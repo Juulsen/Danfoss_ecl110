@@ -1,0 +1,61 @@
+{
+  "title": "Danfoss ECL Comfort 110 Modbus",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Forbind til Danfoss ECL Comfort 110",
+        "description": "Konfigurer Modbus TCP-forbindelsen gennem din RTU-til-TCP-gateway. Register 11200 testlæses uden skrivning, før opsætningen gemmes.",
+        "data": {
+          "host": "Værtsnavn eller IP-adresse",
+          "port": "TCP-port",
+          "device_id": "Modbus slave-ID",
+          "application": "ECL-applikation",
+          "scan_interval": "Opdateringsinterval",
+          "timeout": "Kommunikationstimeout",
+          "request_delay": "Pause mellem Modbus-forespørgsler"
+        },
+        "data_description": {
+          "host": "Adressen på mbusd eller en anden Modbus TCP-gateway.",
+          "port": "Modbus TCP-porten, normalt 502.",
+          "device_id": "ECL110-adressen på RS485-bussen, normalt 5 i denne installation.",
+          "application": "Vælg 116, 130 eller all, hvis applikationen ikke er kendt.",
+          "scan_interval": "Antal sekunder mellem opdateringer. Minimum 5 sekunder.",
+          "timeout": "Antal sekunder der ventes på forbindelse eller Modbus-svar.",
+          "request_delay": "Pause i sekunder mellem forespørgsler for at skåne den langsommere RTU-bus."
+        }
+      },
+      "reconfigure": {
+        "title": "Rediger Danfoss ECL110",
+        "description": "Rediger forbindelsesindstillingerne. De nye indstillinger testes, før integrationen genindlæses.",
+        "data": {
+          "host": "Værtsnavn eller IP-adresse",
+          "port": "TCP-port",
+          "device_id": "Modbus slave-ID",
+          "application": "ECL-applikation",
+          "scan_interval": "Opdateringsinterval",
+          "timeout": "Kommunikationstimeout",
+          "request_delay": "Pause mellem Modbus-forespørgsler"
+        },
+        "data_description": {
+          "host": "Adressen på mbusd eller en anden Modbus TCP-gateway.",
+          "port": "Modbus TCP-porten, normalt 502.",
+          "device_id": "ECL110-adressen på RS485-bussen.",
+          "application": "Vælg 116, 130 eller all, hvis applikationen ikke er kendt.",
+          "scan_interval": "Antal sekunder mellem opdateringer. Minimum 5 sekunder.",
+          "timeout": "Antal sekunder der ventes på forbindelse eller Modbus-svar.",
+          "request_delay": "Pause i sekunder mellem forespørgsler for at skåne den langsommere RTU-bus."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Der kunne ikke oprettes forbindelse til Modbus TCP-gatewayen.",
+      "cannot_read": "Der er forbindelse til gatewayen, men ECL110 returnerede ikke en gyldig værdi fra register 11200. Kontroller slave-ID og RS485-forbindelsen.",
+      "modbus_error": "ECL110 returnerede en Modbus-kommunikationsfejl.",
+      "unknown": "Der opstod en uventet fejl. Kontroller Home Assistant-loggen."
+    },
+    "abort": {
+      "already_configured": "Denne gateway og dette Modbus slave-ID er allerede konfigureret.",
+      "reconfigure_successful": "ECL110-konfigurationen blev opdateret."
+    }
+  }
+}
