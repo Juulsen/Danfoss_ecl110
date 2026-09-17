@@ -1,0 +1,61 @@
+{
+  "title": "Danfoss ECL Comfort 110 Modbus",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Danfoss ECL Comfort 110",
+        "description": "Configure the Modbus TCP connection through your RTU-to-TCP gateway. A read-only test of register 11200 is performed before the entry is created.",
+        "data": {
+          "host": "Host or IP address",
+          "port": "TCP port",
+          "device_id": "Modbus slave ID",
+          "application": "ECL application",
+          "scan_interval": "Update interval",
+          "timeout": "Communication timeout",
+          "request_delay": "Delay between Modbus requests"
+        },
+        "data_description": {
+          "host": "Address of the mbusd or other Modbus TCP gateway.",
+          "port": "Modbus TCP port, normally 502.",
+          "device_id": "ECL110 address on the RS485 bus, normally 5 in this installation.",
+          "application": "Select 116, 130 or all when the application is not known.",
+          "scan_interval": "Seconds between updates. Minimum 5 seconds.",
+          "timeout": "Seconds to wait for a connection or Modbus response.",
+          "request_delay": "Pause in seconds between requests to protect the slower RTU bus."
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure Danfoss ECL110",
+        "description": "Update the connection settings. The new settings are tested before the integration is reloaded.",
+        "data": {
+          "host": "Host or IP address",
+          "port": "TCP port",
+          "device_id": "Modbus slave ID",
+          "application": "ECL application",
+          "scan_interval": "Update interval",
+          "timeout": "Communication timeout",
+          "request_delay": "Delay between Modbus requests"
+        },
+        "data_description": {
+          "host": "Address of the mbusd or other Modbus TCP gateway.",
+          "port": "Modbus TCP port, normally 502.",
+          "device_id": "ECL110 address on the RS485 bus.",
+          "application": "Select 116, 130 or all when the application is not known.",
+          "scan_interval": "Seconds between updates. Minimum 5 seconds.",
+          "timeout": "Seconds to wait for a connection or Modbus response.",
+          "request_delay": "Pause in seconds between requests to protect the slower RTU bus."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Unable to connect to the Modbus TCP gateway.",
+      "cannot_read": "Connected to the gateway, but the ECL110 did not return a valid value from register 11200. Check the slave ID and RS485 connection.",
+      "modbus_error": "The ECL110 returned a Modbus communication error.",
+      "unknown": "An unexpected error occurred. Check the Home Assistant log."
+    },
+    "abort": {
+      "already_configured": "This gateway and Modbus slave ID are already configured.",
+      "reconfigure_successful": "The ECL110 configuration was updated successfully."
+    }
+  }
+}
