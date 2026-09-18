@@ -33,6 +33,7 @@ from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
 )
 
+from .const import DOMAIN, INTEGRATION_AUTHOR, MODEL
 from .registers import (
     SOURCE_URL,
     EclRegister,
@@ -40,7 +41,6 @@ from .registers import (
     SENSOR_REGISTERS,
 )
 
-DOMAIN: Final = "danfoss_ecl110_modbus"
 PARALLEL_UPDATES: Final = 0
 _MISSING: Final = object()
 
@@ -197,9 +197,9 @@ class Ecl110Sensor(
         )
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, device_identifier)},
-            name=entry.title or "Danfoss ECL Comfort 110",
-            manufacturer="Danfoss",
-            model="ECL Comfort 110",
+            name=entry.title or "ECL110 Modbus",
+            manufacturer=INTEGRATION_AUTHOR,
+            model=MODEL,
         )
 
     def _register_values(self) -> Mapping[Any, Any]:
