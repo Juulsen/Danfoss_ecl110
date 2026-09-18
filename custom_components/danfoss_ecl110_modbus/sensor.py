@@ -81,7 +81,9 @@ def _entity_category(register: EclRegister) -> EntityCategory | None:
     if register.entity_category == "diagnostic":
         return EntityCategory.DIAGNOSTIC
     if register.entity_category == "configuration":
-        return EntityCategory.CONFIG
+        # These are read-only views of settings. SensorEntity rejects CONFIG;
+        # reserve that category for future writable number/select entities.
+        return EntityCategory.DIAGNOSTIC
     return None
 
 
