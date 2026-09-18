@@ -1,17 +1,17 @@
 {
-  "domain": "danfoss_ecl110_modbus",
-  "name": "ECL110 Modbus by Michael V. J. Juulsen",
   "codeowners": [
     "@Juulsen"
   ],
   "config_flow": true,
   "documentation": "https://github.com/Juulsen/Danfoss_ecl110",
+  "domain": "danfoss_ecl110_modbus",
   "integration_type": "device",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/Juulsen/Danfoss_ecl110/issues",
   "loggers": [
     "pymodbus"
   ],
+  "name": "Danfoss ECL110 Modbus",
   "requirements": [
     "pymodbus==3.13.1"
   ],
