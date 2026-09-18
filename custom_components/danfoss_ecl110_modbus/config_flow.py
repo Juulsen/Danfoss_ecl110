@@ -172,7 +172,7 @@ class Ecl110ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     return self.async_abort(reason="already_configured")
 
                 title = (
-                    f"Danfoss ECL110 "
+                    f"ECL110 Modbus "
                     f"({user_input[CONF_HOST]} / "
                     f"ID {user_input[CONF_DEVICE_ID]})"
                 )
