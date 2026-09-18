@@ -73,10 +73,10 @@
         "name": "Aktuatortype"
       },
       "auto_reduct": {
-        "name": "Automatisk sænkning"
+        "name": "Udetemperaturgrænse for sænkning"
       },
       "boost": {
-        "name": "Boost"
+        "name": "Boost af ønsket fremløbstemperatur"
       },
       "clock_day": {
         "name": "Ur – dag"
@@ -91,10 +91,10 @@
         "name": "Ur – måned"
       },
       "clock_year": {
-        "name": "Ur – år"
+        "name": "Ur – årstal"
       },
       "daylight_saving": {
-        "name": "Sommertid"
+        "name": "Automatisk sommer- og vintertid"
       },
       "desired_mode": {
         "name": "Ønsket driftstilstand",
@@ -109,19 +109,19 @@
         "name": "Ønsket værdi S2"
       },
       "desired_s3": {
-        "name": "Ønsket værdi S3"
+        "name": "Ønsket fremløbstemperatur S3"
       },
       "dhw_priority": {
-        "name": "Varmtvandsprioritet"
+        "name": "Varmtvandsprioritet fra master"
       },
       "display_backlight": {
-        "name": "Displayets baggrundslys"
+        "name": "Displayets baggrundslys (trin)"
       },
       "display_contrast": {
-        "name": "Displayets kontrast"
+        "name": "Displayets kontrast (trin)"
       },
       "eca_address": {
-        "name": "ECA-adresse",
+        "name": "Rum- eller fjernbetjeningspanel",
         "state": {
           "off": "Fra",
           "a": "A",
@@ -129,28 +129,28 @@
         }
       },
       "ecl_address": {
-        "name": "ECL-adresse"
+        "name": "ECL-busadresse"
       },
       "external_override": {
         "name": "Ekstern overstyring"
       },
       "flow_temperature_max": {
-        "name": "Fremløbstemperatur – maksimum"
+        "name": "Maksimum fremløbstemperatur"
       },
       "flow_temperature_min": {
-        "name": "Fremløbstemperatur – minimum"
+        "name": "Minimum fremløbstemperatur"
       },
       "heating_curve_slope": {
         "name": "Varmekurvens hældning"
       },
       "heating_cutout": {
-        "name": "Varmeudkobling"
+        "name": "Udetemperaturgrænse for varmeudkobling"
       },
       "integration_time": {
         "name": "Integrationstid Tn"
       },
       "knee_point": {
-        "name": "Knækpunkt"
+        "name": "Varmekurvens knækpunkt"
       },
       "language": {
         "name": "Sprog",
@@ -167,25 +167,25 @@
         }
       },
       "minimum_activation_time": {
-        "name": "Minimum aktiveringstid"
+        "name": "Minimumspuls til gearmotor"
       },
       "modbus_address": {
         "name": "Modbus-adresse"
       },
       "motor_protection": {
-        "name": "Motorbeskyttelse"
+        "name": "Aktiveringsforsinkelse for motorbeskyttelse"
       },
       "neutral_zone": {
         "name": "Neutralzone Nz"
       },
       "optimization_basis": {
-        "name": "Optimeringsgrundlag"
+        "name": "Temperaturgrundlag for optimering"
       },
       "optimizer": {
-        "name": "Optimering"
+        "name": "Optimeringskode"
       },
       "parallel_displacement": {
-        "name": "Parallelforskydning"
+        "name": "Varmekurvens parallelforskydning"
       },
       "proportional_band": {
         "name": "Proportionalbånd Xp"
@@ -194,10 +194,10 @@
         "name": "Pumpemotionering"
       },
       "pump_frost_temperature": {
-        "name": "Pumpe – frosttemperatur"
+        "name": "Frostgrænse for pumpestart"
       },
       "pump_heat_temperature": {
-        "name": "Pumpe – varmebehovstemperatur"
+        "name": "Ønsket fremløbstemperatur for pumpestart"
       },
       "pump_state": {
         "name": "Pumpestatus",
@@ -207,31 +207,31 @@
         }
       },
       "reference_ramp": {
-        "name": "Referencerampe"
+        "name": "Opstartsrampe for ønsket fremløb"
       },
       "return_gain_max": {
-        "name": "Returbegrænsning – maksimal påvirkning"
+        "name": "Returpåvirkning over grænsen"
       },
       "return_gain_min": {
-        "name": "Returbegrænsning – minimal påvirkning"
+        "name": "Returpåvirkning under grænsen"
       },
       "return_integration_time": {
-        "name": "Returbegrænsning – integrationstid"
+        "name": "Returbegrænsningens integrationstid"
       },
       "return_priority": {
-        "name": "Returtemperaturprioritet"
+        "name": "Returbegrænsning overstyrer minimum fremløb"
       },
       "return_temperature_limit": {
         "name": "Returtemperaturgrænse"
       },
       "room_gain_max": {
-        "name": "Rumbegrænsning – maksimal påvirkning"
+        "name": "Rumpåvirkning over ønsket temperatur"
       },
       "room_gain_min": {
-        "name": "Rumbegrænsning – minimal påvirkning"
+        "name": "Rumpåvirkning under ønsket temperatur"
       },
       "room_integration_time": {
-        "name": "Rumtemperaturens integrationstid"
+        "name": "Rumreguleringens integration"
       },
       "schedule_friday_start_1": {
         "name": "Fredag start 1"
@@ -318,7 +318,7 @@
         "name": "Onsdag stop 2"
       },
       "standby_temperature": {
-        "name": "Standbytemperatur"
+        "name": "Ønsket fremløbstemperatur i standby"
       },
       "temperature_s1": {
         "name": "Temperatur S1"
@@ -333,7 +333,7 @@
         "name": "Temperatur S4"
       },
       "total_stop": {
-        "name": "Totalstop"
+        "name": "Totalstop under sænkningsperioden"
       },
       "valve_close_signal": {
         "name": "Signal: ventil lukker",
@@ -353,7 +353,7 @@
         }
       },
       "valve_running_time": {
-        "name": "Ventilmotors gangtid"
+        "name": "Ventilmotorens fulde gangtid"
       }
     }
   }
