@@ -8,9 +8,9 @@ from typing import Final
 from homeassistant.const import Platform
 
 DOMAIN: Final = "danfoss_ecl110_modbus"
-NAME: Final = "Danfoss ECL Comfort 110"
-MANUFACTURER: Final = "Danfoss"
-MODEL: Final = "ECL Comfort 110"
+NAME: Final = "ECL110 Modbus"
+INTEGRATION_AUTHOR: Final = "Michael V. J. Juulsen"
+MODEL: Final = "Danfoss ECL Comfort 110"
 
 PLATFORMS: Final = (Platform.SENSOR,)
 
