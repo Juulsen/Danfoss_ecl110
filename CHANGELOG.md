@@ -6,10 +6,6 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 ## [Unreleased]
 
-### Changed
-
-- Use **Juulsen** as the developer name in Home Assistant and project documentation.
-
 ### Planned
 
 - Hardware verification of all 85 named read-only entities
