@@ -9,7 +9,7 @@ from homeassistant.const import Platform
 
 DOMAIN: Final = "danfoss_ecl110_modbus"
 NAME: Final = "ECL110 Modbus"
-INTEGRATION_AUTHOR: Final = "Michael V. J. Juulsen"
+INTEGRATION_AUTHOR: Final = "Juulsen"
 MODEL: Final = "Danfoss ECL Comfort 110"
 
 PLATFORMS: Final = (Platform.SENSOR,)
@@ -28,7 +28,7 @@ APPLICATIONS: Final = (
     APPLICATION_130,
 )
 
-# Defaults for Michael's mbusd gateway. All values remain configurable in the
+# Defaults for the mbusd gateway. All values remain configurable in the
 # upcoming config flow.
 DEFAULT_HOST: Final = "10.0.0.30"
 DEFAULT_PORT: Final = 502
