@@ -1,6 +1,6 @@
 # Danfoss ECL110 Modbus for Home Assistant
 
-[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.2.1-blue.svg)](CHANGELOG.md)
 [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Custom%20Integration-41BDF5.svg)](https://www.home-assistant.io/)
 [![HACS](https://img.shields.io/badge/HACS-preparing-orange.svg)](https://www.hacs.xyz/)
 [![Communication](https://img.shields.io/badge/Modbus-RTU%20%2F%20TCP-informational.svg)](#communication)
@@ -11,7 +11,7 @@ A Home Assistant custom integration for monitoring the **Danfoss ECL Comfort 110
 The integration is developed and maintained by **Michael V. J. Juulsen**. It is an independent community project and is not developed, supported, or endorsed by Danfoss.
 
 > [!IMPORTANT]
-> Version 0.2.0 is a read-only test release. Home Assistant cannot write settings to the controller in this version.
+> Version 0.2.1 is a read-only test release. Home Assistant cannot write settings to the controller in this version.
 
 ## Highlights
 
@@ -156,7 +156,7 @@ Each mapped register includes metadata for:
 - Confidence level
 - Safe-write status
 
-### Entity policy in version 0.2.0
+### Entity policy in version 0.2.1
 
 - S1-S4 are enabled by default.
 - All other named registers are created but disabled by default.
@@ -169,7 +169,7 @@ This design prevents the integration from polling every address continuously and
 
 ## Testing the complete register map
 
-After installing version 0.2.0:
+After installing version 0.2.1:
 
 1. Confirm that S1-S4 still update.
 2. Open the ECL110 device in Home Assistant.
@@ -196,7 +196,7 @@ Do not enable all entities at once on a shared RS485 bus.
 
 S1-S4 are decoded as signed 16-bit values with a scale of 0.1 °C.
 
-The raw value `1920`, corresponding to 192.0 °C, is treated as a disconnected sensor and displayed as unavailable.
+The raw value `1920`, corresponding to 192.0 °C, is treated as a disconnected sensor and displayed as unknown.
 
 The physical purpose of S1-S4 depends on the active ECL application and the installation wiring.
 
