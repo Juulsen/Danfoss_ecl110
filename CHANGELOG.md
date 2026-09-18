@@ -15,6 +15,18 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 - HACS metadata, validation workflows and brand assets
 - First published GitHub release
 
+## [0.2.1] - 2026-09-18
+
+### Fixed
+
+- Read-only setting sensors now use the diagnostic category. Home Assistant rejected the config category and could not load these entities.
+- Existing entity identifiers and enabled states are preserved; no removal or reconfiguration is required.
+
+### Validation
+
+- Python syntax checked and category mapping checked locally.
+- Hardware confirmation after installing this patch is pending.
+
 ## [0.2.0] - 2026-09-18
 
 ### Added
