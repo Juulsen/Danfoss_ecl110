@@ -8,7 +8,7 @@
 
 A Home Assistant custom integration for monitoring the **Danfoss ECL Comfort 110** through Modbus.
 
-The integration is developed and maintained by **Michael V. J. Juulsen**. It is an independent community project and is not developed, supported, or endorsed by Danfoss.
+The integration is developed and maintained by **Juulsen**. It is an independent community project and is not developed, supported, or endorsed by Danfoss.
 
 > [!IMPORTANT]
 > Version 0.2.2 is a read-only test release. Home Assistant cannot write settings to the controller in this version.
@@ -324,7 +324,7 @@ When reporting a register issue, include the register address, ECL application, 
 
 ## Credits
 
-- Developed and maintained by **Michael V. J. Juulsen**
+- Developed and maintained by **Juulsen**
 - Register research based on [Ingramz/ecl110](https://github.com/Ingramz/ecl110)
 - Built for [Home Assistant](https://www.home-assistant.io/)
 - Distribution preparation for [HACS](https://www.hacs.xyz/)
