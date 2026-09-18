@@ -1,6 +1,6 @@
 # Danfoss ECL110 Modbus for Home Assistant
 
-[![Version](https://img.shields.io/badge/version-0.2.1-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.2.2-blue.svg)](CHANGELOG.md)
 [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Custom%20Integration-41BDF5.svg)](https://www.home-assistant.io/)
 [![HACS](https://img.shields.io/badge/HACS-preparing-orange.svg)](https://www.hacs.xyz/)
 [![Communication](https://img.shields.io/badge/Modbus-RTU%20%2F%20TCP-informational.svg)](#communication)
@@ -11,7 +11,7 @@ A Home Assistant custom integration for monitoring the **Danfoss ECL Comfort 110
 The integration is developed and maintained by **Michael V. J. Juulsen**. It is an independent community project and is not developed, supported, or endorsed by Danfoss.
 
 > [!IMPORTANT]
-> Version 0.2.1 is a read-only test release. Home Assistant cannot write settings to the controller in this version.
+> Version 0.2.2 is a read-only test release. Home Assistant cannot write settings to the controller in this version.
 
 ## Highlights
 
@@ -139,6 +139,20 @@ The setup flow performs a harmless read-only test of register 11200 before savin
 
 For a shared RS485 bus, keep a reasonable update interval and request delay.
 
+## Decoding in version 0.2.2
+
+Parameter names, display units and numeric ranges follow the Danfoss application 116/130 operating guides (software 1.08 onward). The Modbus source was researched on software 1.06; wire scaling remains inferred where that source says TODO: FORMAT.
+
+- Minimum actuator pulse: setting 10 means **200 ms**, using 20 ms per step.
+- Signed examples: 65521 becomes **-15 °C**; 65516 becomes **-2.0** for return influence.
+- Temperature differences (Xp, Nz and curve displacement) use **K**, without an absolute-temperature device class.
+- Desired S3: 321 is provisionally shown as **32.1 °C**; verify against the controller.
+- Clock year: 26 becomes **2026**.
+- Unknown OFF codes outside the documented numeric range show **unknown**. Inspect `raw_value` and `decoding_note`; do not interpret raw 9 or 29 as minutes or degrees.
+- GEAR/ABV and other unverified option codes remain raw numbers. Readings do not enable writes.
+
+These metadata changes preserve entity identifiers. Restart Home Assistant after updating; user-assigned entity names are retained.
+
 ## Register model
 
 The register map is based on the reverse-engineered [Ingramz/ecl110](https://github.com/Ingramz/ecl110) project for application 116/130 and software version 1.06.
@@ -156,7 +170,7 @@ Each mapped register includes metadata for:
 - Confidence level
 - Safe-write status
 
-### Entity policy in version 0.2.1
+### Entity policy in version 0.2.2
 
 - S1-S4 are enabled by default.
 - All other named registers are created but disabled by default.
@@ -169,7 +183,7 @@ This design prevents the integration from polling every address continuously and
 
 ## Testing the complete register map
 
-After installing version 0.2.1:
+After installing version 0.2.2:
 
 1. Confirm that S1-S4 still update.
 2. Open the ECL110 device in Home Assistant.
@@ -318,3 +332,4 @@ When reporting a register issue, include the register address, ECL application, 
 ## Trademark notice
 
 Danfoss and ECL Comfort are trademarks of their respective owner. Their names are used only to identify compatible hardware. This independent project is not affiliated with, endorsed by, or supported by Danfoss.
+
