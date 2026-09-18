@@ -82,7 +82,7 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 ### Tested
 
 - Connection through Modbus TCP gateway
-- ECL110 slave ID 5
+- Configurable ECL110 slave ID
 - Reading registers 11200-11203
 - Live S1, S3 and S4 temperature values in Home Assistant
 
