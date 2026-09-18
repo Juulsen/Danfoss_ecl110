@@ -73,10 +73,10 @@
         "name": "Actuator type"
       },
       "auto_reduct": {
-        "name": "Automatic setback"
+        "name": "Outdoor temperature threshold for setback"
       },
       "boost": {
-        "name": "Boost"
+        "name": "Flow temperature boost"
       },
       "clock_day": {
         "name": "Clock day"
@@ -91,10 +91,10 @@
         "name": "Clock month"
       },
       "clock_year": {
-        "name": "Clock year"
+        "name": "Clock calendar year"
       },
       "daylight_saving": {
-        "name": "Daylight saving time"
+        "name": "Automatic daylight saving time"
       },
       "desired_mode": {
         "name": "Desired operating mode",
@@ -109,19 +109,19 @@
         "name": "Desired value S2"
       },
       "desired_s3": {
-        "name": "Desired value S3"
+        "name": "Desired flow temperature S3"
       },
       "dhw_priority": {
-        "name": "DHW priority"
+        "name": "DHW priority from master"
       },
       "display_backlight": {
-        "name": "Display backlight"
+        "name": "Display backlight level"
       },
       "display_contrast": {
-        "name": "Display contrast"
+        "name": "Display contrast level"
       },
       "eca_address": {
-        "name": "ECA address",
+        "name": "Room panel or remote control",
         "state": {
           "off": "Off",
           "a": "A",
@@ -129,28 +129,28 @@
         }
       },
       "ecl_address": {
-        "name": "ECL address"
+        "name": "ECL bus address"
       },
       "external_override": {
         "name": "External override"
       },
       "flow_temperature_max": {
-        "name": "Flow temperature maximum"
+        "name": "Maximum flow temperature"
       },
       "flow_temperature_min": {
-        "name": "Flow temperature minimum"
+        "name": "Minimum flow temperature"
       },
       "heating_curve_slope": {
         "name": "Heating curve slope"
       },
       "heating_cutout": {
-        "name": "Heating cut-out"
+        "name": "Outdoor temperature threshold for heating cut-out"
       },
       "integration_time": {
         "name": "Integration time Tn"
       },
       "knee_point": {
-        "name": "Knee point"
+        "name": "Heating curve knee point"
       },
       "language": {
         "name": "Language",
@@ -167,25 +167,25 @@
         }
       },
       "minimum_activation_time": {
-        "name": "Minimum activation time"
+        "name": "Minimum gear motor pulse"
       },
       "modbus_address": {
         "name": "Modbus address"
       },
       "motor_protection": {
-        "name": "Motor protection"
+        "name": "Motor protection activation delay"
       },
       "neutral_zone": {
         "name": "Neutral zone Nz"
       },
       "optimization_basis": {
-        "name": "Optimization basis"
+        "name": "Optimization temperature basis"
       },
       "optimizer": {
-        "name": "Optimizer"
+        "name": "Optimization code"
       },
       "parallel_displacement": {
-        "name": "Parallel displacement"
+        "name": "Heating curve parallel displacement"
       },
       "proportional_band": {
         "name": "Proportional band Xp"
@@ -194,10 +194,10 @@
         "name": "Pump exercise"
       },
       "pump_frost_temperature": {
-        "name": "Pump frost temperature"
+        "name": "Pump frost protection threshold"
       },
       "pump_heat_temperature": {
-        "name": "Pump heat demand temperature"
+        "name": "Desired flow temperature threshold for pump start"
       },
       "pump_state": {
         "name": "Pump status",
@@ -207,31 +207,31 @@
         }
       },
       "reference_ramp": {
-        "name": "Reference ramp"
+        "name": "Flow temperature startup ramp"
       },
       "return_gain_max": {
-        "name": "Return limitation – maximum influence"
+        "name": "Return influence above limit"
       },
       "return_gain_min": {
-        "name": "Return limitation – minimum influence"
+        "name": "Return influence below limit"
       },
       "return_integration_time": {
-        "name": "Return limitation – integration time"
+        "name": "Return limitation integration time"
       },
       "return_priority": {
-        "name": "Return temperature priority"
+        "name": "Return limitation overrides minimum flow"
       },
       "return_temperature_limit": {
         "name": "Return temperature limit"
       },
       "room_gain_max": {
-        "name": "Room limitation – maximum influence"
+        "name": "Room influence above target"
       },
       "room_gain_min": {
-        "name": "Room limitation – minimum influence"
+        "name": "Room influence below target"
       },
       "room_integration_time": {
-        "name": "Room temperature integration time"
+        "name": "Room control integration"
       },
       "schedule_friday_start_1": {
         "name": "Friday start 1"
@@ -318,7 +318,7 @@
         "name": "Wednesday stop 2"
       },
       "standby_temperature": {
-        "name": "Standby temperature"
+        "name": "Desired standby flow temperature"
       },
       "temperature_s1": {
         "name": "Temperature S1"
@@ -333,7 +333,7 @@
         "name": "Temperature S4"
       },
       "total_stop": {
-        "name": "Total stop"
+        "name": "Total stop during setback"
       },
       "valve_close_signal": {
         "name": "Valve closing signal",
@@ -353,7 +353,7 @@
         }
       },
       "valve_running_time": {
-        "name": "Valve motor running time"
+        "name": "Valve motor full travel time"
       }
     }
   }
