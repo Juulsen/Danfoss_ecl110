@@ -37,6 +37,7 @@ from .const import DOMAIN, INTEGRATION_AUTHOR, MODEL
 from .registers import (
     SOURCE_URL,
     EclRegister,
+    EntityPlatform,
     RegisterConfidence,
     SENSOR_REGISTERS,
 )
@@ -98,13 +99,20 @@ def _build_description(
     return EclSensorEntityDescription(
         key=register.key,
         name=register.name,
+        translation_key=register.key,
         icon=register.icon,
         device_class=_sensor_device_class(register),
         state_class=_sensor_state_class(register),
         native_unit_of_measurement=register.unit,
         suggested_display_precision=register.precision,
         entity_category=_entity_category(register),
-        entity_registry_enabled_default=register.enabled_by_default,
+        # Only ordinary sensor registers (currently S1-S4) start enabled.
+        # Settings and schedules are exposed read-only for testing and can be
+        # enabled individually without loading the shared RTU bus all at once.
+        entity_registry_enabled_default=(
+            register.platform is EntityPlatform.SENSOR
+            and register.enabled_by_default
+        ),
         options=options,
         register=register,
     )
