@@ -57,5 +57,304 @@
       }
     }
   },
-  "title": "Danfoss ECL110 Modbus"
+  "title": "Danfoss ECL110 Modbus",
+  "entity": {
+    "sensor": {
+      "actual_mode": {
+        "name": "Aktuel driftstilstand",
+        "state": {
+          "auto": "Automatisk",
+          "comfort": "Komfort",
+          "setback": "Sænket",
+          "standby": "Standby"
+        }
+      },
+      "actuator_type": {
+        "name": "Aktuatortype"
+      },
+      "auto_reduct": {
+        "name": "Automatisk sænkning"
+      },
+      "boost": {
+        "name": "Boost"
+      },
+      "clock_day": {
+        "name": "Ur – dag"
+      },
+      "clock_hour": {
+        "name": "Ur – timer"
+      },
+      "clock_minute": {
+        "name": "Ur – minutter"
+      },
+      "clock_month": {
+        "name": "Ur – måned"
+      },
+      "clock_year": {
+        "name": "Ur – år"
+      },
+      "daylight_saving": {
+        "name": "Sommertid"
+      },
+      "desired_mode": {
+        "name": "Ønsket driftstilstand",
+        "state": {
+          "auto": "Automatisk",
+          "comfort": "Komfort",
+          "setback": "Sænket",
+          "standby": "Standby"
+        }
+      },
+      "desired_s2": {
+        "name": "Ønsket værdi S2"
+      },
+      "desired_s3": {
+        "name": "Ønsket værdi S3"
+      },
+      "dhw_priority": {
+        "name": "Varmtvandsprioritet"
+      },
+      "display_backlight": {
+        "name": "Displayets baggrundslys"
+      },
+      "display_contrast": {
+        "name": "Displayets kontrast"
+      },
+      "eca_address": {
+        "name": "ECA-adresse",
+        "state": {
+          "off": "Fra",
+          "a": "A",
+          "b": "B"
+        }
+      },
+      "ecl_address": {
+        "name": "ECL-adresse"
+      },
+      "external_override": {
+        "name": "Ekstern overstyring"
+      },
+      "flow_temperature_max": {
+        "name": "Fremløbstemperatur – maksimum"
+      },
+      "flow_temperature_min": {
+        "name": "Fremløbstemperatur – minimum"
+      },
+      "heating_curve_slope": {
+        "name": "Varmekurvens hældning"
+      },
+      "heating_cutout": {
+        "name": "Varmeudkobling"
+      },
+      "integration_time": {
+        "name": "Integrationstid Tn"
+      },
+      "knee_point": {
+        "name": "Knækpunkt"
+      },
+      "language": {
+        "name": "Sprog",
+        "state": {
+          "english": "Engelsk",
+          "swedish": "Svensk",
+          "danish": "Dansk",
+          "finnish": "Finsk",
+          "german": "Tysk",
+          "estonian": "Estisk",
+          "lithuanian": "Litauisk",
+          "latvian": "Lettisk",
+          "polish": "Polsk"
+        }
+      },
+      "minimum_activation_time": {
+        "name": "Minimum aktiveringstid"
+      },
+      "modbus_address": {
+        "name": "Modbus-adresse"
+      },
+      "motor_protection": {
+        "name": "Motorbeskyttelse"
+      },
+      "neutral_zone": {
+        "name": "Neutralzone Nz"
+      },
+      "optimization_basis": {
+        "name": "Optimeringsgrundlag"
+      },
+      "optimizer": {
+        "name": "Optimering"
+      },
+      "parallel_displacement": {
+        "name": "Parallelforskydning"
+      },
+      "proportional_band": {
+        "name": "Proportionalbånd Xp"
+      },
+      "pump_exercise": {
+        "name": "Pumpemotionering"
+      },
+      "pump_frost_temperature": {
+        "name": "Pumpe – frosttemperatur"
+      },
+      "pump_heat_temperature": {
+        "name": "Pumpe – varmebehovstemperatur"
+      },
+      "pump_state": {
+        "name": "Pumpestatus",
+        "state": {
+          "off": "Fra",
+          "on": "Til"
+        }
+      },
+      "reference_ramp": {
+        "name": "Referencerampe"
+      },
+      "return_gain_max": {
+        "name": "Returbegrænsning – maksimal påvirkning"
+      },
+      "return_gain_min": {
+        "name": "Returbegrænsning – minimal påvirkning"
+      },
+      "return_integration_time": {
+        "name": "Returbegrænsning – integrationstid"
+      },
+      "return_priority": {
+        "name": "Returtemperaturprioritet"
+      },
+      "return_temperature_limit": {
+        "name": "Returtemperaturgrænse"
+      },
+      "room_gain_max": {
+        "name": "Rumbegrænsning – maksimal påvirkning"
+      },
+      "room_gain_min": {
+        "name": "Rumbegrænsning – minimal påvirkning"
+      },
+      "room_integration_time": {
+        "name": "Rumtemperaturens integrationstid"
+      },
+      "schedule_friday_start_1": {
+        "name": "Fredag start 1"
+      },
+      "schedule_friday_start_2": {
+        "name": "Fredag start 2"
+      },
+      "schedule_friday_stop_1": {
+        "name": "Fredag stop 1"
+      },
+      "schedule_friday_stop_2": {
+        "name": "Fredag stop 2"
+      },
+      "schedule_monday_start_1": {
+        "name": "Mandag start 1"
+      },
+      "schedule_monday_start_2": {
+        "name": "Mandag start 2"
+      },
+      "schedule_monday_stop_1": {
+        "name": "Mandag stop 1"
+      },
+      "schedule_monday_stop_2": {
+        "name": "Mandag stop 2"
+      },
+      "schedule_saturday_start_1": {
+        "name": "Lørdag start 1"
+      },
+      "schedule_saturday_start_2": {
+        "name": "Lørdag start 2"
+      },
+      "schedule_saturday_stop_1": {
+        "name": "Lørdag stop 1"
+      },
+      "schedule_saturday_stop_2": {
+        "name": "Lørdag stop 2"
+      },
+      "schedule_sunday_start_1": {
+        "name": "Søndag start 1"
+      },
+      "schedule_sunday_start_2": {
+        "name": "Søndag start 2"
+      },
+      "schedule_sunday_stop_1": {
+        "name": "Søndag stop 1"
+      },
+      "schedule_sunday_stop_2": {
+        "name": "Søndag stop 2"
+      },
+      "schedule_thursday_start_1": {
+        "name": "Torsdag start 1"
+      },
+      "schedule_thursday_start_2": {
+        "name": "Torsdag start 2"
+      },
+      "schedule_thursday_stop_1": {
+        "name": "Torsdag stop 1"
+      },
+      "schedule_thursday_stop_2": {
+        "name": "Torsdag stop 2"
+      },
+      "schedule_tuesday_start_1": {
+        "name": "Tirsdag start 1"
+      },
+      "schedule_tuesday_start_2": {
+        "name": "Tirsdag start 2"
+      },
+      "schedule_tuesday_stop_1": {
+        "name": "Tirsdag stop 1"
+      },
+      "schedule_tuesday_stop_2": {
+        "name": "Tirsdag stop 2"
+      },
+      "schedule_wednesday_start_1": {
+        "name": "Onsdag start 1"
+      },
+      "schedule_wednesday_start_2": {
+        "name": "Onsdag start 2"
+      },
+      "schedule_wednesday_stop_1": {
+        "name": "Onsdag stop 1"
+      },
+      "schedule_wednesday_stop_2": {
+        "name": "Onsdag stop 2"
+      },
+      "standby_temperature": {
+        "name": "Standbytemperatur"
+      },
+      "temperature_s1": {
+        "name": "Temperatur S1"
+      },
+      "temperature_s2": {
+        "name": "Temperatur S2"
+      },
+      "temperature_s3": {
+        "name": "Temperatur S3"
+      },
+      "temperature_s4": {
+        "name": "Temperatur S4"
+      },
+      "total_stop": {
+        "name": "Totalstop"
+      },
+      "valve_close_signal": {
+        "name": "Signal: ventil lukker",
+        "state": {
+          "off": "Fra",
+          "on": "Til"
+        }
+      },
+      "valve_exercise": {
+        "name": "Ventilmotionering"
+      },
+      "valve_open_signal": {
+        "name": "Signal: ventil åbner",
+        "state": {
+          "off": "Fra",
+          "on": "Til"
+        }
+      },
+      "valve_running_time": {
+        "name": "Ventilmotors gangtid"
+      }
+    }
+  }
 }
