@@ -15,6 +15,23 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 - HACS metadata, validation workflows and brand assets
 - First published GitHub release
 
+## [0.2.2] - 2026-09-18
+
+### Changed
+
+- Align Danish and English setting names and units with the application 116/130 operating guides.
+- Decode signed setback temperatures and signed gain values (tenths), heating curve slope (tenths), seconds, minutes and temperature differences.
+- Minimum gear motor pulse uses 20 ms per setting step: 10 means 200 ms.
+- Display clock year with the documented year-2000 offset.
+- Desired S3 uses inferred 0.1 °C scaling, explicitly pending display confirmation.
+- Preserve entity keys/addresses and raw values. Add bilingual descriptions and decoding metadata.
+- Unconfirmed OFF sentinels outside numeric ranges show unknown with a decoding note, not a misleading physical value. Enum codes remain raw unless previously mapped.
+
+### Validation
+
+- Local checks of observed values, signed boundaries, pulse scaling, numeric sentinel handling and translation coverage; controller verification pending.
+- Read-only operation remains in place. These operating guides document menu semantics, not the Modbus wire format.
+
 ## [0.2.1] - 2026-09-18
 
 ### Fixed
@@ -106,3 +123,4 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 - [0.1.0](https://github.com/Juulsen/Danfoss_ecl110/releases/tag/v0.1.0)
 
 > Release links become active after the corresponding GitHub releases are published.
+
