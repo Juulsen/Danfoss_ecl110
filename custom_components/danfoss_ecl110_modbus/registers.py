@@ -215,7 +215,7 @@ def _unknown(
         name=f"Ukendt register {address}",
         description=description or "Funktionen er ikke identificeret i kilden.",
         access=access,
-        platform=EntityPlatform.SENSOR,
+        platform=EntityPlatform.NONE,
         applications=applications,
         enabled_by_default=False,
         entity_category="diagnostic",
@@ -736,8 +736,11 @@ WRITABLE_REGISTERS: Final = tuple(
 SAFE_WRITABLE_REGISTERS: Final = tuple(
     register for register in WRITABLE_REGISTERS if register.safe_write
 )
+# During the read-only verification phase, every named readable register is
+# exposed as a sensor. Registers whose function is unknown remain in REGISTERS
+# for documentation, but EntityPlatform.NONE prevents Home Assistant entities.
 SENSOR_REGISTERS: Final = tuple(
     register
     for register in READABLE_REGISTERS
-    if register.platform is EntityPlatform.SENSOR
+    if register.platform is not EntityPlatform.NONE
 )
