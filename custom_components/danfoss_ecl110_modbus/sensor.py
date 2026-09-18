@@ -293,7 +293,23 @@ class Ecl110Sensor(
             "confidence": register.confidence.value,
             "applications": sorted(register.applications),
             "source": SOURCE_URL,
+            "description_da": register.description,
+            "description_en": register.description_en,
+            "scale": register.scale,
+            "offset": register.offset,
+            "data_type": register.data_type.value,
+            "numeric_min": register.decoded_min,
+            "numeric_max": register.decoded_max,
         }
+
+        if raw_value is not _MISSING and raw_value is not None:
+            try:
+                value = int(raw_value) & 0xFFFF
+                attributes["raw_signed_value"] = value - 65536 if value >= 32768 else value
+                if (register.decoded_min is not None or register.decoded_max is not None) and register.decode(value) is None:
+                    attributes["decoding_note"] = "Outside documented numeric range; possible unconfirmed OFF code"
+            except (TypeError, ValueError):
+                pass
 
         if register.ecl_line is not None:
             attributes["ecl_line"] = register.ecl_line
@@ -304,3 +320,4 @@ class Ecl110Sensor(
             attributes["unconfirmed"] = True
 
         return attributes
+
