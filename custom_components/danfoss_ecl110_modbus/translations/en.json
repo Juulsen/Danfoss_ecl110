@@ -57,5 +57,304 @@
       }
     }
   },
-  "title": "Danfoss ECL110 Modbus"
+  "title": "Danfoss ECL110 Modbus",
+  "entity": {
+    "sensor": {
+      "actual_mode": {
+        "name": "Actual operating mode",
+        "state": {
+          "auto": "Auto",
+          "comfort": "Comfort",
+          "setback": "Setback",
+          "standby": "Standby"
+        }
+      },
+      "actuator_type": {
+        "name": "Actuator type"
+      },
+      "auto_reduct": {
+        "name": "Automatic setback"
+      },
+      "boost": {
+        "name": "Boost"
+      },
+      "clock_day": {
+        "name": "Clock day"
+      },
+      "clock_hour": {
+        "name": "Clock hour"
+      },
+      "clock_minute": {
+        "name": "Clock minute"
+      },
+      "clock_month": {
+        "name": "Clock month"
+      },
+      "clock_year": {
+        "name": "Clock year"
+      },
+      "daylight_saving": {
+        "name": "Daylight saving time"
+      },
+      "desired_mode": {
+        "name": "Desired operating mode",
+        "state": {
+          "auto": "Auto",
+          "comfort": "Comfort",
+          "setback": "Setback",
+          "standby": "Standby"
+        }
+      },
+      "desired_s2": {
+        "name": "Desired value S2"
+      },
+      "desired_s3": {
+        "name": "Desired value S3"
+      },
+      "dhw_priority": {
+        "name": "DHW priority"
+      },
+      "display_backlight": {
+        "name": "Display backlight"
+      },
+      "display_contrast": {
+        "name": "Display contrast"
+      },
+      "eca_address": {
+        "name": "ECA address",
+        "state": {
+          "off": "Off",
+          "a": "A",
+          "b": "B"
+        }
+      },
+      "ecl_address": {
+        "name": "ECL address"
+      },
+      "external_override": {
+        "name": "External override"
+      },
+      "flow_temperature_max": {
+        "name": "Flow temperature maximum"
+      },
+      "flow_temperature_min": {
+        "name": "Flow temperature minimum"
+      },
+      "heating_curve_slope": {
+        "name": "Heating curve slope"
+      },
+      "heating_cutout": {
+        "name": "Heating cut-out"
+      },
+      "integration_time": {
+        "name": "Integration time Tn"
+      },
+      "knee_point": {
+        "name": "Knee point"
+      },
+      "language": {
+        "name": "Language",
+        "state": {
+          "english": "English",
+          "swedish": "Swedish",
+          "danish": "Danish",
+          "finnish": "Finnish",
+          "german": "German",
+          "estonian": "Estonian",
+          "lithuanian": "Lithuanian",
+          "latvian": "Latvian",
+          "polish": "Polish"
+        }
+      },
+      "minimum_activation_time": {
+        "name": "Minimum activation time"
+      },
+      "modbus_address": {
+        "name": "Modbus address"
+      },
+      "motor_protection": {
+        "name": "Motor protection"
+      },
+      "neutral_zone": {
+        "name": "Neutral zone Nz"
+      },
+      "optimization_basis": {
+        "name": "Optimization basis"
+      },
+      "optimizer": {
+        "name": "Optimizer"
+      },
+      "parallel_displacement": {
+        "name": "Parallel displacement"
+      },
+      "proportional_band": {
+        "name": "Proportional band Xp"
+      },
+      "pump_exercise": {
+        "name": "Pump exercise"
+      },
+      "pump_frost_temperature": {
+        "name": "Pump frost temperature"
+      },
+      "pump_heat_temperature": {
+        "name": "Pump heat demand temperature"
+      },
+      "pump_state": {
+        "name": "Pump status",
+        "state": {
+          "off": "Off",
+          "on": "On"
+        }
+      },
+      "reference_ramp": {
+        "name": "Reference ramp"
+      },
+      "return_gain_max": {
+        "name": "Return limitation – maximum influence"
+      },
+      "return_gain_min": {
+        "name": "Return limitation – minimum influence"
+      },
+      "return_integration_time": {
+        "name": "Return limitation – integration time"
+      },
+      "return_priority": {
+        "name": "Return temperature priority"
+      },
+      "return_temperature_limit": {
+        "name": "Return temperature limit"
+      },
+      "room_gain_max": {
+        "name": "Room limitation – maximum influence"
+      },
+      "room_gain_min": {
+        "name": "Room limitation – minimum influence"
+      },
+      "room_integration_time": {
+        "name": "Room temperature integration time"
+      },
+      "schedule_friday_start_1": {
+        "name": "Friday start 1"
+      },
+      "schedule_friday_start_2": {
+        "name": "Friday start 2"
+      },
+      "schedule_friday_stop_1": {
+        "name": "Friday stop 1"
+      },
+      "schedule_friday_stop_2": {
+        "name": "Friday stop 2"
+      },
+      "schedule_monday_start_1": {
+        "name": "Monday start 1"
+      },
+      "schedule_monday_start_2": {
+        "name": "Monday start 2"
+      },
+      "schedule_monday_stop_1": {
+        "name": "Monday stop 1"
+      },
+      "schedule_monday_stop_2": {
+        "name": "Monday stop 2"
+      },
+      "schedule_saturday_start_1": {
+        "name": "Saturday start 1"
+      },
+      "schedule_saturday_start_2": {
+        "name": "Saturday start 2"
+      },
+      "schedule_saturday_stop_1": {
+        "name": "Saturday stop 1"
+      },
+      "schedule_saturday_stop_2": {
+        "name": "Saturday stop 2"
+      },
+      "schedule_sunday_start_1": {
+        "name": "Sunday start 1"
+      },
+      "schedule_sunday_start_2": {
+        "name": "Sunday start 2"
+      },
+      "schedule_sunday_stop_1": {
+        "name": "Sunday stop 1"
+      },
+      "schedule_sunday_stop_2": {
+        "name": "Sunday stop 2"
+      },
+      "schedule_thursday_start_1": {
+        "name": "Thursday start 1"
+      },
+      "schedule_thursday_start_2": {
+        "name": "Thursday start 2"
+      },
+      "schedule_thursday_stop_1": {
+        "name": "Thursday stop 1"
+      },
+      "schedule_thursday_stop_2": {
+        "name": "Thursday stop 2"
+      },
+      "schedule_tuesday_start_1": {
+        "name": "Tuesday start 1"
+      },
+      "schedule_tuesday_start_2": {
+        "name": "Tuesday start 2"
+      },
+      "schedule_tuesday_stop_1": {
+        "name": "Tuesday stop 1"
+      },
+      "schedule_tuesday_stop_2": {
+        "name": "Tuesday stop 2"
+      },
+      "schedule_wednesday_start_1": {
+        "name": "Wednesday start 1"
+      },
+      "schedule_wednesday_start_2": {
+        "name": "Wednesday start 2"
+      },
+      "schedule_wednesday_stop_1": {
+        "name": "Wednesday stop 1"
+      },
+      "schedule_wednesday_stop_2": {
+        "name": "Wednesday stop 2"
+      },
+      "standby_temperature": {
+        "name": "Standby temperature"
+      },
+      "temperature_s1": {
+        "name": "Temperature S1"
+      },
+      "temperature_s2": {
+        "name": "Temperature S2"
+      },
+      "temperature_s3": {
+        "name": "Temperature S3"
+      },
+      "temperature_s4": {
+        "name": "Temperature S4"
+      },
+      "total_stop": {
+        "name": "Total stop"
+      },
+      "valve_close_signal": {
+        "name": "Valve closing signal",
+        "state": {
+          "off": "Off",
+          "on": "On"
+        }
+      },
+      "valve_exercise": {
+        "name": "Valve exercise"
+      },
+      "valve_open_signal": {
+        "name": "Valve opening signal",
+        "state": {
+          "off": "Off",
+          "on": "On"
+        }
+      },
+      "valve_running_time": {
+        "name": "Valve motor running time"
+      }
+    }
+  }
 }
