@@ -12,7 +12,12 @@ NAME: Final = "ECL110 Modbus"
 INTEGRATION_AUTHOR: Final = "Juulsen"
 MODEL: Final = "Danfoss ECL Comfort 110"
 
-PLATFORMS: Final = (Platform.SENSOR,)
+PLATFORMS: Final = (
+    Platform.SENSOR,
+    Platform.NUMBER,
+    Platform.SELECT,
+    Platform.SWITCH,
+)
 
 CONF_DEVICE_ID: Final = "device_id"
 CONF_APPLICATION: Final = "application"
