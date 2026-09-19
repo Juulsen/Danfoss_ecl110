@@ -32,6 +32,10 @@ class EclReadError(EclModbusError):
     """Raised when a holding-register read fails validation."""
 
 
+class EclWriteError(EclModbusError):
+    """Raised when a holding-register write or verification fails."""
+
+
 class Ecl110ModbusClient:
     """Serialize Modbus TCP requests to an ECL110 behind mbusd."""
 
@@ -170,4 +174,88 @@ class Ecl110ModbusClient:
                 )
 
             return [int(value) & 0xFFFF for value in registers]
+
+    async def async_write_holding_register(
+        self,
+        *,
+        address: int,
+        value: int,
+    ) -> int:
+        """Write one FC06 register and verify it with an immediate FC03 read."""
+
+        if not 0 <= address <= 0xFFFF:
+            raise ValueError("address must be between 0 and 65535")
+        if not 0 <= value <= 0xFFFF:
+            raise ValueError("value must be between 0 and 65535")
+
+        async with self._request_lock:
+            await self.async_connect()
+            await self._async_wait_for_bus()
+
+            try:
+                response = await self._client.write_register(
+                    address,
+                    value,
+                    device_id=self.device_id,
+                )
+            except (ModbusException, OSError, asyncio.TimeoutError) as err:
+                self._client.close()
+                raise EclWriteError(
+                    f"Write failed for holding register {address} on "
+                    f"device {self.device_id}"
+                ) from err
+            finally:
+                self._last_request_finished = monotonic()
+
+            if response.isError():
+                raise EclWriteError(
+                    f"Device {self.device_id} returned {response!s} for "
+                    f"holding register {address}"
+                )
+
+            echoed_address = getattr(response, "address", None)
+            echoed_registers = getattr(response, "registers", None)
+            if echoed_address != address or not echoed_registers:
+                raise EclWriteError(
+                    f"Invalid FC06 acknowledgement for register {address}"
+                )
+            if (int(echoed_registers[0]) & 0xFFFF) != value:
+                raise EclWriteError(
+                    f"FC06 acknowledgement did not echo value {value} for "
+                    f"register {address}"
+                )
+
+            await self._async_wait_for_bus()
+            try:
+                verification = await self._client.read_holding_registers(
+                    address,
+                    count=1,
+                    device_id=self.device_id,
+                )
+            except (ModbusException, OSError, asyncio.TimeoutError) as err:
+                self._client.close()
+                raise EclWriteError(
+                    f"Could not verify holding register {address} after write"
+                ) from err
+            finally:
+                self._last_request_finished = monotonic()
+
+            if verification.isError():
+                raise EclWriteError(
+                    f"Device {self.device_id} rejected verification read for "
+                    f"holding register {address}"
+                )
+            registers = getattr(verification, "registers", None)
+            if not isinstance(registers, list) or len(registers) != 1:
+                raise EclWriteError(
+                    f"Invalid verification response for register {address}"
+                )
+
+            read_back = int(registers[0]) & 0xFFFF
+            if read_back != value:
+                raise EclWriteError(
+                    f"Register {address} returned {read_back} after writing "
+                    f"{value}"
+                )
+            return read_back
 
