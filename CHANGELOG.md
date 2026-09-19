@@ -10,10 +10,33 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 - Hardware verification of all 85 named read-only entities
 - Confirmed scaling, sign and valid ranges for configuration registers
-- Safe write support through dedicated `number`, `select`, `switch` and time platforms
+- Further safe write support only after physical verification
 - Additional translations
 - HACS metadata, validation workflows and brand assets
 - First published GitHub release
+
+## [0.2.4] - 2026-09-19
+
+### Added
+
+- Dedicated `number`, `select` and `switch` platforms for eight physically verified settings.
+- Numeric controls for display backlight and contrast using their documented ranges.
+- Restricted selections for language, room integration time, optimization basis, reference ramp and boost.
+- Switch control for automatic daylight saving time.
+- Danish and English names and option translations for every new control.
+
+### Safety
+
+- Writes use Modbus function 06 and are serialized with all reads on the shared bus.
+- Every successful FC06 acknowledgement is followed immediately by an FC03 readback.
+- A write fails when the acknowledgement or readback differs from the requested value.
+- Only explicitly whitelisted registers and values can be written; all other registers remain read-only.
+- Existing sensor entities and identifiers are preserved.
+
+### Validation
+
+- The eight controls are based on the completed external FC06, FC03, controller-display and restoration tests.
+- Local validation covers the write whitelist, register ranges, syntax, translations and write/readback behaviour.
 
 ## [0.2.3] - 2026-09-19
 
