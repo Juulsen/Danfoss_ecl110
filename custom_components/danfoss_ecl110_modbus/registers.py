@@ -104,6 +104,8 @@ class EclRegister:
     value_format: ValueFormat = ValueFormat.RAW
     confidence: RegisterConfidence = RegisterConfidence.CONFIRMED
     safe_write: bool = False
+    verified_write_values: Mapping[int, str] | None = None
+    verified_write_range: tuple[int, int] | None = None
 
     @property
     def readable(self) -> bool:
@@ -183,6 +185,21 @@ class EclRegister:
             raise ValueError(f"{self.key} is not writable")
         if not self.safe_write:
             raise ValueError(f"{self.key} is not confirmed safe to write")
+        if self.verified_write_values is not None:
+            if raw_value not in self.verified_write_values:
+                raise ValueError(
+                    f"{self.key} has no verified write value {raw_value}"
+                )
+        elif self.verified_write_range is not None:
+            minimum, maximum = self.verified_write_range
+            if not minimum <= raw_value <= maximum:
+                raise ValueError(
+                    f"{self.key} must be between {minimum} and {maximum}"
+                )
+        else:
+            raise ValueError(
+                f"{self.key} has no verified write whitelist"
+            )
         if self.raw_min is not None and raw_value < self.raw_min:
             raise ValueError(f"{self.key} must be at least {self.raw_min}")
         if self.raw_max is not None and raw_value > self.raw_max:
@@ -1350,7 +1367,6 @@ for _key, _raw in _OBSERVED_RAW.items():
     _DISPLAY_METADATA.setdefault(_key, {}).update(observed_raw_values=(_raw,))
 
 # FC06 / FC03 / display / restore tested by the user with external software.
-# This records observed values only; the integration remains read-only.
 _EXTERNAL_WRITE_TEST_VALUES: Final = {
     "display_backlight": (16, 17),
     "display_contrast": (10, 11),
@@ -1363,6 +1379,46 @@ _EXTERNAL_WRITE_TEST_VALUES: Final = {
 }
 for _key, _values in _EXTERNAL_WRITE_TEST_VALUES.items():
     _DISPLAY_METADATA[_key].update(observed_raw_values=_values)
+
+# Only these settings are exposed for writing. Numeric ranges come from the
+# ECL110 manual; enumerated values are restricted to the values physically
+# tested on the controller. All writes are verified by an immediate FC03 read.
+_VERIFIED_WRITE_METADATA: Final = {
+    "display_backlight": dict(
+        safe_write=True,
+        verified_write_range=(1, 30),
+    ),
+    "display_contrast": dict(
+        safe_write=True,
+        verified_write_range=(0, 20),
+    ),
+    "language": dict(
+        safe_write=True,
+        verified_write_values={0: "english", 2: "danish"},
+    ),
+    "daylight_saving": dict(
+        safe_write=True,
+        verified_write_values={0: "off", 1: "on"},
+    ),
+    "room_integration_time": dict(
+        safe_write=True,
+        verified_write_values={0: "off", 1: "one_second"},
+    ),
+    "optimization_basis": dict(
+        safe_write=True,
+        verified_write_values={0: "outdoor", 1: "room"},
+    ),
+    "reference_ramp": dict(
+        safe_write=True,
+        verified_write_values={0: "off", 1: "one_minute"},
+    ),
+    "boost": dict(
+        safe_write=True,
+        verified_write_values={0: "off", 1: "one_percent"},
+    ),
+}
+for _key, _metadata in _VERIFIED_WRITE_METADATA.items():
+    _DISPLAY_METADATA[_key].update(_metadata)
 
 _registers = [
     replace(register, **_DISPLAY_METADATA.get(register.key, {}))
@@ -1387,8 +1443,17 @@ WRITABLE_REGISTERS: Final = tuple(
     register for register in REGISTERS if register.writable
 )
 SAFE_WRITABLE_REGISTERS: Final = tuple(
-    register for register in WRITABLE_REGISTERS if register.safe_write
+    register
+    for register in WRITABLE_REGISTERS
+    if register.safe_write
+    and (
+        register.verified_write_values is not None
+        or register.verified_write_range is not None
+    )
 )
+SAFE_WRITABLE_REGISTERS_BY_KEY: Final = {
+    register.key: register for register in SAFE_WRITABLE_REGISTERS
+}
 # During the read-only verification phase, every named readable register is
 # exposed as a sensor. Registers whose function is unknown remain in REGISTERS
 # for documentation, but EntityPlatform.NONE prevents Home Assistant entities.
