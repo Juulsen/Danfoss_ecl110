@@ -70,7 +70,10 @@
         }
       },
       "actuator_type": {
-        "name": "Aktuatortype"
+        "name": "Aktuatortype",
+        "state": {
+          "gear": "GEAR"
+        }
       },
       "auto_reduct": {
         "name": "Udetemperaturgrænse for sænkning"
@@ -94,7 +97,10 @@
         "name": "Ur – årstal"
       },
       "daylight_saving": {
-        "name": "Automatisk sommer- og vintertid"
+        "name": "Automatisk sommer- og vintertid",
+        "state": {
+          "on": "ON"
+        }
       },
       "desired_mode": {
         "name": "Ønsket driftstilstand",
@@ -112,7 +118,10 @@
         "name": "Ønsket fremløbstemperatur S3"
       },
       "dhw_priority": {
-        "name": "Varmtvandsprioritet fra master"
+        "name": "Varmtvandsprioritet fra master",
+        "state": {
+          "off": "OFF"
+        }
       },
       "display_backlight": {
         "name": "Displayets baggrundslys (trin)"
@@ -132,7 +141,10 @@
         "name": "ECL-busadresse"
       },
       "external_override": {
-        "name": "Ekstern overstyring"
+        "name": "Ekstern overstyring",
+        "state": {
+          "off": "OFF"
+        }
       },
       "flow_temperature_max": {
         "name": "Maksimum fremløbstemperatur"
@@ -179,7 +191,10 @@
         "name": "Neutralzone Nz"
       },
       "optimization_basis": {
-        "name": "Temperaturgrundlag for optimering"
+        "name": "Temperaturgrundlag for optimering",
+        "state": {
+          "outdoor": "UDE"
+        }
       },
       "optimizer": {
         "name": "Optimeringskode"
@@ -191,13 +206,16 @@
         "name": "Proportionalbånd Xp"
       },
       "pump_exercise": {
-        "name": "Pumpemotionering"
+        "name": "Pumpemotionering",
+        "state": {
+          "on": "ON"
+        }
       },
       "pump_frost_temperature": {
         "name": "Frostgrænse for pumpestart"
       },
       "pump_heat_temperature": {
-        "name": "Ønsket fremløbstemperatur for pumpestart"
+        "name": "Pumpestop – grænse for ønsket fremløbstemperatur"
       },
       "pump_state": {
         "name": "Pumpestatus",
@@ -219,7 +237,10 @@
         "name": "Returbegrænsningens integrationstid"
       },
       "return_priority": {
-        "name": "Returbegrænsning overstyrer minimum fremløb"
+        "name": "Returbegrænsning overstyrer minimum fremløb",
+        "state": {
+          "off": "OFF"
+        }
       },
       "return_temperature_limit": {
         "name": "Returtemperaturgrænse"
@@ -231,7 +252,7 @@
         "name": "Rumpåvirkning under ønsket temperatur"
       },
       "room_integration_time": {
-        "name": "Rumreguleringens integration"
+        "name": "Rumreguleringens integrationstid"
       },
       "schedule_friday_start_1": {
         "name": "Fredag start 1"
@@ -333,7 +354,10 @@
         "name": "Temperatur S4"
       },
       "total_stop": {
-        "name": "Totalstop under sænkningsperioden"
+        "name": "Totalstop under sænkningsperioden",
+        "state": {
+          "off": "OFF"
+        }
       },
       "valve_close_signal": {
         "name": "Signal: ventil lukker",
@@ -343,7 +367,10 @@
         }
       },
       "valve_exercise": {
-        "name": "Ventilmotionering"
+        "name": "Ventilmotionering",
+        "state": {
+          "off": "OFF"
+        }
       },
       "valve_open_signal": {
         "name": "Signal: ventil åbner",
@@ -354,6 +381,48 @@
       },
       "valve_running_time": {
         "name": "Ventilmotorens fulde gangtid"
+      },
+      "room_integration_time_setting_state": {
+        "name": "Rumreguleringens integrationstid – tilstand",
+        "state": {
+          "off": "OFF",
+          "active": "Aktiv"
+        }
+      },
+      "boost_setting_state": {
+        "name": "Boost af ønsket fremløbstemperatur – tilstand",
+        "state": {
+          "off": "OFF",
+          "active": "Aktiv"
+        }
+      },
+      "reference_ramp_setting_state": {
+        "name": "Opstartsrampe for ønsket fremløb – tilstand",
+        "state": {
+          "off": "OFF",
+          "active": "Aktiv"
+        }
+      },
+      "optimizer_setting_state": {
+        "name": "Optimeringskode – tilstand",
+        "state": {
+          "off": "OFF",
+          "active": "Aktiv"
+        }
+      },
+      "motor_protection_setting_state": {
+        "name": "Aktiveringsforsinkelse for motorbeskyttelse – tilstand",
+        "state": {
+          "off": "OFF",
+          "active": "Aktiv"
+        }
+      },
+      "knee_point_setting_state": {
+        "name": "Varmekurvens knækpunkt – tilstand",
+        "state": {
+          "off": "OFF",
+          "active": "Aktiv"
+        }
       }
     }
   }
