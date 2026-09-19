@@ -1,6 +1,6 @@
 # Danfoss ECL110 Modbus for Home Assistant
 
-[![Version](https://img.shields.io/badge/version-0.2.2-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.2.3-blue.svg)](CHANGELOG.md)
 [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Custom%20Integration-41BDF5.svg)](https://www.home-assistant.io/)
 [![HACS](https://img.shields.io/badge/HACS-preparing-orange.svg)](https://www.hacs.xyz/)
 [![Communication](https://img.shields.io/badge/Modbus-RTU%20%2F%20TCP-informational.svg)](#communication)
@@ -11,7 +11,7 @@ A Home Assistant custom integration for monitoring the **Danfoss ECL Comfort 110
 The integration is developed and maintained by **Juulsen**. It is an independent community project and is not developed, supported, or endorsed by Danfoss.
 
 > [!IMPORTANT]
-> Version 0.2.2 is a read-only test release. Home Assistant cannot write settings to the controller in this version.
+> Version 0.2.3 is a read-only test release. Home Assistant cannot write settings to the controller in this version.
 
 ## Highlights
 
@@ -22,6 +22,7 @@ The integration is developed and maintained by **Juulsen**. It is an independent
 - Register map for applications 116 and 130
 - 112 source addresses preserved in the internal map
 - 85 named registers available as read-only test entities
+- Six optional OFF/Active state sensors for settings with verified OFF codes
 - 27 undocumented addresses retained as metadata but hidden from Home Assistant
 - Danish and English entity translations
 - Conservative polling designed for a shared RS485 bus
@@ -139,19 +140,39 @@ The setup flow performs a harmless read-only test of register 11200 before savin
 
 For a shared RS485 bus, keep a reasonable update interval and request delay.
 
-## Decoding in version 0.2.2
+## Decoding in version 0.2.3
 
-Parameter names, display units and numeric ranges follow the Danfoss application 116/130 operating guides (software 1.08 onward). The Modbus source was researched on software 1.06; wire scaling remains inferred where that source says TODO: FORMAT.
+Application 130 display photographs and direct Modbus readings have been compared.
+See [hardware verification and raw readings](docs/hardware-verification-2026-09-19.md)
+for the measured values, confirmed codes and remaining uncertainties.
 
-- Minimum actuator pulse: setting 10 means **200 ms**, using 20 ms per step.
-- Signed examples: 65521 becomes **-15 °C**; 65516 becomes **-2.0** for return influence.
-- Temperature differences (Xp, Nz and curve displacement) use **K**, without an absolute-temperature device class.
-- Desired S3: 321 is provisionally shown as **32.1 °C**; verify against the controller.
-- Clock year: 26 becomes **2026**.
-- Unknown OFF codes outside the documented numeric range show **unknown**. Inspect `raw_value` and `decoding_note`; do not interpret raw 9 or 29 as minutes or degrees.
-- GEAR/ABV and other unverified option codes remain raw numbers. Readings do not enable writes.
+- Room integration (3015) is a time in **seconds**, confirmed by the controller display.
+- Known option codes now show translated text such as **OFF**, **ON**, **OUT/UDE** and **GEAR**.
+- Follow-up external Modbus tests also confirmed **ROOM/RUM** (5020 raw 1) and
+  summertime **OFF** (7198 raw 0). These choices are included in both languages.
+- Unknown alternative option codes remain unknown, with the original `raw_value` available.
+- Known numeric OFF codes are 0 for 3015/5012/5013, 9 for 5014/6174 and 29 for 7162.
+- Six additional **state / tilstand** sensors show **OFF** or **Active / Aktiv**.
+  Enable these under the device's disabled entities when needed. They use the same
+  register and polling context as the corresponding numeric sensor.
+- While a setting is OFF, its numeric sensor has no numeric value (Home Assistant
+  displays unknown). Its state sensor shows OFF; its attributes identify the known
+  OFF code. Text is never inserted into a temperature, percentage or duration sensor.
+- Signed values are preserved: 65496 → −4.0, 65516 → −2.0 and 65521 → −15 °C.
+- Minimum motor pulse: controller step 10 represents 200 ms (20 ms per step).
+- Temperature differences use K without absolute-temperature conversion.
+- Desired S3 remains inferred at 0.1 °C per raw count, pending a paired display reading.
 
-These metadata changes preserve entity identifiers. Restart Home Assistant after updating; user-assigned entity names are retained.
+Existing entity identifiers are preserved. The new state sensors are disabled by
+default, as are the existing additional setting sensors. Read-only operation remains.
+Observations apply to the tested application 130; a single value does not establish
+the full valid range, every alternative code, or write support. Menu 5081 (S1 filter)
+has been observed but its Modbus address is still unknown.
+
+Eight registers have also passed user-run FC06 writes, FC03 readback, display checks
+and restoration using external Modbus software: 60057, 60058, 2027, 11197, 11014,
+11019, 11012 and 11011. This establishes the tested values only. Version 0.2.3
+does not expose writable Home Assistant entities; write support is planned separately.
 
 ## Register model
 
@@ -170,7 +191,7 @@ Each mapped register includes metadata for:
 - Confidence level
 - Safe-write status
 
-### Entity policy in version 0.2.2
+### Entity policy in version 0.2.3
 
 - S1-S4 are enabled by default.
 - All other named registers are created but disabled by default.
@@ -183,7 +204,7 @@ This design prevents the integration from polling every address continuously and
 
 ## Testing the complete register map
 
-After installing version 0.2.2:
+After installing version 0.2.3:
 
 1. Confirm that S1-S4 still update.
 2. Open the ECL110 device in Home Assistant.
