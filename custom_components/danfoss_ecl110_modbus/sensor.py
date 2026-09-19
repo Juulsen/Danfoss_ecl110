@@ -51,6 +51,7 @@ class EclSensorEntityDescription(SensorEntityDescription):
     """Home Assistant sensor description linked to an ECL register."""
 
     register: EclRegister
+    setting_state_only: bool = False
 
 
 def _sensor_device_class(
@@ -106,7 +107,9 @@ def _build_description(
         device_class=_sensor_device_class(register),
         state_class=_sensor_state_class(register),
         native_unit_of_measurement=register.unit,
-        suggested_display_precision=register.precision,
+        suggested_display_precision=(
+            None if options is not None else register.precision
+        ),
         entity_category=_entity_category(register),
         # Only ordinary sensor registers (currently S1-S4) start enabled.
         # Settings and schedules are exposed read-only for testing and can be
@@ -122,6 +125,20 @@ def _build_description(
 
 SENSOR_DESCRIPTIONS: Final = tuple(
     _build_description(register) for register in SENSOR_REGISTERS
+) + tuple(
+    EclSensorEntityDescription(
+        key=f"{register.key}_setting_state",
+        name=f"{register.name} – tilstand",
+        translation_key=f"{register.key}_setting_state",
+        device_class=SensorDeviceClass.ENUM,
+        options=["off", "active"],
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+        register=register,
+        setting_state_only=True,
+    )
+    for register in SENSOR_REGISTERS
+    if register.off_raw_values
 )
 
 
@@ -197,13 +214,14 @@ class Ecl110Sensor(
     ) -> None:
         """Initialize the ECL110 sensor."""
 
-        super().__init__(coordinator, context=description.key)
+        # Numeric and OFF-state entities subscribe to the same register key.
+        super().__init__(coordinator, context=description.register.key)
         self.entity_description = description
         self._entry = entry
 
         device_identifier = entry.unique_id or entry.entry_id
         self._attr_unique_id = (
-            f"{device_identifier}_{description.register.key}"
+            f"{device_identifier}_{description.key}"
         )
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, device_identifier)},
@@ -262,6 +280,10 @@ class Ecl110Sensor(
             return None
 
         try:
+            if self.entity_description.setting_state_only:
+                return self.entity_description.register.setting_state(
+                    int(raw_value)
+                )
             decoded = self.entity_description.register.decode(
                 int(raw_value)
             )
@@ -301,13 +323,37 @@ class Ecl110Sensor(
             "numeric_min": register.decoded_min,
             "numeric_max": register.decoded_max,
         }
+        if register.observed_raw_values:
+            attributes["observed_raw_values"] = list(register.observed_raw_values)
+            attributes["observation_application"] = "130"
+            attributes["observation_date"] = "2026-09-19"
+        if register.off_raw_values:
+            attributes["off_raw_values"] = sorted(register.off_raw_values)
 
         if raw_value is not _MISSING and raw_value is not None:
             try:
                 value = int(raw_value) & 0xFFFF
-                attributes["raw_signed_value"] = value - 65536 if value >= 32768 else value
-                if (register.decoded_min is not None or register.decoded_max is not None) and register.decode(value) is None:
-                    attributes["decoding_note"] = "Outside documented numeric range; possible unconfirmed OFF code"
+                attributes["raw_signed_value"] = (
+                    value - 65536 if value >= 32768 else value
+                )
+                if value in register.off_raw_values:
+                    attributes["setting_state"] = "off"
+                    attributes["decoding_note"] = "Confirmed OFF code; no numeric value"
+                elif register.off_raw_values:
+                    attributes["setting_state"] = register.setting_state(value)
+                decoded = register.decode(value)
+                if (
+                    register.options is not None
+                    and isinstance(decoded, str)
+                    and decoded.startswith("unknown_")
+                ):
+                    attributes["decoding_note"] = "Unconfirmed option code; raw_value preserved"
+                elif (
+                    value not in register.off_raw_values
+                    and (register.decoded_min is not None or register.decoded_max is not None)
+                    and decoded is None
+                ):
+                    attributes["decoding_note"] = "Outside documented numeric range; raw_value preserved"
             except (TypeError, ValueError):
                 pass
 
@@ -320,4 +366,3 @@ class Ecl110Sensor(
             attributes["unconfirmed"] = True
 
         return attributes
-
