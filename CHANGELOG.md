@@ -15,6 +15,29 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 - HACS metadata, validation workflows and brand assets
 - First published GitHub release
 
+## [0.2.3] - 2026-09-19
+
+### Fixed
+
+- Room integration time (3015) now has the unit seconds, based on the physical display.
+- Pump threshold (7078) is named consistently with the display's pump-stop setting.
+- Removed misleading blanket OFF-code warnings from settings without a documented OFF option.
+
+### Added
+
+- Text decoding and Danish/English translations for the observed option codes only.
+- Follow-up confirmation of 5020 raw 1 = ROOM/RUM and 7198 raw 0 = OFF.
+- Verified OFF codes for 3015, 5012, 5013, 5014, 6174 and 7162.
+- Six optional OFF/Active state sensors; numeric entities keep their units and identifiers.
+- Raw-value observation metadata and a hardware verification report including all 27 unknown-register readings.
+
+### Validation
+
+- Local decoder and sensor contract checks against supplied raw readings, unknown codes, OFF transitions and translations.
+- Display/raw evidence from application 130 is recorded separately from untested alternate codes and full ranges.
+- User confirmed external FC06 writes, FC03 readback, display values and restoration for eight registers. Positive values for room integration, ramp and boost are included in the decoder tests.
+- Home Assistant runtime and controller installation test of this version remain pending. No write support added.
+
 ## [0.2.2] - 2026-09-18
 
 ### Changed
