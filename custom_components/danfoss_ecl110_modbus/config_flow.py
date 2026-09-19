@@ -44,6 +44,7 @@ def _config_schema(defaults: dict[str, Any]) -> vol.Schema:
 
     return vol.Schema(
         {
+            vol.Optional("schedule_enabled", default=defaults.get("schedule_enabled", False)): bool,
             vol.Required(
                 CONF_HOST,
                 default=defaults.get(CONF_HOST, DEFAULT_HOST),
@@ -103,6 +104,9 @@ async def _async_validate_connection(data: dict[str, Any]) -> None:
             address=TEST_REGISTER,
             count=1,
         )
+        if data.get("schedule_enabled"):
+            for address in (1109, 1119, 1129, 1139, 1149, 1159, 1169):
+                await client.async_read_holding_registers(address=address, count=4)
     finally:
         await client.async_close()
 

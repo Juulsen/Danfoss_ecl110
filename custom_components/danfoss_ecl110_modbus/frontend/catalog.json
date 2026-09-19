@@ -1,0 +1,2025 @@
+[
+  {
+    "key": "schedule_monday_start_1",
+    "line": null,
+    "address": 1109,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Mandag start 1",
+      "en": "Monday start 1"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_monday_stop_1",
+    "line": null,
+    "address": 1110,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Mandag stop 1",
+      "en": "Monday stop 1"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_monday_start_2",
+    "line": null,
+    "address": 1111,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Mandag start 2",
+      "en": "Monday start 2"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_monday_stop_2",
+    "line": null,
+    "address": 1112,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Mandag stop 2",
+      "en": "Monday stop 2"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_tuesday_start_1",
+    "line": null,
+    "address": 1119,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Tirsdag start 1",
+      "en": "Tuesday start 1"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_tuesday_stop_1",
+    "line": null,
+    "address": 1120,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Tirsdag stop 1",
+      "en": "Tuesday stop 1"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_tuesday_start_2",
+    "line": null,
+    "address": 1121,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Tirsdag start 2",
+      "en": "Tuesday start 2"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_tuesday_stop_2",
+    "line": null,
+    "address": 1122,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Tirsdag stop 2",
+      "en": "Tuesday stop 2"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_wednesday_start_1",
+    "line": null,
+    "address": 1129,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Onsdag start 1",
+      "en": "Wednesday start 1"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_wednesday_stop_1",
+    "line": null,
+    "address": 1130,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Onsdag stop 1",
+      "en": "Wednesday stop 1"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_wednesday_start_2",
+    "line": null,
+    "address": 1131,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Onsdag start 2",
+      "en": "Wednesday start 2"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_wednesday_stop_2",
+    "line": null,
+    "address": 1132,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Onsdag stop 2",
+      "en": "Wednesday stop 2"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_thursday_start_1",
+    "line": null,
+    "address": 1139,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Torsdag start 1",
+      "en": "Thursday start 1"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_thursday_stop_1",
+    "line": null,
+    "address": 1140,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Torsdag stop 1",
+      "en": "Thursday stop 1"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_thursday_start_2",
+    "line": null,
+    "address": 1141,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Torsdag start 2",
+      "en": "Thursday start 2"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_thursday_stop_2",
+    "line": null,
+    "address": 1142,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Torsdag stop 2",
+      "en": "Thursday stop 2"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_friday_start_1",
+    "line": null,
+    "address": 1149,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Fredag start 1",
+      "en": "Friday start 1"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_friday_stop_1",
+    "line": null,
+    "address": 1150,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Fredag stop 1",
+      "en": "Friday stop 1"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_friday_start_2",
+    "line": null,
+    "address": 1151,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Fredag start 2",
+      "en": "Friday start 2"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_friday_stop_2",
+    "line": null,
+    "address": 1152,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Fredag stop 2",
+      "en": "Friday stop 2"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_saturday_start_1",
+    "line": null,
+    "address": 1159,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Lørdag start 1",
+      "en": "Saturday start 1"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_saturday_stop_1",
+    "line": null,
+    "address": 1160,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Lørdag stop 1",
+      "en": "Saturday stop 1"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_saturday_start_2",
+    "line": null,
+    "address": 1161,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Lørdag start 2",
+      "en": "Saturday start 2"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_saturday_stop_2",
+    "line": null,
+    "address": 1162,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Lørdag stop 2",
+      "en": "Saturday stop 2"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_sunday_start_1",
+    "line": null,
+    "address": 1169,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Søndag start 1",
+      "en": "Sunday start 1"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_sunday_stop_1",
+    "line": null,
+    "address": 1170,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Søndag stop 1",
+      "en": "Sunday stop 1"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_sunday_start_2",
+    "line": null,
+    "address": 1171,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Søndag start 2",
+      "en": "Sunday start 2"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "schedule_sunday_stop_2",
+    "line": null,
+    "address": 1172,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Søndag stop 2",
+      "en": "Sunday stop 2"
+    },
+    "description": {
+      "da": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres.",
+      "en": "Ugeprogrammets klokkeslæt i formatet HHMM. Minutter kan være 00 eller 30; værdien 2400 accepteres."
+    }
+  },
+  {
+    "key": "modbus_address",
+    "line": "8320",
+    "address": 2007,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Modbus-adresse",
+      "en": "Modbus address"
+    },
+    "description": {
+      "da": "ECL110-enhedens Modbus-adresse. Ændring kan afbryde kommunikationen og er derfor ikke markeret som sikker skrivning.",
+      "en": "ECL110-enhedens Modbus-adresse. Ændring kan afbryde kommunikationen og er derfor ikke markeret som sikker skrivning."
+    }
+  },
+  {
+    "key": "language",
+    "line": "8315",
+    "address": 2027,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Sprog",
+      "en": "Language"
+    },
+    "description": {
+      "da": "Displaysprog.",
+      "en": "Displaysprog."
+    }
+  },
+  {
+    "key": "pump_state",
+    "line": null,
+    "address": 4001,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Pumpestatus",
+      "en": "Pump status"
+    },
+    "description": {
+      "da": "Formodet status for pumpe til/fra.",
+      "en": "Formodet status for pumpe til/fra."
+    }
+  },
+  {
+    "key": "valve_open_signal",
+    "line": null,
+    "address": 4100,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Signal: ventil åbner",
+      "en": "Valve opening signal"
+    },
+    "description": {
+      "da": "Formodet signal for åbning af motorventilen.",
+      "en": "Formodet signal for åbning af motorventilen."
+    }
+  },
+  {
+    "key": "valve_close_signal",
+    "line": null,
+    "address": 4101,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Signal: ventil lukker",
+      "en": "Valve closing signal"
+    },
+    "description": {
+      "da": "Formodet signal for lukning af motorventilen.",
+      "en": "Formodet signal for lukning af motorventilen."
+    }
+  },
+  {
+    "key": "desired_mode",
+    "line": null,
+    "address": 4200,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Ønsket driftstilstand",
+      "en": "Desired operating mode"
+    },
+    "description": {
+      "da": "Ønsket driftstilstand: auto, komfort, sænkning eller standby.",
+      "en": "Ønsket driftstilstand: auto, komfort, sænkning eller standby."
+    }
+  },
+  {
+    "key": "actual_mode",
+    "line": null,
+    "address": 4210,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Aktuel driftstilstand",
+      "en": "Actual operating mode"
+    },
+    "description": {
+      "da": "Formodet aktuel driftstilstand.",
+      "en": "Formodet aktuel driftstilstand."
+    }
+  },
+  {
+    "key": "eca_address",
+    "line": "7010",
+    "address": 11009,
+    "applications": [
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "source-documented",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Rum- eller fjernbetjeningspanel",
+      "en": "Room panel or remote control"
+    },
+    "description": {
+      "da": "ECA-panel: 0=OFF er fysisk bekræftet; A/B-koder er fra registerkilden og ikke fysisk testet.",
+      "en": "ECA panel: 0=OFF observed on hardware; A/B codes are source-backed but not hardware-tested."
+    }
+  },
+  {
+    "key": "auto_reduct",
+    "line": "5011",
+    "address": 11010,
+    "applications": [
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "°C",
+    "scale": 1.0,
+    "minimum": -29.0,
+    "maximum": 10.0,
+    "name": {
+      "da": "Udetemperaturgrænse for sænkning",
+      "en": "Outdoor temperature threshold for setback"
+    },
+    "description": {
+      "da": "Udetemperaturgrænse for sænkning. Manual 130, side 20. Numerisk område: -29–10 °C. Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Outdoor temperature threshold for setback. Application 130 manual, page 20. Numeric range: -29–10 °C. Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "boost",
+    "line": "5012",
+    "address": 11011,
+    "applications": [
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "%",
+    "scale": 1.0,
+    "minimum": 1.0,
+    "maximum": 99.0,
+    "name": {
+      "da": "Boost af ønsket fremløbstemperatur",
+      "en": "Flow temperature boost"
+    },
+    "description": {
+      "da": "Boost af ønsket fremløbstemperatur. Manual 130, side 20. Numerisk område: 1–99 %. Modbus-dekodning udledt af manual og testværdier. Bekræftet på applikation 130: råværdi 0 = OFF.",
+      "en": "Flow temperature boost. Application 130 manual, page 20. Numeric range: 1–99 %. Modbus decoding inferred from manual and observed values. Observed on application 130: raw 0 = OFF."
+    }
+  },
+  {
+    "key": "reference_ramp",
+    "line": "5013",
+    "address": 11012,
+    "applications": [
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "min",
+    "scale": 1.0,
+    "minimum": 1.0,
+    "maximum": 99.0,
+    "name": {
+      "da": "Opstartsrampe for ønsket fremløb",
+      "en": "Flow temperature startup ramp"
+    },
+    "description": {
+      "da": "Opstartsrampe for ønsket fremløb. Manual 130, side 21. Numerisk område: 1–99 min. Modbus-dekodning udledt af manual og testværdier. Bekræftet på applikation 130: råværdi 0 = OFF.",
+      "en": "Flow temperature startup ramp. Application 130 manual, page 21. Numeric range: 1–99 min. Modbus decoding inferred from manual and observed values. Observed on application 130: raw 0 = OFF."
+    }
+  },
+  {
+    "key": "optimizer",
+    "line": "5014",
+    "address": 11013,
+    "applications": [
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": 10.0,
+    "maximum": 59.0,
+    "name": {
+      "da": "Optimeringskode",
+      "en": "Optimization code"
+    },
+    "description": {
+      "da": "Optimeringskode. Manual 130, side 21–22. Numerisk område: 10–59 . Modbus-dekodning udledt af manual og testværdier. Koden beskriver bygning, varmeanlæg og dimensioneringstemperatur; ingen tidsenhed. Bekræftet på applikation 130: råværdi 9 = OFF.",
+      "en": "Optimization code. Application 130 manual, page 21–22. Numeric range: 10–59 . Modbus decoding inferred from manual and observed values. Code describes building, heating system and design temperature; no time unit. Observed on application 130: raw 9 = OFF."
+    }
+  },
+  {
+    "key": "room_integration_time",
+    "line": "3015",
+    "address": 11014,
+    "applications": [
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "s",
+    "scale": 1.0,
+    "minimum": 1.0,
+    "maximum": 50.0,
+    "name": {
+      "da": "Rumreguleringens integrationstid",
+      "en": "Room control integration time"
+    },
+    "description": {
+      "da": "Rumreguleringens integrationstid. Numerisk område: 1–50 s. Modbus-dekodning udledt af manual og testværdier. Foto IMG_3956 viser 1 s på applikation 130. Bekræftet på applikation 130: råværdi 0 = OFF.",
+      "en": "Room control integration time. Numeric range: 1–50 s. Modbus decoding inferred from manual and observed values. Photo IMG_3956 shows 1 s on application 130. Observed on application 130: raw 0 = OFF."
+    }
+  },
+  {
+    "key": "optimization_basis",
+    "line": "5020",
+    "address": 11019,
+    "applications": [
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "hardware-tested",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Temperaturgrundlag for optimering",
+      "en": "Optimization temperature basis"
+    },
+    "description": {
+      "da": "Temperaturgrundlag for optimering. Manual 130, side 22. Kun de målte Modbus-koder er bekræftet. Displayvalg: ROOM (rumtemperatur) eller OUT (udetemperatur). Bekræftede råkoder på applikation 130: {0: 'outdoor', 1: 'room'}. Øvrige koder er ikke bekræftet.",
+      "en": "Optimization temperature basis. Application 130 manual, page 22. Only observed Modbus codes have been verified. Display options: ROOM (room temperature) or OUT (outdoor temperature). Observed raw codes on application 130: {0: 'outdoor', 1: 'room'}. Other codes are unconfirmed."
+    }
+  },
+  {
+    "key": "total_stop",
+    "line": "5021",
+    "address": 11020,
+    "applications": [
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Totalstop under sænkningsperioden",
+      "en": "Total stop during setback"
+    },
+    "description": {
+      "da": "Totalstop under sænkningsperioden. Manual 130, side 23. Kun de målte Modbus-koder er bekræftet. Bekræftede råkoder på applikation 130: {0: 'off'}. Øvrige koder er ikke bekræftet.",
+      "en": "Total stop during setback. Application 130 manual, page 23. Only observed Modbus codes have been verified. Observed raw codes on application 130: {0: 'off'}. Other codes are unconfirmed."
+    }
+  },
+  {
+    "key": "pump_exercise",
+    "line": "7022",
+    "address": 11021,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Pumpemotionering",
+      "en": "Pump exercise"
+    },
+    "description": {
+      "da": "Pumpemotionering. Manual 130, side 28. Kun de målte Modbus-koder er bekræftet. Bekræftede råkoder på applikation 130: {1: 'on'}. Øvrige koder er ikke bekræftet.",
+      "en": "Pump exercise. Application 130 manual, page 28. Only observed Modbus codes have been verified. Observed raw codes on application 130: {1: 'on'}. Other codes are unconfirmed."
+    }
+  },
+  {
+    "key": "valve_exercise",
+    "line": "7023",
+    "address": 11022,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Ventilmotionering",
+      "en": "Valve exercise"
+    },
+    "description": {
+      "da": "Ventilmotionering. Manual 130, side 28. Kun de målte Modbus-koder er bekræftet. Bekræftede råkoder på applikation 130: {0: 'off'}. Øvrige koder er ikke bekræftet.",
+      "en": "Valve exercise. Application 130 manual, page 28. Only observed Modbus codes have been verified. Observed raw codes on application 130: {0: 'off'}. Other codes are unconfirmed."
+    }
+  },
+  {
+    "key": "actuator_type",
+    "line": "7024",
+    "address": 11023,
+    "applications": [
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Aktuatortype",
+      "en": "Actuator type"
+    },
+    "description": {
+      "da": "Aktuatortype. Manual 130, side 28. Kun de målte Modbus-koder er bekræftet. Displayvalg: GEAR (gearmotor) eller ABV (termisk aktuator). Bekræftede råkoder på applikation 130: {1: 'gear'}. Øvrige koder er ikke bekræftet.",
+      "en": "Actuator type. Application 130 manual, page 28. Only observed Modbus codes have been verified. Display options: GEAR (gear motor) or ABV (thermal actuator). Observed raw codes on application 130: {1: 'gear'}. Other codes are unconfirmed."
+    }
+  },
+  {
+    "key": "return_temperature_limit",
+    "line": "4030",
+    "address": 11029,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "°C",
+    "scale": 1.0,
+    "minimum": 10.0,
+    "maximum": 110.0,
+    "name": {
+      "da": "Returtemperaturgrænse",
+      "en": "Return temperature limit"
+    },
+    "description": {
+      "da": "Returtemperaturgrænse. Manual 130, side 17. Numerisk område: 10–110 °C. Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Return temperature limit. Application 130 manual, page 17. Numeric range: 10–110 °C. Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "return_gain_max",
+    "line": "4035",
+    "address": 11034,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": null,
+    "scale": 0.1,
+    "minimum": -9.9,
+    "maximum": 9.9,
+    "name": {
+      "da": "Returpåvirkning over grænsen",
+      "en": "Return influence above limit"
+    },
+    "description": {
+      "da": "Returpåvirkning over grænsen. Manual 130, side 18. Numerisk område: -9.9–9.9 . Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Return influence above limit. Application 130 manual, page 18. Numeric range: -9.9–9.9 . Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "return_gain_min",
+    "line": "4036",
+    "address": 11035,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": null,
+    "scale": 0.1,
+    "minimum": -9.9,
+    "maximum": 9.9,
+    "name": {
+      "da": "Returpåvirkning under grænsen",
+      "en": "Return influence below limit"
+    },
+    "description": {
+      "da": "Returpåvirkning under grænsen. Manual 130, side 18. Numerisk område: -9.9–9.9 . Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Return influence below limit. Application 130 manual, page 18. Numeric range: -9.9–9.9 . Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "return_integration_time",
+    "line": "4037",
+    "address": 11036,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "s",
+    "scale": 1.0,
+    "minimum": 1.0,
+    "maximum": 50.0,
+    "name": {
+      "da": "Returbegrænsningens integrationstid",
+      "en": "Return limitation integration time"
+    },
+    "description": {
+      "da": "Returbegrænsningens integrationstid. Manual 130, side 19. Numerisk område: 1–50 s. Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Return limitation integration time. Application 130 manual, page 19. Numeric range: 1–50 s. Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "dhw_priority",
+    "line": "7052",
+    "address": 11051,
+    "applications": [
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Varmtvandsprioritet fra master",
+      "en": "DHW priority from master"
+    },
+    "description": {
+      "da": "Varmtvandsprioritet fra master. Manual 130, side 29. Kun de målte Modbus-koder er bekræftet. Bekræftede råkoder på applikation 130: {0: 'off'}. Øvrige koder er ikke bekræftet.",
+      "en": "DHW priority from master. Application 130 manual, page 29. Only observed Modbus codes have been verified. Observed raw codes on application 130: {0: 'off'}. Other codes are unconfirmed."
+    }
+  },
+  {
+    "key": "pump_frost_temperature",
+    "line": "7077",
+    "address": 11076,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "°C",
+    "scale": 1.0,
+    "minimum": -10.0,
+    "maximum": 20.0,
+    "name": {
+      "da": "Frostgrænse for pumpestart",
+      "en": "Pump frost protection threshold"
+    },
+    "description": {
+      "da": "Frostgrænse for pumpestart. Manual 130, side 29. Numerisk område: -10–20 °C. Modbus-dekodning udledt af manual og testværdier. 130 bruger udetemperaturen; 116 bruger fremløbstemperatur S3.",
+      "en": "Pump frost protection threshold. Application 130 manual, page 29. Numeric range: -10–20 °C. Modbus decoding inferred from manual and observed values. Application 130 uses outdoor temperature; 116 uses flow temperature S3."
+    }
+  },
+  {
+    "key": "pump_heat_temperature",
+    "line": "7078",
+    "address": 11077,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "°C",
+    "scale": 1.0,
+    "minimum": -20.0,
+    "maximum": 50.0,
+    "name": {
+      "da": "Pumpestop – grænse for ønsket fremløbstemperatur",
+      "en": "Pump stop – desired flow temperature threshold"
+    },
+    "description": {
+      "da": "Pumpestop: grænse for ønsket fremløbstemperatur. Manual 130, side 30. Numerisk område: -20–50 °C. Modbus-dekodning udledt af manual og testværdier. Område 130: 5–40 °C. Område 116: −20–50 °C.",
+      "en": "Pump stop: desired flow temperature threshold. Application 130 manual, page 30. Numeric range: -20–50 °C. Modbus decoding inferred from manual and observed values. Application 130 range: 5–40 °C. Application 116 range: −20–50 °C."
+    }
+  },
+  {
+    "key": "return_priority",
+    "line": "4085",
+    "address": 11084,
+    "applications": [
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Returbegrænsning overstyrer minimum fremløb",
+      "en": "Return limitation overrides minimum flow"
+    },
+    "description": {
+      "da": "Returbegrænsning overstyrer minimum fremløb. Manual 130, side 19. Kun de målte Modbus-koder er bekræftet. Bekræftede råkoder på applikation 130: {0: 'off'}. Øvrige koder er ikke bekræftet.",
+      "en": "Return limitation overrides minimum flow. Application 130 manual, page 19. Only observed Modbus codes have been verified. Observed raw codes on application 130: {0: 'off'}. Other codes are unconfirmed."
+    }
+  },
+  {
+    "key": "standby_temperature",
+    "line": "7093",
+    "address": 11092,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "°C",
+    "scale": 1.0,
+    "minimum": 5.0,
+    "maximum": 40.0,
+    "name": {
+      "da": "Ønsket fremløbstemperatur i standby",
+      "en": "Desired standby flow temperature"
+    },
+    "description": {
+      "da": "Ønsket fremløbstemperatur i standby. Manual 130, side 30. Numerisk område: 5–40 °C. Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Desired standby flow temperature. Application 130 manual, page 30. Numeric range: 5–40 °C. Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "external_override",
+    "line": "7141",
+    "address": 11140,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Ekstern overstyring",
+      "en": "External override"
+    },
+    "description": {
+      "da": "Ekstern overstyring. Manual 130, side 30. Kun de målte Modbus-koder er bekræftet. Displayvalg: OFF, SETBACK eller COMFORT. Bekræftede råkoder på applikation 130: {0: 'off'}. Øvrige koder er ikke bekræftet.",
+      "en": "External override. Application 130 manual, page 30. Only observed Modbus codes have been verified. Display options: OFF, SETBACK or COMFORT. Observed raw codes on application 130: {0: 'off'}. Other codes are unconfirmed."
+    }
+  },
+  {
+    "key": "knee_point",
+    "line": "7162",
+    "address": 11161,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "°C",
+    "scale": 1.0,
+    "minimum": 30.0,
+    "maximum": 50.0,
+    "name": {
+      "da": "Varmekurvens knækpunkt",
+      "en": "Heating curve knee point"
+    },
+    "description": {
+      "da": "Varmekurvens knækpunkt. Manual 130, side 31. Numerisk område: 30–50 °C. Modbus-dekodning udledt af manual og testværdier. Bekræftet på applikation 130: råværdi 29 = OFF.",
+      "en": "Heating curve knee point. Application 130 manual, page 31. Numeric range: 30–50 °C. Modbus decoding inferred from manual and observed values. Observed on application 130: raw 29 = OFF."
+    }
+  },
+  {
+    "key": "motor_protection",
+    "line": "6174",
+    "address": 11173,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "min",
+    "scale": 1.0,
+    "minimum": 10.0,
+    "maximum": 59.0,
+    "name": {
+      "da": "Aktiveringsforsinkelse for motorbeskyttelse",
+      "en": "Motor protection activation delay"
+    },
+    "description": {
+      "da": "Aktiveringsforsinkelse for motorbeskyttelse. Manual 130, side 25. Numerisk område: 10–59 min. Modbus-dekodning udledt af manual og testværdier. Bekræftet på applikation 130: råværdi 9 = OFF.",
+      "en": "Motor protection activation delay. Application 130 manual, page 25. Numeric range: 10–59 min. Modbus decoding inferred from manual and observed values. Observed on application 130: raw 9 = OFF."
+    }
+  },
+  {
+    "key": "heating_curve_slope",
+    "line": "2175",
+    "address": 11174,
+    "applications": [
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": null,
+    "scale": 0.1,
+    "minimum": 0.1,
+    "maximum": 4.0,
+    "name": {
+      "da": "Varmekurvens hældning",
+      "en": "Heating curve slope"
+    },
+    "description": {
+      "da": "Varmekurvens hældning. Manual 130, side 11. Numerisk område: 0.1–4 . Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Heating curve slope. Application 130 manual, page 11. Numeric range: 0.1–4 . Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "parallel_displacement",
+    "line": "2176",
+    "address": 11175,
+    "applications": [
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "K",
+    "scale": 1.0,
+    "minimum": -20.0,
+    "maximum": 20.0,
+    "name": {
+      "da": "Varmekurvens parallelforskydning",
+      "en": "Heating curve parallel displacement"
+    },
+    "description": {
+      "da": "Varmekurvens parallelforskydning. Manual 130, side 13. Numerisk område: -20–20 K. Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Heating curve parallel displacement. Application 130 manual, page 13. Numeric range: -20–20 K. Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "flow_temperature_min",
+    "line": "2177",
+    "address": 11176,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "°C",
+    "scale": 1.0,
+    "minimum": 10.0,
+    "maximum": 150.0,
+    "name": {
+      "da": "Minimum fremløbstemperatur",
+      "en": "Minimum flow temperature"
+    },
+    "description": {
+      "da": "Minimum fremløbstemperatur. Manual 130, side 13. Numerisk område: 10–150 °C. Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Minimum flow temperature. Application 130 manual, page 13. Numeric range: 10–150 °C. Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "flow_temperature_max",
+    "line": "2178",
+    "address": 11177,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "°C",
+    "scale": 1.0,
+    "minimum": 10.0,
+    "maximum": 150.0,
+    "name": {
+      "da": "Maksimum fremløbstemperatur",
+      "en": "Maximum flow temperature"
+    },
+    "description": {
+      "da": "Maksimum fremløbstemperatur. Manual 130, side 13. Numerisk område: 10–150 °C. Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Maximum flow temperature. Application 130 manual, page 13. Numeric range: 10–150 °C. Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "heating_cutout",
+    "line": "5179",
+    "address": 11178,
+    "applications": [
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "°C",
+    "scale": 1.0,
+    "minimum": 1.0,
+    "maximum": 50.0,
+    "name": {
+      "da": "Udetemperaturgrænse for varmeudkobling",
+      "en": "Outdoor temperature threshold for heating cut-out"
+    },
+    "description": {
+      "da": "Udetemperaturgrænse for varmeudkobling. Manual 130, side 24. Numerisk område: 1–50 °C. Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Outdoor temperature threshold for heating cut-out. Application 130 manual, page 24. Numeric range: 1–50 °C. Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "room_gain_max",
+    "line": "3182",
+    "address": 11181,
+    "applications": [
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": null,
+    "scale": 0.1,
+    "minimum": -9.9,
+    "maximum": 0.0,
+    "name": {
+      "da": "Rumpåvirkning over ønsket temperatur",
+      "en": "Room influence above target"
+    },
+    "description": {
+      "da": "Rumpåvirkning over ønsket temperatur. Manual 130, side 16. Numerisk område: -9.9–0 . Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Room influence above target. Application 130 manual, page 16. Numeric range: -9.9–0 . Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "room_gain_min",
+    "line": "3183",
+    "address": 11182,
+    "applications": [
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": null,
+    "scale": 0.1,
+    "minimum": 0.0,
+    "maximum": 9.9,
+    "name": {
+      "da": "Rumpåvirkning under ønsket temperatur",
+      "en": "Room influence below target"
+    },
+    "description": {
+      "da": "Rumpåvirkning under ønsket temperatur. Manual 130, side 16. Numerisk område: 0–9.9 . Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Room influence below target. Application 130 manual, page 16. Numeric range: 0–9.9 . Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "proportional_band",
+    "line": "6184",
+    "address": 11183,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "K",
+    "scale": 1.0,
+    "minimum": 1.0,
+    "maximum": 250.0,
+    "name": {
+      "da": "Proportionalbånd Xp",
+      "en": "Proportional band Xp"
+    },
+    "description": {
+      "da": "Proportionalbånd Xp. Manual 130, side 25. Numerisk område: 1–250 K. Modbus-dekodning udledt af manual og testværdier. I 116: Xp1 ved forsyningstemperatur S2 = 65 °C.",
+      "en": "Proportional band Xp. Application 130 manual, page 25. Numeric range: 1–250 K. Modbus decoding inferred from manual and observed values. In application 116: Xp1 at supply temperature S2 = 65 °C."
+    }
+  },
+  {
+    "key": "integration_time",
+    "line": "6185",
+    "address": 11184,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "s",
+    "scale": 1.0,
+    "minimum": 5.0,
+    "maximum": 999.0,
+    "name": {
+      "da": "Integrationstid Tn",
+      "en": "Integration time Tn"
+    },
+    "description": {
+      "da": "Integrationstid Tn. Manual 130, side 25. Numerisk område: 5–999 s. Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Integration time Tn. Application 130 manual, page 25. Numeric range: 5–999 s. Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "valve_running_time",
+    "line": "6186",
+    "address": 11185,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "s",
+    "scale": 1.0,
+    "minimum": 5.0,
+    "maximum": 250.0,
+    "name": {
+      "da": "Ventilmotorens fulde gangtid",
+      "en": "Valve motor full travel time"
+    },
+    "description": {
+      "da": "Ventilmotorens fulde gangtid. Manual 130, side 25. Numerisk område: 5–250 s. Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Valve motor full travel time. Application 130 manual, page 25. Numeric range: 5–250 s. Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "neutral_zone",
+    "line": "6187",
+    "address": 11186,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "K",
+    "scale": 1.0,
+    "minimum": 1.0,
+    "maximum": 9.0,
+    "name": {
+      "da": "Neutralzone Nz",
+      "en": "Neutral zone Nz"
+    },
+    "description": {
+      "da": "Neutralzone Nz. Manual 130, side 26. Numerisk område: 1–9 K. Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Neutral zone Nz. Application 130 manual, page 26. Numeric range: 1–9 K. Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "minimum_activation_time",
+    "line": "7189",
+    "address": 11188,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "manual-and-display",
+    "unit": "ms",
+    "scale": 20.0,
+    "minimum": 40.0,
+    "maximum": 1000.0,
+    "name": {
+      "da": "Minimumspuls til gearmotor",
+      "en": "Minimum gear motor pulse"
+    },
+    "description": {
+      "da": "Minimumspuls til gearmotor. Manual 130, side 31. Numerisk område: 40–1000 ms. Modbus-dekodning udledt af manual og testværdier. ECL viser trin 2–50; hvert trin er 20 ms. Trin 10 = 200 ms.",
+      "en": "Minimum gear motor pulse. Application 130 manual, page 31. Numeric range: 40–1000 ms. Modbus decoding inferred from manual and observed values. ECL displays steps 2–50, each step equals 20 ms. Step 10 = 200 ms."
+    }
+  },
+  {
+    "key": "daylight_saving",
+    "line": "7198",
+    "address": 11197,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "hardware-tested",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Automatisk sommer- og vintertid",
+      "en": "Automatic daylight saving time"
+    },
+    "description": {
+      "da": "Automatisk sommer- og vintertid. Manual 130, side 31. Kun de målte Modbus-koder er bekræftet. Bekræftede råkoder på applikation 130: {0: 'off', 1: 'on'}. Øvrige koder er ikke bekræftet.",
+      "en": "Automatic daylight saving time. Application 130 manual, page 31. Only observed Modbus codes have been verified. Observed raw codes on application 130: {0: 'off', 1: 'on'}. Other codes are unconfirmed."
+    }
+  },
+  {
+    "key": "ecl_address",
+    "line": "7199",
+    "address": 11198,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": 0.0,
+    "maximum": 15.0,
+    "name": {
+      "da": "ECL-busadresse",
+      "en": "ECL bus address"
+    },
+    "description": {
+      "da": "ECL-busadresse. Manual 130, side 31–32. Numerisk område: 0–15 . Modbus-dekodning udledt af manual og testværdier.",
+      "en": "ECL bus address. Application 130 manual, page 31–32. Numeric range: 0–15 . Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "temperature_s1",
+    "line": null,
+    "address": 11200,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": "°C",
+    "scale": 0.1,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Temperatur S1",
+      "en": "Temperature S1"
+    },
+    "description": {
+      "da": "Aktuel temperatur på følerindgang S1. Følerens fysiske funktion afhænger af ECL-applikationen.",
+      "en": "Aktuel temperatur på følerindgang S1. Følerens fysiske funktion afhænger af ECL-applikationen."
+    }
+  },
+  {
+    "key": "temperature_s2",
+    "line": null,
+    "address": 11201,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": "°C",
+    "scale": 0.1,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Temperatur S2",
+      "en": "Temperature S2"
+    },
+    "description": {
+      "da": "Aktuel temperatur på følerindgang S2. Følerens fysiske funktion afhænger af ECL-applikationen.",
+      "en": "Aktuel temperatur på følerindgang S2. Følerens fysiske funktion afhænger af ECL-applikationen."
+    }
+  },
+  {
+    "key": "temperature_s3",
+    "line": null,
+    "address": 11202,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": "°C",
+    "scale": 0.1,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Temperatur S3",
+      "en": "Temperature S3"
+    },
+    "description": {
+      "da": "Aktuel temperatur på følerindgang S3. Følerens fysiske funktion afhænger af ECL-applikationen.",
+      "en": "Aktuel temperatur på følerindgang S3. Følerens fysiske funktion afhænger af ECL-applikationen."
+    }
+  },
+  {
+    "key": "temperature_s4",
+    "line": null,
+    "address": 11203,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": "°C",
+    "scale": 0.1,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Temperatur S4",
+      "en": "Temperature S4"
+    },
+    "description": {
+      "da": "Aktuel temperatur på følerindgang S4. Følerens fysiske funktion afhænger af ECL-applikationen.",
+      "en": "Aktuel temperatur på følerindgang S4. Følerens fysiske funktion afhænger af ECL-applikationen."
+    }
+  },
+  {
+    "key": "desired_s2",
+    "line": null,
+    "address": 11228,
+    "applications": [
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Ønsket værdi S2",
+      "en": "Desired value S2"
+    },
+    "description": {
+      "da": "Ønsket aflæsning for S2 i applikation 130. Skalering og betydning er ikke bekræftet.",
+      "en": "Ønsket aflæsning for S2 i applikation 130. Skalering og betydning er ikke bekræftet."
+    }
+  },
+  {
+    "key": "desired_s3",
+    "line": null,
+    "address": 11229,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": "°C",
+    "scale": 0.1,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Ønsket fremløbstemperatur S3",
+      "en": "Desired flow temperature S3"
+    },
+    "description": {
+      "da": "Ønsket S3. Skalering 0,1 °C er udledt af råværdier 300/321; skal bekræftes på ECL-displayet.",
+      "en": "Desired S3. Scale 0.1 °C inferred from raw readings 300/321; verify against the ECL display."
+    }
+  },
+  {
+    "key": "display_backlight",
+    "line": "8310",
+    "address": 60057,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "hardware-tested",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": 1.0,
+    "maximum": 30.0,
+    "name": {
+      "da": "Displayets baggrundslys (trin)",
+      "en": "Display backlight level"
+    },
+    "description": {
+      "da": "Displayets baggrundslys (trin). Manual 130, side 33. Numerisk område: 1–30 . Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Display backlight level. Application 130 manual, page 33. Numeric range: 1–30 . Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "display_contrast",
+    "line": "8311",
+    "address": 60058,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": true,
+    "write_application": null,
+    "write_basis": "hardware-tested",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": 0.0,
+    "maximum": 20.0,
+    "name": {
+      "da": "Displayets kontrast (trin)",
+      "en": "Display contrast level"
+    },
+    "description": {
+      "da": "Displayets kontrast (trin). Manual 130, side 33. Numerisk område: 0–20 . Modbus-dekodning udledt af manual og testværdier.",
+      "en": "Display contrast level. Application 130 manual, page 33. Numeric range: 0–20 . Modbus decoding inferred from manual and observed values."
+    }
+  },
+  {
+    "key": "clock_hour",
+    "line": "1000",
+    "address": 64044,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Ur – timer",
+      "en": "Clock hour"
+    },
+    "description": {
+      "da": "ECL110-urets time.",
+      "en": "ECL110-urets time."
+    }
+  },
+  {
+    "key": "clock_minute",
+    "line": "1000",
+    "address": 64045,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Ur – minutter",
+      "en": "Clock minute"
+    },
+    "description": {
+      "da": "ECL110-urets minut.",
+      "en": "ECL110-urets minut."
+    }
+  },
+  {
+    "key": "clock_day",
+    "line": "1000",
+    "address": 64046,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Ur – dag",
+      "en": "Clock day"
+    },
+    "description": {
+      "da": "ECL110-urets dag i måneden.",
+      "en": "ECL110-urets dag i måneden."
+    }
+  },
+  {
+    "key": "clock_month",
+    "line": "1000",
+    "address": 64047,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": null,
+    "maximum": null,
+    "name": {
+      "da": "Ur – måned",
+      "en": "Clock month"
+    },
+    "description": {
+      "da": "ECL110-urets måned. Kan ikke ændres til en måned, som ikke indeholder den aktuelt valgte dag.",
+      "en": "ECL110-urets måned. Kan ikke ændres til en måned, som ikke indeholder den aktuelt valgte dag."
+    }
+  },
+  {
+    "key": "clock_year",
+    "line": "1000",
+    "address": 64048,
+    "applications": [
+      "116",
+      "130"
+    ],
+    "writable": false,
+    "write_application": null,
+    "write_basis": "disabled",
+    "unit": null,
+    "scale": 1.0,
+    "minimum": 2001,
+    "maximum": 2040,
+    "name": {
+      "da": "Ur – årstal",
+      "en": "Clock calendar year"
+    },
+    "description": {
+      "da": "Kalenderår; registeret tæller år efter 2000.",
+      "en": "Calendar year; raw register counts years since 2000."
+    }
+  }
+]

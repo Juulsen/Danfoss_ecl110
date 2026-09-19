@@ -1,381 +1,125 @@
-# Danfoss ECL110 Modbus for Home Assistant
+# ECL110 Modbus · Juulsen
 
-[![Version](https://img.shields.io/badge/version-0.2.4-blue.svg)](CHANGELOG.md)
-[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Custom%20Integration-41BDF5.svg)](https://www.home-assistant.io/)
-[![HACS](https://img.shields.io/badge/HACS-preparing-orange.svg)](https://www.hacs.xyz/)
-[![Communication](https://img.shields.io/badge/Modbus-RTU%20%2F%20TCP-informational.svg)](#communication)
-[![Status](https://img.shields.io/badge/status-limited%20verified%20write-yellow.svg)](#project-status)
+**Home Assistant control, weekly schedules and contextual help for Danfoss ECL Comfort 110.**
 
-A Home Assistant custom integration for monitoring and verified control of the **Danfoss ECL Comfort 110** through Modbus.
+Version **0.3.0** · Local Modbus TCP · Danish / English · Independent community project
 
-The integration is developed and maintained by **Juulsen**. It is an independent community project and is not developed, supported, or endorsed by Danfoss.
+Developed by **Juulsen**. This integration is not developed, supported or endorsed by Danfoss.
 
-> [!IMPORTANT]
-> [!CAUTION]
-> Version 0.2.4 can change eight explicitly verified settings. Each write uses
-> FC06 and is accepted only after an immediate FC03 readback returns the same
-> value. All other registers remain read-only.
+## What is new
 
-## Highlights
+- A dashboard card with **Overview · Settings · Schedule · Suggestions**.
+- Settings grouped by ECL menu number, with units and readable choices.
+- An information dialog with explanations, formulas, examples and manual page references.
+- Two comfort periods per day, a timeline and copying to selected weekdays.
+- Floor-heating and radiator starting suggestions with an explicit change preview.
+- A design heat-curve calculator based on the application 130 guide.
+- 22 numeric controls, 10 setting selections and one daylight-saving switch; 28 additional schedule selections are optional.
 
-- Configuration through the Home Assistant user interface
-- Local polling with no cloud dependency
-- Modbus TCP connection through an RTU-to-TCP gateway
-- Support for Modbus slave IDs and configurable connection settings
-- Register map for applications 116 and 130
-- 112 source addresses preserved in the internal map
-- 85 named registers available as read-only test entities
-- Six optional OFF/Active state sensors for settings with verified OFF codes
-- 27 undocumented addresses retained as metadata but hidden from Home Assistant
-- Danish and English entity translations
-- Conservative polling designed for a shared RS485 bus
-- Signed temperature decoding and disconnected-sensor handling
-- Register address, access type, confidence and source exposed as entity attributes
-- Eight deliberately limited writable controls verified on real hardware
+Numeric ranges added in this version use the application 130 manual and paired display/raw observations. They are **not all physically write-tested**. The eight controls introduced in 0.2.4 have been reported working by the owner. Every write is still validated, sent using FC06, and checked with an immediate FC03 readback.
 
-## Project status
+## Install / update
 
-| Area | Status |
-|---|---|
-| Modbus TCP connection | Working |
-| S1-S4 temperatures | Hardware tested |
-| Complete named register map | Ready for hardware testing |
-| Danish translation | Included |
-| English translation | Included |
-| Writing parameters | 8 verified controls |
-| HACS custom repository | Preparing |
-| HACS default repository | Not submitted |
+1. Download the [repository ZIP](https://github.com/Juulsen/Danfoss_ecl110/archive/refs/heads/main.zip).
+2. Extract it and copy the complete `custom_components/danfoss_ecl110_modbus` folder to `/config/custom_components/`, including its `frontend` subfolder.
+3. Restart Home Assistant.
+4. Open **Settings → Devices & services → ECL110 → Reconfigure**.
+5. Select the actual application: **130** for room heating, **116** for domestic hot water. Newly expanded heating writes require explicit selection of **130**; `all` does not unlock them.
+6. Enable **ECA 110 weekly schedule** only if the controller has its timer program. Setup tests reading all seven days before creating the 28 time selections together.
 
-The project prioritizes safe observation and verification. Registers documented as writable by the source remain read-only unless their behaviour has been verified on real hardware and explicitly whitelisted.
+HACS: the repository can be added as a custom integration repository where repository access and HACS validation permit. This is not a claim of inclusion in the HACS default store.
+
+## Add the dashboard card
+
+No Browser Mod or additional card dependency is needed. The integration serves its bundled files itself.
+
+Add a dashboard **resource** (JavaScript module):
+
+```text
+/ecl110-static/ecl110-card.js?v=0.3.0
+```
+
+Then add a manual card:
+
+```yaml
+type: custom:ecl110-card
+```
+
+With exactly one ECL110 device, discovery is automatic. With multiple controllers, choose one existing entity from the desired controller:
+
+```yaml
+type: custom:ecl110-card
+entity: sensor.REPLACE_WITH_YOUR_ECL110_S1_ENTITY
+# Optional: language: da
+```
+
+This is a dashboard card. Home Assistant's standard device page is not replaced or restyled. Names and entity IDs can be customized normally; discovery uses the integration's attributes rather than guessed IDs.
+
+## Daily operation
+
+**Overview:** four temperatures and operating mode.
+
+**Settings:** groups follow the ECL menu structure. Values are in display units; changing an input writes that individual value. The info button explains its purpose and provides relevant formulas. Unsupported or disabled registers appear as read-only; enable a diagnostic sensor if its current reading is needed.
+
+**Schedule:** edit two start/stop pairs, select optional copy days, then save. Editing fields alone performs no writes. Times use half-hour steps, including **24:00**, which is different from 00:00. The card accepts ordered periods within a day; equal start/stop makes a zero-length interval. Overnight periods must be split across days. The controller must be in AUTO and have the ECA 110 timer function for scheduled operation.
+
+A multi-register schedule update is **not atomic**. Writes are individually checked. On failure the operation stops and reports the number confirmed; the last attempted write may also have taken effect. Previously completed writes are not automatically rolled back. Check the controller and reload the card before retrying if communication failed. Avoid simultaneous editing from another client.
+
+**Suggestions:** the floor-heating starting suggestion is slope **0.6**, knee point **OFF**; the radiator starting suggestion is slope **1.2**, knee point **40 °C**. These come from guide examples/defaults, not a design of your installation. Only those two values change after preview and confirmation. No pump limits, return limits, maximum flow temperature or valve travel time are changed by a suggestion. Like schedules, a two-setting update can partially complete.
+
+## Help and calculations
+
+The supplied operating guides were reviewed:
+
+| Guide | Application | Reference |
+|---|---|---|
+| Weather-compensated heating | 130 | AQ188586469712en-010801, software 1.08 onward |
+| Constant domestic-hot-water control | 116 | AQ188586469032en-010701, software 1.08 onward |
+| Modbus map | 116/130 | [Ingramz/ecl110](https://github.com/Ingramz/ecl110), firmware 1.06 |
+
+The manual explains menu behaviour; it does not establish every Modbus encoding. The version difference is retained as an uncertainty, not treated as proof of compatibility.
+
+The popup covers:
+
+- Heat-curve design slope (130 pages 11–12).
+- Room influence including heat-curve slope (130 pages 14–16).
+- Return influence above/below the limit (130 pages 18–19).
+- Two-digit optimizer code (130 pages 21–22).
+- PI tuning relationships, as explanation rather than automatic tuning (130 page 27).
+- Valve travel time from stroke/speed or angle/speed (130 page 26).
+- Symmetrical neutral zone and minimum motor pulse conversion (130 pages 26, 31).
+
+The heat-curve calculator computes a **design slope**, not the exact live target including all controller influences. The guide specifies separate formulas above and below 40 °C; the calculator deliberately does not invent a formula at exactly 40 °C.
+
+## Coverage and limits
+
+112 register addresses are preserved; 85 named readable registers remain available as sensors, plus six optional OFF/Active sensors. Unknown registers stay hidden.
+
+Some items cannot honestly be called finished Modbus controls yet:
+
+- S1 filter **5081** has no confirmed register address.
+- Alternate codes for return priority, total stop, pump/valve exercise, actuator type, DHW priority and external override remain unresolved. They are not guessed as 0/1.
+- OFF codes for auto-reduction, return integration, heating cut-out, pump frost and backlight are unresolved. Their documented numeric ranges can be used; unknown OFF codes are not sent.
+- Network/bus address changes and multi-field clock setting are not exposed for writing.
+- Application 116-specific menus **6094, 6095, 6096, 6097, 6129 and 6173** need confirmed Modbus mappings. Heating presets are never offered for 116.
+- A full climate entity and direct serial RTU transport remain future work.
+
+Existing sensor IDs are retained. The three OFF/numeric controls introduced as selects in 0.2.4 remain selects, with expanded choices. No forced entity-registry cleanup is performed.
 
 ## Communication
 
-The ECL Comfort 110 communicates using Modbus RTU. A Modbus TCP gateway can be used between Home Assistant and the RS485 bus.
+Home Assistant → Modbus TCP gateway → RS485 → ECL110. Connection settings remain configurable. Source serial settings are 19200 baud, 8 data bits, even parity, 1 stop bit. The gateway serial configuration is separate from this integration.
 
-```mermaid
-flowchart LR
-    HA["Home Assistant"] -->|Modbus TCP| GW["RTU/TCP gateway"]
-    GW -->|RS485 · 19200 8E1| ECL["ECL Comfort 110"]
+Polling and setting writes share an operation lock; a completed older poll cannot overwrite a just-verified write. Reads are grouped only across adjacent named registers. Minimum/maximum flow settings are checked against a fresh reading of the opposite limit before writing.
+
+## Validation
+
+Run decoder and write-boundary tests without Home Assistant:
+
+```sh
+python -m unittest discover -s tests -v
 ```
 
-Known RTU settings from the reverse-engineered source:
+The tests cover observed raw readings, signed encoding, fractional step rejection, OFF options, translations, schedule boundaries and writes denied for unknown settings. Browser checks use simulated Home Assistant states and service calls. They do not replace installation testing against Home Assistant and the real controller.
 
-| Setting | Value |
-|---|---:|
-| Baud rate | 19200 |
-| Data bits | 8 |
-| Parity | Even |
-| Stop bits | 1 |
-| Modbus function used for reading | FC03 |
-| Register table | Holding registers |
-
-The TCP host, port and Modbus slave ID are configurable and must match the local gateway and controller.
-
-## Requirements
-
-- Home Assistant with support for custom integrations
-- Danfoss ECL Comfort 110
-- Application 116, application 130, or an installation where the application is not yet known
-- An RS485-to-Modbus-TCP gateway
-- Correct RS485 wiring and serial configuration
-- Network access from Home Assistant to the gateway
-
-## Installation
-
-### Manual installation
-
-Manual installation is currently recommended while the integration is being hardware-tested.
-
-1. Download the repository as a ZIP file.
-2. Extract the archive.
-3. Copy this directory:
-
-```text
-custom_components/danfoss_ecl110_modbus
-```
-
-to:
-
-```text
-/config/custom_components/danfoss_ecl110_modbus
-```
-
-The resulting structure must be:
-
-```text
-/config/custom_components/danfoss_ecl110_modbus/
-├── __init__.py
-├── config_flow.py
-├── const.py
-├── coordinator.py
-├── manifest.json
-├── modbus_client.py
-├── number.py
-├── registers.py
-├── select.py
-├── sensor.py
-├── switch.py
-└── translations/
-    ├── da.json
-    └── en.json
-```
-
-4. Restart Home Assistant.
-5. Open **Settings → Devices & services**.
-6. Select **Add integration**.
-7. Search for **Danfoss ECL110 Modbus**.
-
-### HACS
-
-HACS packaging is being prepared. Until the repository is public and has a published release, use manual installation.
-
-When HACS support is released, this repository will be installable as a custom integration repository.
-
-## Configuration
-
-The setup flow performs a harmless read-only test of register 11200 before saving the configuration.
-
-| Field | Description | Default |
-|---|---|---:|
-| Host | Modbus TCP gateway address | Local gateway address |
-| Port | Modbus TCP port | `502` |
-| Modbus slave ID | ECL110 address on the RS485 bus | Configurable |
-| Application | `116`, `130`, or `all` | `all` |
-| Update interval | Seconds between polls | `15` |
-| Timeout | Communication timeout in seconds | `5` |
-| Request delay | Pause between Modbus requests | `0.10` |
-
-For a shared RS485 bus, keep a reasonable update interval and request delay.
-
-## Verified controls in version 0.2.4
-
-| Home Assistant control | ECL menu | Register | Allowed values |
-|---|---:|---:|---|
-| Display backlight | 8310 | 60057 | 1–30 |
-| Display contrast | 8311 | 60058 | 0–20 |
-| Language | 8315 | 2027 | English / Danish |
-| Automatic daylight saving | 7198 | 11197 | OFF / ON |
-| Room integration time | 3015 | 11014 | OFF / 1 second |
-| Optimization basis | 5020 | 11019 | OUT / ROOM |
-| Reference ramp | 5013 | 11012 | OFF / 1 minute |
-| Boost | 5012 | 11011 | OFF / 1 % |
-
-The complete manual range is enabled only for backlight and contrast. The six
-remaining controls expose only values physically tested with FC06, FC03,
-display confirmation and restoration. Unsupported values are rejected before
-communication. The controller acknowledgement and readback are both checked.
-
-## Decoding in version 0.2.4
-
-Application 130 display photographs and direct Modbus readings have been compared.
-See [hardware verification and raw readings](docs/hardware-verification-2026-09-19.md)
-for the measured values, confirmed codes and remaining uncertainties.
-
-- Room integration (3015) is a time in **seconds**, confirmed by the controller display.
-- Known option codes now show translated text such as **OFF**, **ON**, **OUT/UDE** and **GEAR**.
-- Follow-up external Modbus tests also confirmed **ROOM/RUM** (5020 raw 1) and
-  summertime **OFF** (7198 raw 0). These choices are included in both languages.
-- Unknown alternative option codes remain unknown, with the original `raw_value` available.
-- Known numeric OFF codes are 0 for 3015/5012/5013, 9 for 5014/6174 and 29 for 7162.
-- Six additional **state / tilstand** sensors show **OFF** or **Active / Aktiv**.
-  Enable these under the device's disabled entities when needed. They use the same
-  register and polling context as the corresponding numeric sensor.
-- While a setting is OFF, its numeric sensor has no numeric value (Home Assistant
-  displays unknown). Its state sensor shows OFF; its attributes identify the known
-  OFF code. Text is never inserted into a temperature, percentage or duration sensor.
-- Signed values are preserved: 65496 → −4.0, 65516 → −2.0 and 65521 → −15 °C.
-- Minimum motor pulse: controller step 10 represents 200 ms (20 ms per step).
-- Temperature differences use K without absolute-temperature conversion.
-- Desired S3 remains inferred at 0.1 °C per raw count, pending a paired display reading.
-
-Existing entity identifiers are preserved. The new state sensors are disabled by
-default, as are the existing additional setting sensors. Read-only operation remains.
-Observations apply to the tested application 130; a single value does not establish
-the full valid range, every alternative code, or write support. Menu 5081 (S1 filter)
-has been observed but its Modbus address is still unknown.
-
-Eight registers have also passed user-run FC06 writes, FC03 readback, display checks
-and restoration using external Modbus software: 60057, 60058, 2027, 11197, 11014,
-11019, 11012 and 11011. Version 0.2.4 exposes only those verified controls.
-
-## Register model
-
-The register map is based on the reverse-engineered [Ingramz/ecl110](https://github.com/Ingramz/ecl110) project for application 116/130 and software version 1.06.
-
-Each mapped register includes metadata for:
-
-- Modbus address
-- Holding-register type
-- Function code
-- Read/write indication from the source
-- Application compatibility
-- Signed or unsigned 16-bit decoding
-- Scaling and unit
-- ECL menu line when known
-- Confidence level
-- Safe-write status
-
-### Entity policy in version 0.2.4
-
-- S1-S4 are enabled by default.
-- All other named registers are created but disabled by default.
-- Unknown addresses are not created as Home Assistant entities.
-- Enabling an entity adds its register to the polling set.
-- Adjacent registers are grouped into bounded read blocks.
-- Writable controls are configuration entities and use the same shared polling coordinator.
-- Registers without an explicit write whitelist cannot be written by the integration.
-- Undocumented gaps are not read as part of a block.
-
-This design prevents the integration from polling every address continuously and reduces load on slower or shared RTU networks.
-
-## Testing the complete register map
-
-After installing version 0.2.4:
-
-1. Confirm that S1-S4 still update.
-2. Open the ECL110 device in Home Assistant.
-3. Open **Entities** and filter for disabled entities.
-4. Enable 5-10 entities at a time.
-5. Reload the integration.
-6. Compare values with the ECL110 display and menu.
-7. Check the Home Assistant log for Modbus exception responses.
-
-A useful first test group is:
-
-- Modbus address
-- Language
-- Desired operating mode
-- Clock hour
-- Clock minute
-- Clock day
-- Clock month
-- Clock year
-
-Do not enable all entities at once on a shared RS485 bus.
-
-## Temperature handling
-
-S1-S4 are decoded as signed 16-bit values with a scale of 0.1 °C.
-
-The raw value `1920`, corresponding to 192.0 °C, is treated as a disconnected sensor and displayed as unknown.
-
-The physical purpose of S1-S4 depends on the active ECL application and the installation wiring.
-
-## Languages
-
-The integration currently includes:
-
-- Danish (`da`)
-- English (`en`)
-
-English is the fallback when a Home Assistant language does not have a dedicated translation file.
-
-Additional languages can be added after the register names and behaviour are confirmed by hardware testing.
-
-## Troubleshooting
-
-### Integration is not shown
-
-Verify that `manifest.json` is located directly at:
-
-```text
-/config/custom_components/danfoss_ecl110_modbus/manifest.json
-```
-
-Restart Home Assistant and refresh the browser.
-
-### Cannot connect to the gateway
-
-Check:
-
-- Gateway IP address and TCP port
-- Network/VLAN routing
-- That the gateway is listening for Modbus TCP connections
-- That another client is not locking the serial interface
-
-### Gateway connects but ECL110 does not respond
-
-Check:
-
-- Modbus slave ID
-- RS485 A/B polarity
-- Common reference/GND where required
-- 19200 baud, 8 data bits, even parity and 1 stop bit
-- RTU bus termination and biasing
-- That each device on the bus has a unique address
-
-### Newly enabled entity remains unavailable
-
-Reload the integration after enabling the entity. If it still remains unavailable, inspect the Home Assistant log for an illegal-address or timeout response.
-
-The register may be application-specific or unsupported by the installed firmware.
-
-### Old “Unknown register” entities remain
-
-Entities created by an older integration version can remain in Home Assistant's entity registry. Delete those unavailable legacy entities manually, or remove and re-add the integration for a clean registry.
-
-## Safety and limitations
-
-- The register source is reverse-engineered and not official Danfoss documentation.
-- Application and firmware differences may change register behaviour.
-- Write support remains disabled until each parameter has been verified.
-- Changing heating-controller parameters can affect comfort, energy use and frost protection.
-- Home Assistant must not be the only protection mechanism for safety-critical heating functions.
-- Always preserve the ECL110's normal local control and protection functions during testing.
-
-## Roadmap
-
-- [x] Modbus TCP client and UI configuration
-- [x] Initial S1-S4 hardware test
-- [x] Full source register map
-- [x] Danish and English entity translations
-- [x] Read-only staged polling
-- [ ] Hardware verification of the 85 named entities
-- [ ] Confirm scaling and limits for writable parameters
-- [ ] Add `number`, `select`, `switch` and time-control platforms
-- [ ] Add diagnostics export
-- [ ] Add HACS metadata, validation actions and brand assets
-- [ ] Publish the first GitHub release
-- [ ] Submit for HACS inclusion
-
-## Project structure
-
-```text
-custom_components/danfoss_ecl110_modbus/
-├── __init__.py          # Integration lifecycle
-├── config_flow.py       # Home Assistant setup flow
-├── const.py             # Constants and defaults
-├── coordinator.py       # Poll scheduling and read blocks
-├── manifest.json        # Home Assistant integration metadata
-├── modbus_client.py     # Serialized Modbus TCP client
-├── registers.py         # Register definitions and decoding
-├── sensor.py            # Read-only Home Assistant entities
-└── translations/       # User-interface translations
-```
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for version history and upgrade notes.
-
-## Issues and contributions
-
-Use [GitHub Issues](https://github.com/Juulsen/Danfoss_ecl110/issues) for:
-
-- Reproducible communication errors
-- Confirmed register values
-- Application 116/130 differences
-- Translation corrections
-- Feature proposals
-
-When reporting a register issue, include the register address, ECL application, firmware version, raw value and expected display value when possible.
-
-## Credits
-
-- Developed and maintained by **Juulsen**
-- Register research based on [Ingramz/ecl110](https://github.com/Ingramz/ecl110)
-- Built for [Home Assistant](https://www.home-assistant.io/)
-- Distribution preparation for [HACS](https://www.hacs.xyz/)
-
-## Trademark notice
-
-Danfoss and ECL Comfort are trademarks of their respective owner. Their names are used only to identify compatible hardware. This independent project is not affiliated with, endorsed by, or supported by Danfoss.
+See [CHANGELOG.md](CHANGELOG.md) for version history and [hardware observations](docs/hardware-verification-2026-09-19.md) for the earlier measurement record.

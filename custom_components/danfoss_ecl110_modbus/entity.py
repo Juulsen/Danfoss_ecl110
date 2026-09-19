@@ -53,6 +53,7 @@ class Ecl110WritableEntity(CoordinatorEntity[Ecl110DataUpdateCoordinator]):
 
         super().__init__(coordinator, context=register.key)
         self.register = register
+        self._entry = entry
         self._attr_unique_id = (
             f"{entry.unique_id or entry.entry_id}_{register.key}_{platform_suffix}"
         )
@@ -77,6 +78,22 @@ class Ecl110WritableEntity(CoordinatorEntity[Ecl110DataUpdateCoordinator]):
         """Return the current raw register value."""
 
         return self.coordinator.register_value(self.register.key)
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Allow the dashboard to discover controls without guessing IDs."""
+        r = self.register
+        return {
+            "ecl_device": self._entry.entry_id,
+            "ecl_application": self.coordinator.application,
+            "register_key": r.key,
+            "ecl_line": r.ecl_line,
+            "modbus_register": r.address,
+            "raw_value": self.raw_value,
+            "write_basis": r.write_basis,
+            "description_da": r.description,
+            "description_en": r.description_en,
+        }
 
     async def async_write_raw(self, raw_value: int) -> None:
         """Write a validated raw value and surface a friendly HA error."""

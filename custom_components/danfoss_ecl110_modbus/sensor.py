@@ -308,6 +308,8 @@ class Ecl110Sensor(
         raw_value = self._raw_value()
 
         attributes: dict[str, Any] = {
+            "ecl_device": self._entry.entry_id,
+            "register_key": register.key,
             "modbus_register": register.address,
             "register_type": register.register_type.value,
             "function_code": register.function_code,

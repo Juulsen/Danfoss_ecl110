@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
+import asyncio
 from dataclasses import dataclass
 from datetime import timedelta
 import logging
@@ -120,6 +121,7 @@ class Ecl110DataUpdateCoordinator(
             always_update=False,
         )
         self.client = client
+        self._operation_lock = asyncio.Lock()
         self.application = (
             None
             if application in (None, APPLICATION_ALL)
@@ -162,6 +164,11 @@ class Ecl110DataUpdateCoordinator(
 
     async def _async_update_data(self) -> CoordinatorData:
         """Read active registers and expose raw values by register key."""
+        async with self._operation_lock:
+            return await self._async_read_data()
+
+    async def _async_read_data(self) -> CoordinatorData:
+        """Read a complete poll without interleaving setting writes."""
 
         requested = self._requested_registers()
         blocks = build_read_blocks(requested)
@@ -214,9 +221,25 @@ class Ecl110DataUpdateCoordinator(
 
     async def async_write_register(self, key: str, raw_value: int) -> int:
         """Validate, write and publish one verified register value."""
+        async with self._operation_lock:
+            return await self._async_write_register(key, raw_value)
+
+    async def _async_write_register(self, key: str, raw_value: int) -> int:
+        """Write under the shared poll/write operation lock."""
 
         register = REGISTERS_BY_KEY[key]
+        if not register.supports_application(self.application):
+            raise ValueError("Register does not belong to this application")
+        if register.write_application and self.application != register.write_application:
+            raise ValueError(f"Select application {register.write_application} before writing")
         register.validate_raw_write(raw_value)
+        if key in ("flow_temperature_min", "flow_temperature_max"):
+            other_key = "flow_temperature_max" if key.endswith("min") else "flow_temperature_min"
+            other = REGISTERS_BY_KEY[other_key]
+            other_raw = (await self.client.async_read_holding_registers(address=other.address))[0]
+            if ((key.endswith("min") and raw_value > other_raw)
+                    or (key.endswith("max") and raw_value < other_raw)):
+                raise ValueError("Minimum flow temperature must not exceed maximum")
         read_back = await self.client.async_write_holding_register(
             address=register.address,
             value=raw_value,

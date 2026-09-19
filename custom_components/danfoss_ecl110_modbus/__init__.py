@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import timedelta
 from typing import Any
+from pathlib import Path
+from homeassistant.components.http import StaticPathConfig
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TIMEOUT
@@ -42,7 +44,10 @@ type Ecl110ConfigEntry = ConfigEntry[Ecl110RuntimeData]
 async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
     """Set up the integration namespace."""
 
-    del hass, config
+    del config
+    await hass.http.async_register_static_paths([
+        StaticPathConfig("/ecl110-static", str(Path(__file__).parent / "frontend"), False)
+    ])
     return True
 
 

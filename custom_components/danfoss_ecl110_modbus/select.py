@@ -17,12 +17,9 @@ from .entity import (
 from .registers import SAFE_WRITABLE_REGISTERS_BY_KEY, EclRegister
 
 PARALLEL_UPDATES: Final = 0
-SELECT_KEYS: Final = (
-    "language",
-    "room_integration_time",
-    "optimization_basis",
-    "reference_ramp",
-    "boost",
+SELECT_KEYS: Final = tuple(
+    key for key, r in SAFE_WRITABLE_REGISTERS_BY_KEY.items()
+    if r.verified_write_values is not None and key != "daylight_saving"
 )
 
 
@@ -40,6 +37,9 @@ async def async_setup_entry(
         Ecl110Select(coordinator, entry, SAFE_WRITABLE_REGISTERS_BY_KEY[key])
         for key in SELECT_KEYS
         if SAFE_WRITABLE_REGISTERS_BY_KEY[key].supports_application(application)
+        and (not SAFE_WRITABLE_REGISTERS_BY_KEY[key].write_application
+             or SAFE_WRITABLE_REGISTERS_BY_KEY[key].write_application == application)
+        and (not key.startswith("schedule_") or entry.data.get("schedule_enabled", False))
     )
 
 

@@ -17,7 +17,10 @@ from .entity import (
 from .registers import SAFE_WRITABLE_REGISTERS_BY_KEY, EclRegister
 
 PARALLEL_UPDATES: Final = 0
-NUMBER_KEYS: Final = ("display_backlight", "display_contrast")
+NUMBER_KEYS: Final = tuple(
+    key for key, r in SAFE_WRITABLE_REGISTERS_BY_KEY.items()
+    if r.verified_write_range is not None and r.verified_write_values is None
+)
 
 
 async def async_setup_entry(
@@ -34,6 +37,8 @@ async def async_setup_entry(
         Ecl110Number(coordinator, entry, SAFE_WRITABLE_REGISTERS_BY_KEY[key])
         for key in NUMBER_KEYS
         if SAFE_WRITABLE_REGISTERS_BY_KEY[key].supports_application(application)
+        and (not SAFE_WRITABLE_REGISTERS_BY_KEY[key].write_application
+             or SAFE_WRITABLE_REGISTERS_BY_KEY[key].write_application == application)
     )
 
 
@@ -53,19 +58,20 @@ class Ecl110Number(Ecl110WritableEntity, NumberEntity):
             platform_suffix="number",
         )
         minimum, maximum = register.verified_write_range or (0, 0)
-        self._attr_native_min_value = float(minimum)
-        self._attr_native_max_value = float(maximum)
+        self._attr_native_min_value = minimum * register.scale + register.offset
+        self._attr_native_max_value = maximum * register.scale + register.offset
+        self._attr_native_step = register.scale
+        self._attr_native_unit_of_measurement = register.unit
         self._attr_translation_key = f"{register.key}_control"
 
     @property
     def native_value(self) -> float | None:
         """Return the current numeric value."""
 
-        return float(self.raw_value) if self.raw_value is not None else None
+        value = self.register.decode(self.raw_value)
+        return float(value) if isinstance(value, (int, float)) else None
 
     async def async_set_native_value(self, value: float) -> None:
         """Write an integer value to the controller."""
 
-        if not float(value).is_integer():
-            raise ValueError("ECL110 accepts whole-number values only")
-        await self.async_write_raw(int(value))
+        await self.async_write_raw(self.register.encode(float(value)))

@@ -15,6 +15,33 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 - HACS metadata, validation workflows and brand assets
 - First published GitHub release
 
+## [0.3.0] - 2026-09-19
+
+### Added
+
+- Bundled dashboard card with overview, grouped settings, weekly schedules and suggestions.
+- Danish/English manual explanations, formulas and examples in information dialogs.
+- Expanded application 130 numeric ranges, signed encoding and register-step validation.
+- Source-supported mode, ECA panel and language options; known OFF/numeric controls retain their select IDs.
+- Optional seven-day schedule with half-hour choices including 24:00, staged editing and copying to selected days.
+- Schedule enablement in the config flow with read checks before activation.
+- Previewed floor/radiator starting suggestions limited to slope and knee point.
+- Heat-curve design calculator using the application 130 manual formulas.
+
+### Fixed
+
+- Reject 24:30 as an invalid end-of-day time.
+- Serialize complete polls against writes to avoid publishing stale pre-write data.
+- Check minimum/maximum flow constraints against the controller before writing.
+
+### Scope and validation
+
+- The owner reported the eight 0.2.4 HA write controls working.
+- Newly expanded ranges are manual/display-supported, not claimed individually hardware write-tested.
+- Unknown addresses, unresolved option/OFF codes, bus-address changes and clock writes remain unavailable.
+- Added regression checks for signed values, steps, ranges and schedule times; card browser checks use simulated HA state.
+- Real HA/controller testing of this new version is pending. Schedule/profile saves can partially complete on communication failure and report this explicitly.
+
 ## [0.2.4] - 2026-09-19
 
 ### Added
@@ -169,4 +196,5 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 - [0.1.0](https://github.com/Juulsen/Danfoss_ecl110/releases/tag/v0.1.0)
 
 > Release links become active after the corresponding GitHub releases are published.
+
 

@@ -12,6 +12,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
 from enum import StrEnum
+from math import isfinite
 from typing import Final, Mapping
 
 SOURCE_URL: Final = "https://github.com/Ingramz/ecl110"
@@ -106,6 +107,24 @@ class EclRegister:
     safe_write: bool = False
     verified_write_values: Mapping[int, str] | None = None
     verified_write_range: tuple[int, int] | None = None
+    write_basis: str = "disabled"
+    write_application: str | None = None
+
+    def encode(self, value: float) -> int:
+        """Encode physical units without truncating fractional register steps."""
+        if not isfinite(value):
+            raise ValueError("Value must be finite")
+        raw = (value - self.offset) / self.scale
+        if abs(raw - round(raw)) > 1e-7:
+            raise ValueError(f"Value must follow step {self.scale}")
+        integer = round(raw)
+        lower = -32768 if self.data_type is RegisterDataType.INT16 else 0
+        upper = 32767 if self.data_type is RegisterDataType.INT16 else 65535
+        if not lower <= integer <= upper:
+            raise ValueError("Value exceeds the register representation")
+        wire = integer & 0xFFFF
+        self.validate_raw_write(wire)
+        return wire
 
     @property
     def readable(self) -> bool:
@@ -151,7 +170,7 @@ class EclRegister:
 
         if self.value_format is ValueFormat.HHMM:
             hours, minutes = divmod(value, 100)
-            if 0 <= hours <= 24 and minutes in (0, 30):
+            if (0 <= hours < 24 and minutes in (0, 30)) or value == 2400:
                 return f"{hours:02d}:{minutes:02d}"
             return None
 
@@ -185,6 +204,11 @@ class EclRegister:
             raise ValueError(f"{self.key} is not writable")
         if not self.safe_write:
             raise ValueError(f"{self.key} is not confirmed safe to write")
+        if type(raw_value) is not int or not 0 <= raw_value <= 65535:
+            raise ValueError("Raw value must be an unsigned 16-bit integer")
+        signed = raw_value
+        if self.data_type is RegisterDataType.INT16 and signed >= 32768:
+            signed -= 65536
         if self.verified_write_values is not None:
             if raw_value not in self.verified_write_values:
                 raise ValueError(
@@ -192,7 +216,7 @@ class EclRegister:
                 )
         elif self.verified_write_range is not None:
             minimum, maximum = self.verified_write_range
-            if not minimum <= raw_value <= maximum:
+            if not minimum <= signed <= maximum:
                 raise ValueError(
                     f"{self.key} must be between {minimum} and {maximum}"
                 )
@@ -200,15 +224,15 @@ class EclRegister:
             raise ValueError(
                 f"{self.key} has no verified write whitelist"
             )
-        if self.raw_min is not None and raw_value < self.raw_min:
+        if self.raw_min is not None and signed < self.raw_min:
             raise ValueError(f"{self.key} must be at least {self.raw_min}")
-        if self.raw_max is not None and raw_value > self.raw_max:
+        if self.raw_max is not None and signed > self.raw_max:
             raise ValueError(f"{self.key} must be at most {self.raw_max}")
         if self.options is not None and raw_value not in self.options:
             raise ValueError(f"{self.key} has unsupported value {raw_value}")
         if self.value_format is ValueFormat.HHMM:
             hours, minutes = divmod(raw_value, 100)
-            if not (0 <= hours <= 24 and minutes in (0, 30)):
+            if not ((0 <= hours < 24 and minutes in (0, 30)) or raw_value == 2400):
                 raise ValueError(
                     f"{self.key} must use HHMM with minutes 00 or 30"
                 )
@@ -1418,7 +1442,58 @@ _VERIFIED_WRITE_METADATA: Final = {
     ),
 }
 for _key, _metadata in _VERIFIED_WRITE_METADATA.items():
-    _DISPLAY_METADATA[_key].update(_metadata)
+    _DISPLAY_METADATA[_key].update(_metadata, write_basis="hardware-tested")
+
+# Numeric ranges are documented in the application 130 operating guide.
+# Scaling is based on paired display/raw readings. This is source-supported
+# expansion, NOT a claim that every value has been physically write-tested.
+_DOCUMENTED_NUMBERS = (
+    "heating_curve_slope", "parallel_displacement", "flow_temperature_min",
+    "flow_temperature_max", "room_gain_max", "room_gain_min", "auto_reduct",
+    "return_temperature_limit", "return_gain_max", "return_gain_min",
+    "return_integration_time", "heating_cutout", "proportional_band",
+    "integration_time", "valve_running_time", "neutral_zone",
+    "pump_frost_temperature", "pump_heat_temperature", "standby_temperature",
+    "minimum_activation_time",
+)
+for _key in _DOCUMENTED_NUMBERS:
+    _m = _DISPLAY_METADATA[_key]
+    _low, _high = _m["decoded_min"], _m["decoded_max"]
+    if _key == "pump_heat_temperature":
+        _low, _high = 5, 40
+    _m.update(safe_write=True, write_basis="manual-and-display",
+              write_application="130",
+              verified_write_range=(round(_low / _m["scale"]),
+                                    round(_high / _m["scale"])))
+
+# Preserve the select entity identifiers from 0.2.4; extend their options.
+for _key in ("room_integration_time", "boost", "reference_ramp",
+             "optimizer", "motor_protection", "knee_point"):
+    _m = _DISPLAY_METADATA[_key]
+    _values = {raw: "off" for raw in _m["off_raw_values"]}
+    _suffix = {"room_integration_time": " s", "boost": " %",
+               "reference_ramp": " min", "motor_protection": " min",
+               "knee_point": " °C"}.get(_key, "")
+    _values.update({raw: f"{raw}{_suffix}" for raw in
+                   range(int(_m["decoded_min"]), int(_m["decoded_max"]) + 1)})
+    if _key == "room_integration_time": _values[1] = "one_second"
+    if _key == "reference_ramp": _values[1] = "one_minute"
+    if _key == "boost": _values[1] = "one_percent"
+    _m.update(safe_write=True, write_basis="manual-and-display",
+              write_application="130", verified_write_values=_values)
+
+for _r in _registers:
+    if _r.key.startswith("schedule_"):
+        _values = {h * 100 + m: f"{h:02d}:{m:02d}"
+                   for h in range(24) for m in (0, 30)}
+        _values[2400] = "24:00"
+        _DISPLAY_METADATA[_r.key] = dict(
+            safe_write=True, verified_write_values=_values,
+            write_basis="source-documented", write_application=None)
+    elif _r.key in ("desired_mode", "eca_address", "language"):
+        _DISPLAY_METADATA.setdefault(_r.key, {}).update(
+            safe_write=True, verified_write_values=_r.options,
+            write_basis="source-documented")
 
 _registers = [
     replace(register, **_DISPLAY_METADATA.get(register.key, {}))
