@@ -1,336 +1,584 @@
 {
   "2175": {
     "page130": "11–12",
-    "da": "Varmekurvens hældning bestemmer hvor meget fremløbet stiger, når det bliver koldere ude. Justér især hældningen ved problemer i koldt vejr. Gulvvarme nævnes med typisk hældning 0,6; det er et udgangspunkt, ikke en dimensionering.",
-    "en": "The heat curve slope controls how strongly flow temperature rises as outdoor temperature falls. Adjust it primarily for cold-weather errors. The guide gives 0.6 as a typical floor-heating starting point, not a design value.",
-    "formula": "Tflow > 40 °C: S = (Tflow − 25) / (2,5 × Troom − Tout − 30). Tflow < 40 °C: S = (Tflow − 20) / [1,3 × (2,5 × Troom − Tout − 30)].",
-    "example": "80 °C / −12 °C / 20 °C → S ≈ 1,7. 35 °C / −20 °C / 21 °C → S ≈ 0,3."
+    "da": "Bestemmer, hvor meget varmere vand der sendes ud til varmen, når temperaturen udenfor falder.",
+    "en": "Controls how much hotter the water sent to your heating becomes as the weather gets colder.",
+    "effect": {
+      "da": "En højere værdi giver især mere varme på kolde dage. En lavere værdi giver mindre.",
+      "en": "A higher value provides more heat especially on cold days. A lower value provides less."
+    },
+    "example": {
+      "da": "Er huset passende varmt i mildt vejr, men for koldt når det fryser, kan hældningen være for lav. Ændr lidt ad gangen, og giv huset tid til at reagere.",
+      "en": "If your home is comfortable in mild weather but cold in freezing weather, the slope may be too low. Make small changes and allow the house time to respond."
+    },
+    "note": {
+      "da": "Beregningen hjælper med valg af hældning ud fra anlæggets dimensionering. Den viser ikke den aktuelle fremløbstemperatur. Formlerne gælder over eller under 40 °C; præcis 40 °C understøttes ikke.",
+      "en": "The calculation helps choose a slope from the system design. It does not show the current flow temperature. The formulas apply above or below 40 °C; exactly 40 °C is not supported."
+    },
+    "formula": {
+      "da": "Over 40 °C: hældning = (fremløb − 25) / (2,5 × rum − ude − 30).\nUnder 40 °C: hældning = (fremløb − 20) / [1,3 × (2,5 × rum − ude − 30)].\nAlle temperaturer er dimensioneringsværdier i °C.",
+      "en": "Above 40 °C: slope = (flow − 25) / (2.5 × room − outdoor − 30).\nBelow 40 °C: slope = (flow − 20) / [1.3 × (2.5 × room − outdoor − 30)].\nAll temperatures are design values in °C."
+    }
   },
   "2176": {
     "page130": "13",
-    "da": "Flytter kurven op eller ned. Brug små ændringer, når alle rum generelt er for kolde eller varme, især i mildt vejr.",
-    "en": "Moves the heating curve up or down. Use small changes for a general temperature offset, especially in mild weather.",
-    "formula": "",
-    "example": ""
+    "da": "Flytter hele varmekurven op eller ned. Det ændrer temperaturen på vandet til varmeanlægget både i mildt og koldt vejr.",
+    "en": "Moves the whole heat curve up or down, changing the water temperature sent to the heating in both mild and cold weather.",
+    "effect": {
+      "da": "Hæv lidt, hvis huset generelt er for koldt. Sænk lidt, hvis det generelt er for varmt.",
+      "en": "Increase slightly if the home is generally too cold. Decrease slightly if it is generally too warm."
+    },
+    "example": {
+      "da": "+2 hæver kurven med 2 grader. Det betyder ikke, at rumtemperaturen stiger med 2 grader.",
+      "en": "+2 raises the curve by 2 degrees. It does not mean the room temperature rises by 2 degrees."
+    }
   },
   "2177": {
     "page130": "13",
-    "da": "Nedre grænse for ønsket fremløb. En høj minimumsgrænse kan forhindre effektiv natsænkning. Maksimumsgrænsen har højere prioritet.",
-    "en": "Lower limit for desired flow temperature. A high minimum may prevent effective setback. The maximum limit takes priority.",
-    "formula": "",
-    "example": "",
-    "page116": "10"
+    "page116": "10",
+    "da": "Den laveste temperatur regulatoren normalt må ønske på vandet, der sendes ud til varmen.",
+    "en": "The lowest temperature the controller normally requests for water sent to the heating.",
+    "effect": {
+      "da": "En høj grænse giver varmere vand i mildt vejr, men kan modarbejde natsænkning. Maksimumsgrænsen har højere prioritet.",
+      "en": "A high limit gives warmer water in mild weather but can work against night setback. The maximum limit takes priority."
+    },
+    "example": {
+      "da": "Er grænsen 25 °C, løftes et lavere beregnet mål normalt til 25 °C. Totalstop og prioriteret returbegrænsning kan ændre dette.",
+      "en": "With a limit of 25 °C, a lower calculated target is normally raised to 25 °C. Total stop and priority return limitation can override this."
+    }
   },
   "2178": {
     "page130": "13",
-    "da": "Øvre grænse for ønsket fremløb. Vælg efter anlæggets projektering, gulv og shunt. Grænsen er ikke en erstatning for en uafhængig sikkerhedstermostat.",
-    "en": "Upper limit for desired flow temperature. Choose according to the system design, floor construction and mixing circuit. This is not a substitute for an independent safety thermostat.",
-    "formula": "",
-    "example": "",
-    "page116": "10"
+    "page116": "10",
+    "da": "Den højeste temperatur regulatoren må ønske på vandet til varmeanlægget.",
+    "en": "The highest water temperature the controller may request for the heating system.",
+    "effect": {
+      "da": "En lavere grænse begrænser varmeafgivelsen. Vælg grænsen efter gulvets, radiatorernes og anlæggets krav.",
+      "en": "A lower limit restricts heating output. Choose it to suit the floor, radiators and system requirements."
+    },
+    "example": {
+      "da": "Med 43 °C som grænse begrænses et beregnet mål på 50 °C til 43 °C. Indstillingen erstatter ikke en separat sikkerhedstermostat.",
+      "en": "With a 43 °C limit, a calculated target of 50 °C is capped at 43 °C. This setting does not replace a separate safety thermostat."
+    }
   },
   "3015": {
     "page130": "14–16",
-    "da": "Gælder kun med rumtemperaturmåling. Kort integrationstid tilpasser hurtigt; lang tid giver langsommere regulering. OFF fjerner I-leddets påvirkning, men ikke P-leddet. Sekunder er bekræftet på dit display; PDF-tabellen angiver blot 1–50.",
-    "en": "Requires room temperature measurement. Short integration time responds faster; long time responds more slowly. OFF disables the integral influence, not the proportional influence. Seconds were confirmed on the tested display; the PDF table only states 1–50.",
-    "formula": "",
-    "example": ""
+    "da": "Hjælper over tid med at rette en vedvarende forskel mellem ønsket og målt rumtemperatur. Kræver en rumføler.",
+    "en": "Gradually corrects a lasting difference between the desired and measured room temperature. Requires a room sensor.",
+    "effect": {
+      "da": "Kort tid retter hurtigere. Lang tid retter mere roligt. OFF slår denne langsomme tilpasning fra; rummets direkte påvirkning kan stadig være aktiv.",
+      "en": "A shorter time corrects faster. A longer time corrects more gently. OFF disables this gradual adjustment; the direct room influence may still be active."
+    }
   },
   "3182": {
     "page130": "14–16",
-    "da": "Bestemmer reduktionen af fremløbet, når rummet er varmere end ønsket. Negativ værdi sænker fremløbet; 0 giver ingen påvirkning.",
-    "en": "Reduces flow temperature when the room is warmer than desired. A negative value lowers the target; zero disables this influence.",
-    "formula": "ΔTflow = rumoverskud × Gain-max × hældning / room excess × Gain-max × slope",
-    "example": "2 K × (−4,0) × 1,8 = −14,4 K"
+    "da": "Bestemmer, hvor meget fremløbstemperaturen sænkes, når rumføleren måler varmere end ønsket.",
+    "en": "Controls how much the flow target is reduced when the room sensor measures a temperature above the room target.",
+    "effect": {
+      "da": "Et mere negativt tal giver en kraftigere sænkning. 0 slår denne påvirkning fra.",
+      "en": "A more negative value gives a stronger reduction. Zero disables this influence."
+    },
+    "example": {
+      "da": "Er rummet 2 grader for varmt, påvirkningen −4 og hældningen 0,7, bliver korrektionen −5,6 grader.",
+      "en": "If the room is 2 degrees too warm, the gain is −4 and the slope is 0.7, the correction is −5.6 degrees."
+    },
+    "formula": {
+      "da": "Ændring i fremløb = (målt rumtemperatur − ønsket rumtemperatur) × påvirkning × hældning.\n2 × (−4) × 0,7 = −5,6 grader.",
+      "en": "Flow correction = (measured room temperature − desired room temperature) × gain × slope.\n2 × (−4) × 0.7 = −5.6 degrees."
+    }
   },
   "3183": {
     "page130": "15–16",
-    "da": "Bestemmer forøgelsen af fremløbet, når rummet er koldere end ønsket. Kræver en repræsentativ rumføler.",
-    "en": "Increases the flow target when the room is colder than desired. Requires a representative room temperature measurement.",
-    "formula": "ΔTflow = rumunderskud × Gain-min × hældning / room deficit × Gain-min × slope",
-    "example": "2 K × 2,0 × 1,8 = +7,2 K"
+    "da": "Bestemmer, hvor meget fremløbstemperaturen hæves, når rumføleren måler koldere end ønsket.",
+    "en": "Controls how much the flow target increases when the room sensor measures a temperature below the room target.",
+    "effect": {
+      "da": "En større positiv værdi giver mere ekstra varme. 0 slår påvirkningen fra. Rumføleren skal sidde et sted, der repræsenterer huset.",
+      "en": "A larger positive value adds more heat. Zero disables the influence. The room sensor must represent the home temperature."
+    },
+    "example": {
+      "da": "Er rummet 2 grader for koldt, påvirkningen 2 og hældningen 0,7, bliver korrektionen +2,8 grader.",
+      "en": "If the room is 2 degrees too cold, the gain is 2 and the slope is 0.7, the correction is +2.8 degrees."
+    },
+    "formula": {
+      "da": "Ændring i fremløb = (ønsket rumtemperatur − målt rumtemperatur) × påvirkning × hældning.\n2 × 2 × 0,7 = +2,8 grader.",
+      "en": "Flow correction = (desired room temperature − measured room temperature) × gain × slope.\n2 × 2 × 0.7 = +2.8 degrees."
+    }
   },
   "4030": {
     "page130": "17",
-    "da": "Returtemperaturens målgrænse. Effekten bestemmes af Gain-max og Gain-min. Vælg efter varmeforsyningens og anlæggets krav.",
-    "en": "Return temperature limit. Its effect depends on Gain-max and Gain-min. Choose according to the heat supplier and system requirements.",
-    "formula": "",
-    "example": "",
-    "page116": "11"
+    "page116": "11",
+    "da": "Grænsen for temperaturen på vandet, der kommer tilbage fra varmeanlægget.",
+    "en": "The temperature limit for water returning from the heating system.",
+    "effect": {
+      "da": "Regulatorens reaktion over og under grænsen bestemmes af indstillingerne 4035 og 4036. Brug den grænse, der passer til anlægget og varmeforsyningens krav.",
+      "en": "Settings 4035 and 4036 determine the response above and below this limit. Use a limit suitable for the system and heat supplier requirements."
+    }
   },
   "4035": {
     "page130": "18",
-    "da": "Påvirkning når returtemperaturen er over grænsen. Ved fjernvarme bruges normalt negativ påvirkning for at sænke fremløbet.",
-    "en": "Influence when return temperature exceeds the limit. District heating normally uses a negative gain to reduce flow temperature.",
-    "formula": "ΔTflow = (Treturn − Tlimit) × Gain-max",
-    "example": "(52 − 50) × (−2) = −4 K",
-    "page116": "12"
+    "page116": "12",
+    "da": "Bestemmer, hvordan varmen justeres, når returvandet er varmere end grænsen.",
+    "en": "Determines how heating is adjusted when return water is above the limit.",
+    "effect": {
+      "da": "En negativ værdi sænker fremløbstemperaturen. Det bruges typisk ved fjernvarme for at få koldere returvand. 0 giver ingen direkte påvirkning.",
+      "en": "A negative value reduces the flow target, typically to lower district-heating return temperature. Zero gives no direct correction."
+    },
+    "example": {
+      "da": "Retur 52 °C, grænse 50 °C og påvirkning −2 giver en sænkning på 4 grader.",
+      "en": "Return at 52 °C, a 50 °C limit and a gain of −2 produce a 4-degree reduction."
+    },
+    "formula": {
+      "da": "Ændring i fremløb = (returtemperatur − returgrænse) × påvirkning.\n(52 − 50) × (−2) = −4 grader.",
+      "en": "Flow correction = (return temperature − return limit) × gain.\n(52 − 50) × (−2) = −4 degrees."
+    }
   },
   "4036": {
     "page130": "18–19",
-    "da": "Påvirkning når returtemperaturen er under grænsen. Ved fjernvarme er lav retur normalt ønskelig, og manualen beskriver derfor typisk 0. Ved kedler kan positiv påvirkning være relevant.",
-    "en": "Influence below the return limit. Low return temperature is normally desirable in district heating, so the guide describes zero as typical. Boiler systems may require positive influence.",
-    "formula": "ΔTflow = (Tlimit − Treturn) × Gain-min",
-    "example": "(50 − 48) × (−3) = −6 K",
-    "page116": "12–13"
+    "page116": "12–13",
+    "da": "Bestemmer, hvordan varmen justeres, når returvandet er koldere end grænsen.",
+    "en": "Determines how heating is adjusted when return water is below the limit.",
+    "effect": {
+      "da": "Positiv værdi hæver fremløbsmålet; negativ værdi sænker det. Ved fjernvarme er lav retur normalt ønskelig, så 0 er ofte relevant.",
+      "en": "A positive value raises the flow target; a negative value lowers it. Low return temperature is usually desirable with district heating, so zero is often appropriate."
+    },
+    "formula": {
+      "da": "Ændring i fremløb = (returgrænse − returtemperatur) × påvirkning.",
+      "en": "Flow correction = (return limit − return temperature) × gain."
+    }
   },
   "4037": {
     "page130": "19",
-    "da": "I-led for returbegrænsning. Kort tid reagerer hurtigere; lang tid giver roligere regulering. Manualen har OFF, men denne OFF-råkode er endnu ikke fastlagt og tilbydes derfor ikke.",
-    "en": "Integral action for return limitation. Short time responds faster; longer time is slower. The manual includes OFF, but its raw code is unresolved and is not offered.",
-    "formula": "",
-    "example": "",
-    "page116": "13"
+    "page116": "13",
+    "da": "Justerer gradvist varmen, hvis returtemperaturen bliver ved med at afvige fra grænsen.",
+    "en": "Gradually adjusts heating when the return temperature keeps differing from its limit.",
+    "effect": {
+      "da": "Kort tid giver hurtigere tilpasning. Lang tid giver mere rolig tilpasning.",
+      "en": "A shorter time gives faster adjustment. A longer time gives gentler adjustment."
+    },
+    "note": {
+      "da": "OFF kan endnu ikke vælges via integrationen.",
+      "en": "OFF cannot yet be selected through the integration."
+    }
   },
   "4085": {
     "page130": "19",
-    "da": "ON lader returbegrænsningen tilsidesætte minimumsfremløb. Kun OFF-koden er målt; ON er derfor endnu ikke skrivebart.",
-    "en": "ON lets return limitation override minimum flow temperature. Only the OFF code has been observed; ON is not yet writable.",
-    "formula": "",
-    "example": ""
+    "da": "Bestemmer, om returbegrænsningen må sænke fremløbsmålet under den normale minimumstemperatur.",
+    "en": "Determines whether return limitation may lower the flow target below its normal minimum.",
+    "effect": {
+      "da": "ON giver returbegrænsningen forrang. OFF lader minimumsfremløbet have forrang.",
+      "en": "ON gives return limitation priority. OFF gives minimum flow temperature priority."
+    },
+    "note": {
+      "da": "Indstillingen vises kun til aflæsning i integrationen.",
+      "en": "This setting is read-only in the integration."
+    }
   },
   "5011": {
     "page130": "20",
-    "da": "Reducerer natsænkning gradvist, når det bliver koldere. Under den valgte udetemperatur bortfalder sænkningen. OFF-koden er ikke fastlagt.",
-    "en": "Gradually reduces setback as outdoor temperature falls. Below the selected threshold setback is removed. The OFF code is unresolved.",
-    "formula": "",
-    "example": ""
+    "da": "Mindsker automatisk natsænkningen, når det bliver koldt udenfor.",
+    "en": "Automatically reduces night setback as outdoor weather gets colder.",
+    "effect": {
+      "da": "Under den valgte udetemperatur bortfalder sænkningen helt. Huset får dermed mere varme i meget koldt vejr.",
+      "en": "Below the selected outdoor temperature, setback is removed completely, giving the home more heat in very cold weather."
+    },
+    "note": {
+      "da": "OFF kan endnu ikke vælges via integrationen.",
+      "en": "OFF cannot yet be selected through the integration."
+    }
   },
   "5012": {
     "page130": "20",
-    "da": "Midlertidigt boost af ønsket fremløb efter sænkning, højst én time eller under optimeringsperioden. Med rumføler stopper boost, når rumtemperaturen er nået.",
-    "en": "Temporary increase of the flow target after setback, for up to one hour or during optimization. With a room sensor it stops when the room target is reached.",
-    "formula": "Tboost ≈ Ttarget × (1 + boost / 100), før øvrige begrænsninger / before other limits",
-    "example": "40 °C × 1,10 = 44 °C ved / at 10 %"
+    "da": "Giver midlertidigt varmere vand, når anlægget går fra sænkning til komfort.",
+    "en": "Temporarily provides warmer water when the system changes from setback to comfort.",
+    "effect": {
+      "da": "Højere procent giver et større løft. Funktionen varer højst en time eller under optimeringsperioden. Med rumføler stopper løftet, når den ønskede rumtemperatur er nået.",
+      "en": "A higher percentage gives a larger boost. It lasts up to one hour or during the optimization period. With a room sensor, it ends when the room target is reached."
+    },
+    "example": {
+      "da": "Et mål på 40 °C og et boost på 10 % giver 44 °C, før de øvrige temperaturgrænser anvendes.",
+      "en": "A 40 °C target with 10% boost gives 44 °C before the other temperature limits are applied."
+    },
+    "formula": {
+      "da": "Mål med boost = normalt mål × (1 + procent / 100).\n40 × (1 + 10 / 100) = 44 °C før øvrige grænser.",
+      "en": "Boosted target = normal target × (1 + percentage / 100).\n40 × (1 + 10 / 100) = 44 °C before other limits."
+    }
   },
   "5013": {
     "page130": "21",
-    "da": "Tiden for gradvis opbygning af fremløbsreferencen efter sænkning. Kan mindske spidsbelastning på forsyningen. OFF fjerner rampen.",
-    "en": "Time for gradually increasing the flow target after setback. Can reduce peak demand on the heat supply. OFF disables the ramp.",
-    "formula": "",
-    "example": ""
+    "da": "Bestemmer, hvor langsomt vandtemperaturen hæves efter en periode med sænkning.",
+    "en": "Determines how gradually the water temperature increases after a setback period.",
+    "effect": {
+      "da": "Længere tid giver en blødere opstart og kan mindske spidsbelastningen. OFF fjerner den gradvise opstart.",
+      "en": "A longer time gives a gentler start and may reduce peak demand. OFF disables the gradual start."
+    }
   },
   "5014": {
     "page130": "21–22",
-    "da": "En tocifret kode, ikke minutter: første ciffer angiver bygningsmasse og systemtype. 1/2/3 = let/mellem/tung radiatorbygning; 4/5 = mellem/tung gulvvarmebygning. Sidste ciffer angiver dimensionerende udetemperatur. Kræver timerfunktion eller ECA 61.",
-    "en": "A two-digit code, not minutes: the first digit describes building mass and system type. 1/2/3 = light/medium/heavy radiator building; 4/5 = medium/heavy floor-heating building. The last digit represents design outdoor temperature. Requires timer support or ECA 61.",
-    "formula": "Tout,design = −50 + 5 × sidste ciffer / final digit",
-    "example": "25 = radiator, mellem / medium; −25 °C."
+    "da": "Kan starte opvarmningen tidligere, så huset er varmt ved starten af komfortperioden. Tallet er en kode, ikke minutter.",
+    "en": "Can start heating early so the home is warm at the start of a comfort period. The number is a code, not minutes.",
+    "effect": {
+      "da": "Første ciffer beskriver huset og varmen: 1/2/3 er let/mellem/tung bygning med radiatorer. 4/5 er mellem/tung bygning med gulvvarme. Sidste ciffer beskriver den udetemperatur, anlægget er dimensioneret til. OFF slår funktionen fra.",
+      "en": "The first digit describes the home and heating: 1/2/3 mean light/medium/heavy construction with radiators; 4/5 mean medium/heavy construction with floor heating. The last digit describes the design outdoor temperature. OFF disables the function."
+    },
+    "example": {
+      "da": "25 betyder middel varmelagring, radiatorer og dimensionering til −25 °C. Funktionen kræver timerfunktion eller ECA 61.",
+      "en": "25 means medium heat storage, radiators and a design outdoor temperature of −25 °C. Requires timer support or ECA 61."
+    },
+    "formula": {
+      "da": "Dimensionerende udetemperatur = −50 + 5 × sidste ciffer.\nSidste ciffer 5 giver −50 + 25 = −25 °C.",
+      "en": "Design outdoor temperature = −50 + 5 × final digit.\nFinal digit 5 gives −50 + 25 = −25 °C."
+    }
   },
   "5020": {
     "page130": "22",
-    "da": "Vælg UDE uden rumføler. RUM kræver rumtemperaturmåling og bruger denne til optimeret start/stop.",
-    "en": "Choose OUT without a room sensor. ROOM requires room temperature measurement and uses it for optimized start/stop.",
-    "formula": "",
-    "example": ""
+    "da": "Vælger, hvilken temperatur der bruges til at beregne tidlig start og stop af varmen.",
+    "en": "Selects the temperature used to calculate early heating start and stop.",
+    "effect": {
+      "da": "Vælg UDE uden rumføler. RUM bruger rumtemperaturen og kræver en rumføler.",
+      "en": "Choose OUT without a room sensor. ROOM uses indoor temperature and requires a room sensor."
+    }
   },
   "5021": {
     "page130": "23",
-    "da": "Totalstop sænker målet til standbytemperaturen i sænkningsperioder og tilsidesætter minimumsfremløb. ON-råkoden er endnu ikke bekræftet.",
-    "en": "Total stop lowers the target to standby temperature during setback and overrides minimum flow temperature. The ON raw code is not verified.",
-    "formula": "",
-    "example": ""
+    "da": "Kan lade anlægget gå ned på standbytemperaturen under sænkning.",
+    "en": "Allows the system to use the standby temperature during setback.",
+    "effect": {
+      "da": "ON bruger standbyfremløbet og tilsidesætter minimumsfremløbet. OFF bruger den normale sænkningsdrift. Totalstop betyder derfor ikke nødvendigvis, at alt er helt slukket.",
+      "en": "ON uses the standby flow target and overrides minimum flow temperature. OFF uses normal setback operation. Total stop therefore does not necessarily mean everything is off."
+    },
+    "note": {
+      "da": "Indstillingen vises kun til aflæsning i integrationen.",
+      "en": "This setting is read-only in the integration."
+    }
   },
   "5081": {
     "page130": "23",
-    "da": "Filtrerer udetemperaturen: 1 reagerer hurtigt, 200 langsomt. Modbus-adressen er ukendt, så indstillingen kan kun ændres på regulatoren.",
-    "en": "Filters outdoor temperature: 1 responds quickly, 200 slowly. The Modbus address is unknown; change this setting on the controller.",
-    "formula": "",
-    "example": ""
+    "da": "Udjævner udsving i udetemperaturen, så varmen ikke reagerer på enhver kort ændring.",
+    "en": "Smooths outdoor temperature fluctuations so heating does not respond to every brief change.",
+    "effect": {
+      "da": "1 reagerer hurtigt. 200 reagerer langsomt. Indstillingen kan indtil videre kun ændres på selve regulatoren.",
+      "en": "1 responds quickly. 200 responds slowly. For now, this setting can only be changed on the controller itself."
+    }
   },
   "5179": {
     "page130": "24",
-    "da": "Stopper varme ved høj udetemperatur i AUTO. Ventilen lukker, og pumpen stopper efter cirka tre minutter. Genstart kræver, at både aktuel og filtreret udetemperatur falder under grænsen. OFF-råkoden er uafklaret.",
-    "en": "Stops heating at high outdoor temperature in AUTO. The valve closes and the pump stops after about three minutes. Restart requires both actual and accumulated outdoor temperatures below the threshold. The OFF raw code is unresolved.",
-    "formula": "",
-    "example": ""
+    "da": "Stopper opvarmningen i AUTO, når det er tilstrækkeligt varmt udenfor.",
+    "en": "Stops heating in AUTO when it is warm enough outside.",
+    "effect": {
+      "da": "En lavere grænse stopper varmen tidligere i varmt vejr. Ventilen lukker, og pumpen stopper efter cirka tre minutter. Varmen starter igen, når både den aktuelle og den udjævnede udetemperatur er under grænsen.",
+      "en": "A lower limit stops heating sooner in warm weather. The valve closes and the pump stops after about three minutes. Heating resumes when both current and smoothed outdoor temperatures are below the limit."
+    },
+    "note": {
+      "da": "OFF kan endnu ikke vælges via integrationen.",
+      "en": "OFF cannot yet be selected through the integration."
+    }
   },
   "6174": {
     "page130": "25",
-    "da": "Motorbeskyttelse mod pendling ved lav belastning. Tallet er forsinkelse i minutter før aktivering, ikke ventilens gangtid.",
-    "en": "Protects against actuator oscillation at low load. The value is the activation delay in minutes, not valve travel time.",
-    "formula": "",
-    "example": "",
-    "page116": "15"
+    "page116": "15",
+    "da": "Beskytter ventilmotoren mod mange små bevægelser, når varmebehovet er lavt.",
+    "en": "Protects the valve motor from frequent small movements at low heating demand.",
+    "effect": {
+      "da": "Tallet er ventetiden i minutter, før beskyttelsen aktiveres. Det er ikke den tid, ventilen bruger på at åbne. OFF slår funktionen fra.",
+      "en": "The value is the delay in minutes before protection becomes active. It is not the valve opening time. OFF disables the function."
+    }
   },
   "6184": {
     "page130": "25–27",
-    "da": "Proportionalbånd Xp: større værdi giver roligere, langsommere regulering. PI-indregulering kræver observation af anlæggets dynamik. I 116 er dette Xp1 ved 65 °C, ikke en almindelig radiatorindstilling.",
-    "en": "Proportional band Xp: larger values give slower, steadier control. PI tuning requires observation of system dynamics. In application 116 this is Xp1 at 65 °C, not a radiator setting.",
-    "formula": "Ved målt kritisk pendling / with measured critical oscillation: Xp = 2,2 × Xp,critical",
-    "example": "Xp,critical = 40 K → Xp = 88 K. Ikke automatisk tuning / not automatic tuning.",
-    "page116": "15"
+    "page116": "15",
+    "da": "Bestemmer, hvor kraftigt ventilen reagerer på forskellen mellem ønsket og målt vandtemperatur. Kaldes proportionalbånd eller Xp.",
+    "en": "Controls how strongly the valve reacts to the difference between desired and measured water temperature. Also called proportional band or Xp.",
+    "effect": {
+      "da": "En større værdi giver en roligere reaktion. En mindre værdi giver en kraftigere reaktion og kan få temperaturen til at svinge. I applikation 116 er dette Xp1 ved 65 °C.",
+      "en": "A larger value gives a gentler response. A smaller value gives a stronger response and may cause temperature oscillation. In application 116 this is Xp1 at 65 °C."
+    },
+    "note": {
+      "da": "Beregningen kræver målinger fra en kontrolleret indregulering. Den er ikke en automatisk indstilling.",
+      "en": "The calculation requires measurements from controlled tuning. It is not an automatic setting."
+    },
+    "formula": {
+      "da": "Xp = 2,2 × det proportionalbånd, hvor vedvarende svingninger er målt.\nMålt værdi 40 K giver Xp = 88 K. K angiver her en temperaturforskel; 1 K svarer til en forskel på 1 °C.",
+      "en": "Xp = 2.2 × the proportional band at which sustained oscillation was measured.\nA measured value of 40 K gives Xp = 88 K. K denotes a temperature difference here; 1 K equals a difference of 1 °C."
+    }
   },
   "6185": {
     "page130": "25–27",
-    "da": "Integrationstid Tn. Lang tid reagerer langsomt; kort tid kan give pendling. Hjælpens beregning forudsætter en faktisk målt kritisk periode.",
-    "en": "Integration time Tn. Longer time responds more slowly; short time can cause oscillation. The formula requires an actually measured critical period.",
-    "formula": "Tn = 0,85 × Pcritical",
-    "example": "Pcritical = 100 s → Tn = 85 s",
-    "page116": "16"
+    "page116": "16",
+    "da": "Hjælper ventilen med over tid at fjerne en vedvarende temperaturforskel. Kaldes integrationstid eller Tn.",
+    "en": "Helps the valve remove a persistent temperature error over time. Also called integral time or Tn.",
+    "effect": {
+      "da": "Lang tid giver langsom tilpasning. Kort tid reagerer hurtigere, men kan få temperaturen til at svinge.",
+      "en": "A longer time adjusts slowly. A shorter time responds faster but may make the temperature oscillate."
+    },
+    "note": {
+      "da": "Beregningen kræver, at svingningstiden er målt under en kontrolleret indregulering.",
+      "en": "The calculation requires an oscillation period measured during controlled tuning."
+    },
+    "formula": {
+      "da": "Tn = 0,85 × den målte svingningstid.\n100 sekunder giver Tn = 85 sekunder.",
+      "en": "Tn = 0.85 × the measured oscillation period.\n100 seconds gives Tn = 85 seconds."
+    }
   },
   "6186": {
     "page130": "25–26",
-    "da": "Skal passe til motorventilens fulde vandring. Brug aktuatorens og ventilens datablad, ikke en radiator- eller gulvvarmeprofil.",
-    "en": "Must match the motorized valve full travel time. Use actuator and valve data, not a radiator or floor-heating preset.",
-    "formula": "t = slaglængde × s/mm; eller vinkel × s/grad / stroke × s/mm; or angle × s/degree",
-    "example": "5 mm × 15 s/mm = 75 s. 90° × 2 s/° = 180 s.",
-    "page116": "16–17"
+    "page116": "16–17",
+    "da": "Den tid ventilen bruger på at bevæge sig hele vejen fra lukket til åben.",
+    "en": "The time the valve takes to travel fully from closed to open.",
+    "effect": {
+      "da": "Værdien skal passe til din ventilmotor og ventil. Den vælges ikke ud fra, om du har radiatorer eller gulvvarme.",
+      "en": "The value must match your actuator and valve. It is not chosen based on whether you have radiators or floor heating."
+    },
+    "example": {
+      "da": "En ventil med 5 mm vandring og en motor, der bruger 15 sekunder pr. mm, har en gangtid på 75 sekunder.",
+      "en": "A valve with 5 mm travel and an actuator taking 15 seconds per mm has a travel time of 75 seconds."
+    },
+    "formula": {
+      "da": "Gangtid = vandring i mm × sekunder pr. mm.\n5 × 15 = 75 sekunder.\nFor en drejemotor: vinkel × sekunder pr. grad.",
+      "en": "Travel time = stroke in mm × seconds per mm.\n5 × 15 = 75 seconds.\nFor a rotary actuator: angle × seconds per degree."
+    }
   },
   "6187": {
     "page130": "26",
-    "da": "Neutralzonen ligger symmetrisk om fremløbsmålet. Inden for zonen aktiveres motorventilen ikke.",
-    "en": "The neutral zone is symmetrical around the flow target. The controller does not activate the valve inside this band.",
-    "formula": "Nedre/øvre grænse / lower/upper limit = Ttarget ± Nz/2",
-    "example": "Ttarget = 40 °C, Nz = 3 K → 38,5–41,5 °C",
-    "page116": "17"
+    "page116": "17",
+    "da": "Et lille temperaturinterval omkring målet, hvor regulatoren lader ventilen stå stille.",
+    "en": "A small temperature range around the target in which the controller leaves the valve still.",
+    "effect": {
+      "da": "En større zone giver færre ventilbevægelser, men tillader større temperaturafvigelser. Zonen ligger med halvdelen på hver side af målet.",
+      "en": "A wider zone reduces valve movements but allows larger temperature deviations. Half of the zone lies on each side of the target."
+    },
+    "example": {
+      "da": "Mål 40 °C og zone 3 grader giver et interval fra 38,5 til 41,5 °C.",
+      "en": "A 40 °C target and a 3-degree zone give a range from 38.5 to 41.5 °C."
+    },
+    "formula": {
+      "da": "Nedre grænse = mål − zone / 2.\nØvre grænse = mål + zone / 2.\n40 ± 3/2 = 38,5–41,5 °C.",
+      "en": "Lower limit = target − zone / 2.\nUpper limit = target + zone / 2.\n40 ± 3/2 = 38.5–41.5 °C."
+    }
   },
   "7010": {
     "page130": "28",
-    "da": "Valg af rumføler eller ECA 61 med adresse A/B. ECA-forsyning via ECL BUS afhænger også af korrekt masteropsætning.",
-    "en": "Selects room sensor or ECA 61 at address A/B. ECA power through ECL BUS also depends on correct master configuration.",
-    "formula": "",
-    "example": ""
+    "da": "Vælger, om der bruges en ECA 61-rumbetjening, og hvilken adresse den har.",
+    "en": "Selects whether an ECA 61 room panel is used and which address it has.",
+    "effect": {
+      "da": "Vælg A eller B efter rumbetjeningens adresse. OFF fravælger ECA-rumbetjeningen. ECL BUS-opsætningen skal også passe til anlægget.",
+      "en": "Choose A or B to match the room panel address. OFF deselects the ECA panel. The ECL BUS configuration must also match the system."
+    }
   },
   "7022": {
     "page130": "28",
-    "da": "Motionerer pumpen i ét minut hver tredje dag omkring middag. Kun ON er målt; den modsatte råkode er uafklaret.",
-    "en": "Runs the pump for one minute every third day around noon. Only ON has been observed; the opposite raw code is unresolved.",
-    "formula": "",
-    "example": "",
-    "page116": "19"
+    "page116": "19",
+    "da": "Lader pumpen køre kortvarigt, også når der ikke er brug for varme, så den ikke sætter sig fast.",
+    "en": "Runs the pump briefly even when no heat is needed, to help prevent it from seizing.",
+    "effect": {
+      "da": "ON kører pumpen i ét minut hver tredje dag omkring middag. OFF fravælger denne motionering.",
+      "en": "ON runs the pump for one minute every third day around noon. OFF disables this exercise."
+    },
+    "note": {
+      "da": "Indstillingen vises kun til aflæsning i integrationen.",
+      "en": "This setting is read-only in the integration."
+    }
   },
   "7023": {
     "page130": "28",
-    "da": "Åbner og lukker ventilen hver tredje dag omkring middag. Kun OFF-råkoden er målt.",
-    "en": "Exercises the valve open and closed every third day around noon. Only the OFF raw code is observed.",
-    "formula": "",
-    "example": "",
-    "page116": "19"
+    "page116": "19",
+    "da": "Bevæger ventilen med mellemrum for at undgå, at den sætter sig fast.",
+    "en": "Moves the valve periodically to help prevent it from sticking.",
+    "effect": {
+      "da": "ON åbner og lukker ventilen hver tredje dag omkring middag. OFF fravælger motioneringen.",
+      "en": "ON opens and closes the valve every third day around noon. OFF disables this exercise."
+    },
+    "note": {
+      "da": "Indstillingen vises kun til aflæsning i integrationen.",
+      "en": "This setting is read-only in the integration."
+    }
   },
   "7024": {
     "page130": "28",
-    "da": "GEAR er gearmotor; ABV er termisk aktuator. Ved ABV tilsidesættes flere reguleringsparametre. ABV-råkoden er ikke fastlagt.",
-    "en": "GEAR is a gear motor; ABV is a thermal actuator. ABV overrides several control parameters. The ABV raw code is unresolved.",
-    "formula": "",
-    "example": ""
+    "da": "Fortæller regulatoren, hvilken type motor der bevæger ventilen.",
+    "en": "Tells the controller which type of actuator moves the valve.",
+    "effect": {
+      "da": "GEAR er en gearmotor. ABV er en termisk aktuator. Ved ABV bruges flere af de almindelige motorreguleringsindstillinger ikke.",
+      "en": "GEAR means a gear motor. ABV means a thermal actuator. ABV bypasses several normal motor-control settings."
+    },
+    "note": {
+      "da": "Indstillingen vises kun til aflæsning i integrationen.",
+      "en": "This setting is read-only in the integration."
+    }
   },
   "7052": {
     "page130": "29",
-    "da": "Kan lukke slavekredsens ventil ved varmtvandsproduktion på masteren. ON-råkoden er ikke fastlagt.",
-    "en": "Can close the slave heating valve while the master produces hot water. The ON raw code is unresolved.",
-    "formula": "",
-    "example": ""
+    "da": "Kan prioritere varmt brugsvand frem for rumvarme i et anlæg med en fælles masterregulator.",
+    "en": "Can prioritize domestic hot water over space heating in a system with a shared master controller.",
+    "effect": {
+      "da": "Når funktionen er aktiv, kan varmekredsens ventil lukkes, mens masteren producerer varmt brugsvand. Funktionen er kun relevant i den type anlæg.",
+      "en": "When enabled, the heating circuit valve can close while the master produces domestic hot water. This is only relevant in that type of system."
+    },
+    "note": {
+      "da": "Indstillingen vises kun til aflæsning i integrationen.",
+      "en": "This setting is read-only in the integration."
+    }
   },
   "7077": {
     "page130": "29",
-    "da": "Pumpestart ved lav udetemperatur i 130. Manualen anbefaler 2 °C til vandbaserede systemer. I 116 bruges S3 og fabriksindstillingen er 10 °C. OFF-råkoden tilbydes ikke.",
-    "en": "Pump starts at low outdoor temperature in 130; the guide recommends 2 °C for water-based systems. In 116 it uses S3 and the factory value is 10 °C. The OFF raw code is not offered.",
-    "formula": "",
-    "example": "",
-    "page116": "19"
+    "page116": "19",
+    "da": "Starter pumpen ved lav temperatur for at hjælpe med frostbeskyttelse.",
+    "en": "Starts the pump at low temperature to help protect against frost.",
+    "effect": {
+      "da": "I applikation 130 bruges udetemperaturen. I applikation 116 bruges S3-temperaturen. En højere grænse starter pumpen ved en højere temperatur.",
+      "en": "Application 130 uses outdoor temperature. Application 116 uses the S3 temperature. A higher threshold starts the pump at a higher temperature."
+    },
+    "note": {
+      "da": "OFF kan endnu ikke vælges via integrationen.",
+      "en": "OFF cannot yet be selected through the integration."
+    }
   },
   "7078": {
     "page130": "30",
-    "da": "Pumpen kører, når ønsket fremløb er over grænsen. Det er ønsket fremløb, ikke målt rumtemperatur. Område 130: 5–40 °C; 116: −20–50 °C.",
-    "en": "Pump runs when desired flow temperature is above the threshold. This uses desired flow, not measured room temperature. Range 130: 5–40 °C; 116: −20–50 °C.",
-    "formula": "",
-    "example": "",
-    "page116": "19"
+    "page116": "19",
+    "da": "Bestemmer, hvornår pumpen skal køre ud fra det ønskede fremløb.",
+    "en": "Determines when the pump runs based on the desired flow temperature.",
+    "effect": {
+      "da": "Pumpen kører, når fremløbsmålet er over denne grænse. Det er vandets ønskede temperatur, ikke rumtemperaturen, der sammenlignes.",
+      "en": "The pump runs when the flow target is above this threshold. This compares the desired water temperature, not the room temperature."
+    }
   },
   "7093": {
     "page130": "30",
-    "da": "Ønsket fremløb i standby og ved totalstop. Dette er ikke en ønsket rumtemperatur.",
-    "en": "Desired flow temperature in standby and total stop. This is not a room temperature target.",
-    "formula": "",
-    "example": "",
-    "page116": "20"
+    "page116": "20",
+    "da": "Den ønskede vandtemperatur i standby og ved totalstop.",
+    "en": "The desired water temperature during standby and total stop.",
+    "effect": {
+      "da": "En højere værdi giver et varmere mål under standby. Tallet er ikke den rumtemperatur, huset skal holde.",
+      "en": "A higher value gives a warmer target in standby. It is not the room temperature the home should maintain."
+    }
   },
   "7141": {
     "page130": "30",
-    "da": "Overstyring via terminal 11–12 i AUTO. Manualen har OFF, SETBACK og COMFORT, men kun OFF-råkoden er kendt.",
-    "en": "Override through terminals 11–12 in AUTO. The manual describes OFF, SETBACK and COMFORT, but only the OFF raw code is known.",
-    "formula": "",
-    "example": "",
-    "page116": "20"
+    "page116": "20",
+    "da": "Lader en ekstern kontakt på klemme 11–12 vælge en anden driftstilstand, mens regulatoren står i AUTO.",
+    "en": "Allows an external contact on terminals 11–12 to select another operating mode while the controller is in AUTO.",
+    "effect": {
+      "da": "OFF fravælger overstyringen. De øvrige muligheder kan vælge komfort eller sænkning via kontakten.",
+      "en": "OFF disables the override. The other options can select comfort or setback using the contact."
+    },
+    "note": {
+      "da": "Indstillingen vises kun til aflæsning i integrationen.",
+      "en": "This setting is read-only in the integration."
+    }
   },
   "7162": {
     "page130": "31",
-    "da": "Temperaturen hvor varmekurven bøjer. Manualen angiver OFF til gulvvarme og 30–50 °C til radiatorer. OFF er fysisk målt som råværdi 29.",
-    "en": "Temperature where the heat curve bends. The guide specifies OFF for floor heating and 30–50 °C for radiators. OFF was observed as raw 29.",
-    "formula": "",
-    "example": ""
+    "da": "Den temperatur, hvor varmekurven ændrer form. Kaldes knækpunktet.",
+    "en": "The temperature at which the heat curve changes shape. Called the knee point.",
+    "effect": {
+      "da": "OFF giver en kurve uden dette knæk og bruges som udgangspunkt til gulvvarme. Radiatorer bruger typisk et knækpunkt mellem 30 og 50 °C.",
+      "en": "OFF gives a curve without this bend and is a starting choice for floor heating. Radiators typically use a knee point between 30 and 50 °C."
+    }
   },
   "7189": {
     "page130": "31",
-    "da": "Mindste pulslængde til gearmotoren. Hold så høj værdi som reguleringen kan tåle for at begrænse slid.",
-    "en": "Minimum gear motor pulse. Keep it as high as acceptable for regulation to limit wear.",
-    "formula": "Puls / pulse = displaytrin / display step × 20 ms",
-    "example": "10 × 20 ms = 200 ms",
-    "page116": "20"
+    "page116": "20",
+    "da": "Den korteste tid, ventilmotoren får et signal om at bevæge sig.",
+    "en": "The shortest time the valve motor receives a movement signal.",
+    "effect": {
+      "da": "Et større tal giver længere bevægelser ad gangen. Brug ikke kortere pulser end nødvendigt for at holde en stabil temperatur.",
+      "en": "A larger value gives longer movements each time. Avoid shorter pulses than needed to keep a stable temperature."
+    },
+    "example": {
+      "da": "Værdien 10 betyder 10 × 20 millisekunder = 200 millisekunder, altså 0,2 sekund.",
+      "en": "A value of 10 means 10 × 20 milliseconds = 200 milliseconds, or 0.2 seconds."
+    },
+    "formula": {
+      "da": "Pulslængde = indstillet tal × 20 millisekunder.\n10 × 20 = 200 millisekunder = 0,2 sekund.",
+      "en": "Pulse duration = setting × 20 milliseconds.\n10 × 20 = 200 milliseconds = 0.2 seconds."
+    }
   },
   "7198": {
     "page130": "31",
-    "da": "Automatisk skift mellem sommer- og vintertid efter centraleuropæiske skiftedage.",
-    "en": "Automatic clock change on Central European daylight-saving transition days.",
-    "formula": "",
-    "example": "",
-    "page116": "21"
+    "page116": "21",
+    "da": "Lader regulatorens ur skifte automatisk mellem sommer- og vintertid.",
+    "en": "Allows the controller clock to switch automatically between summer and winter time.",
+    "effect": {
+      "da": "ON følger de centraleuropæiske skiftedage. OFF fravælger det automatiske skift. Uret har betydning for ugeprogrammet.",
+      "en": "ON follows Central European changeover dates. OFF disables automatic changeover. The clock affects the weekly schedule."
+    }
   },
   "7199": {
     "page130": "31–32",
-    "da": "ECL BUS-adresse, ikke Modbus-adresse. 15 er master; 0–9 er slavevarianter. 10–14 bruges ikke. Ændres lokalt for at undgå at afbryde ECA-forsyning eller busfunktion.",
-    "en": "ECL BUS address, not Modbus address. 15 is master; 0–9 are slave variants. 10–14 are unused. Change locally to avoid interrupting ECA power or bus functions.",
-    "formula": "",
-    "example": "",
-    "page116": "21"
+    "page116": "21",
+    "da": "Adressen på regulatorens ECL BUS, som bruges mellem regulatorer og rumbetjening.",
+    "en": "The controller address on ECL BUS, used between controllers and room panels.",
+    "effect": {
+      "da": "15 er master. 0–9 er forskellige slaveopsætninger. Det er ikke Modbus-adressen. Ændres kun på regulatoren, da det kan påvirke busforbindelsen og rumbetjeningen.",
+      "en": "15 is the master. 0–9 are different slave configurations. This is not the Modbus address. Change it on the controller only, as it may affect bus communication and the room panel."
+    }
   },
   "8310": {
     "page130": "33",
-    "da": "Baggrundslys: højere tal giver stærkere lys. Manualens OFF-kode er ikke afklaret; skriveområdet er derfor 1–30.",
-    "en": "Backlight: larger numbers give stronger illumination. The manual OFF code is unresolved, so writes are restricted to 1–30.",
-    "formula": "",
-    "example": "",
-    "page116": "23"
+    "page116": "23",
+    "da": "Lysstyrken i regulatorens display.",
+    "en": "The brightness of the controller display.",
+    "effect": {
+      "da": "Et højere tal giver mere lys. Et lavere tal giver mindre lys. Her kan der vælges fra 1 til 30.",
+      "en": "A higher value gives more light. A lower value gives less light. Values from 1 to 30 can be selected here."
+    }
   },
   "8311": {
     "page130": "33",
-    "da": "0 giver høj kontrast, 20 giver lav kontrast.",
-    "en": "0 gives high contrast; 20 gives low contrast.",
-    "formula": "",
-    "example": "",
-    "page116": "23"
+    "page116": "23",
+    "da": "Kontrasten i regulatorens display, altså hvor tydeligt tegnene står mod baggrunden.",
+    "en": "The contrast of the controller display: how clearly characters stand out from the background.",
+    "effect": {
+      "da": "0 giver høj kontrast. 20 giver lav kontrast. Justér efter, hvor let displayet er at læse.",
+      "en": "0 gives high contrast. 20 gives low contrast. Adjust until the display is easy to read."
+    }
   },
   "8315": {
     "page130": "34",
-    "da": "Ændrer sproget på den fysiske ECL110. HA-kortets sprog følger Home Assistants sprog.",
-    "en": "Changes the language on the physical ECL110. The HA card language follows Home Assistant.",
-    "formula": "",
-    "example": "",
-    "page116": "24"
+    "page116": "24",
+    "da": "Sproget i den fysiske regulators menuer.",
+    "en": "The language of the physical controller menus.",
+    "effect": {
+      "da": "Dette ændrer ikke sproget i Home Assistant. Kortet følger dit HA-sprog, medmindre du har valgt et andet sprog i kortets opsætning.",
+      "en": "This does not change the Home Assistant language. The card follows your HA language unless you choose a different language in the card configuration."
+    }
   },
   "8320": {
     "page130": "34",
-    "da": "Modbus slaveadresse. Ændring kan afbryde forbindelsen; ændr lokalt og tilpas derefter HA-forbindelsen.",
-    "en": "Modbus slave address. Changing it may disconnect communication; change locally and then reconfigure the HA connection.",
-    "formula": "",
-    "example": "",
-    "page116": "24"
+    "page116": "24",
+    "da": "Regulatorens adresse på Modbus-forbindelsen.",
+    "en": "The controller address on the Modbus connection.",
+    "effect": {
+      "da": "Home Assistant skal bruge samme adresse for at kunne kommunikere med regulatoren. Adressen ændres på regulatoren og derefter i integrationens forbindelse.",
+      "en": "Home Assistant must use the same address to communicate with the controller. Change the address on the controller, then update the integration connection."
+    }
   },
   "schedule": {
     "page130": "8–9",
-    "da": "To komfortperioder pr. dag. Resten af døgnet er sænkning i AUTO. Kræver indbygget ECA 110-timerprogram. Vælg i trin på 30 minutter; 24:00 er døgnets afslutning. Ved kopiering skrives kun valgte dage. Ved kommunikationsfejl kan en del være gemt; kontrollér da regulatorens program.",
-    "en": "Two comfort periods per day; remaining time is setback in AUTO. Requires the built-in ECA 110 timer program. Use 30-minute steps; 24:00 is the end of the day. Copy writes only selected days. A communication failure can leave a partial update; then check the controller schedule.",
-    "formula": "",
-    "example": "06:00–08:00 + 16:00–22:00",
-    "page116": "8–9"
+    "page116": "8–9",
+    "da": "Du kan vælge to perioder med komforttemperatur for hver dag. Resten af døgnet bruges sænkning, når regulatoren står i AUTO.",
+    "en": "You can choose two comfort periods for each day. The rest of the day uses setback while the controller is in AUTO.",
+    "effect": {
+      "da": "Tider vælges i trin på 30 minutter. 24:00 er slutningen af dagen. Ens start- og stoptid giver en periode uden længde. Gem skriver kun den valgte dag og de dage, du vælger at kopiere til.",
+      "en": "Times use 30-minute steps. 24:00 is the end of the day. Equal start and stop times give a zero-length period. Saving writes only the selected day and the days you choose to copy to."
+    },
+    "example": {
+      "da": "06:00–08:00 og 16:00–22:00 giver komfort om morgenen og aftenen. Funktionen kræver ECA 110-timerprogrammet.",
+      "en": "06:00–08:00 and 16:00–22:00 provide comfort in the morning and evening. Requires the ECA 110 timer program."
+    },
+    "note": {
+      "da": "Hvis forbindelsen svigter under gemning, kan nogle tider være gemt og andre ikke. Kontrollér programmet, før du forsøger igen.",
+      "en": "If communication fails while saving, some times may be saved and others may not. Check the schedule before trying again."
+    }
   },
   "desired_mode": {
     "page130": "8",
-    "da": "AUTO følger regulatorens ugeprogram. KOMFORT og SÆNKNING fastholder hver sin drift. STANDBY bruger standbyfremløb; det er ikke nødvendigvis fuldt slukket anlæg.",
-    "en": "AUTO follows the controller schedule. COMFORT and SETBACK hold their respective mode. STANDBY uses the standby flow target; it does not necessarily switch the entire system off.",
-    "formula": "",
-    "example": "",
-    "page116": "8"
+    "page116": "8",
+    "da": "Vælger, hvordan regulatoren skal køre varmen.",
+    "en": "Selects how the controller operates the heating.",
+    "effect": {
+      "da": "AUTO følger ugeprogrammet. KOMFORT holder komfortdrift. SÆNKNING holder sænkningsdrift. STANDBY bruger standbyfremløbet og er derfor ikke nødvendigvis helt slukket.",
+      "en": "AUTO follows the weekly schedule. COMFORT holds comfort operation. SETBACK holds setback operation. STANDBY uses the standby flow target and therefore does not necessarily mean completely off."
+    }
   }
 }

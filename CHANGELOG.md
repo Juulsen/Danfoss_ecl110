@@ -15,6 +15,34 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 - HACS metadata, validation workflows and brand assets
 - First published GitHub release
 
+## [0.4.0] - 2026-09-19
+
+### Added
+
+- Overview field selection and ordering using existing HA entities and stable register keys.
+- Tiles, list and first-field focus layouts, each with compact, normal or large display size.
+- Browser-local preferences scoped to HA user, controller and optional `overview_id`; optional YAML defaults.
+- Cancel/default actions, storage-error feedback and responsive layouts based on card width.
+
+### Changed
+
+- Rewrote all 44 setting/schedule help entries in plain Danish and English.
+- Explain the purpose and effect of settings, with examples and expandable, localized calculations.
+- Removed PDF, manual-page and register-implementation references from help/profile dialogs; preserve source documentation in README.
+- Updated README with a Danish quick guide, resource-update steps and overview configuration examples.
+
+### Fixed
+
+- Keep overview readings current while the card has keyboard focus or its layout is being edited.
+- Keep an open help dialog intact during incoming HA state updates.
+
+### Validation and scope
+
+- Browser checks cover overview storage, cancellation, user/card separation, live updates, blocked/corrupt storage, DA/EN help and narrow layouts.
+- Existing schedule and profile service-call checks and all 15 Python regression tests pass.
+- Overview customization sends no HA service calls. Modbus communication, register mappings/scaling, writable ranges and entity IDs are unchanged.
+- Verification uses simulated HA data. Installation testing of this version on a real HA instance remains to be done.
+
 ## [0.3.0] - 2026-09-19
 
 ### Added
