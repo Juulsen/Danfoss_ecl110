@@ -54,7 +54,7 @@ En enkelt observeret værdi dokumenterer ikke alle valgmuligheder, hele skalaen 
 | 8315 | 2027 | 2 | DANSK |
 | 8320 | 2007 | 5 | 5 |
 
-3015: Foto IMG_3956 viser **1 s**. Dette retter enheden til sekunder; den indsendte råværdi 0 svarer til OFF, så en positiv råværdi bør også parres med displayet.
+3015: Foto IMG_3956 viser **1 s**. Senere direkte test bekræftede raw 1 = 1 s og raw 0 = OFF, inklusive skrivning og gendannelse.
 
 7189: Displayet viser trin 10 og den målte råværdi er 10. Omregningen til 200 ms kommer fra manualens 20 ms pr. trin, ikke fra en måling af motorpulsen.
 
@@ -100,13 +100,29 @@ En enkelt observeret værdi dokumenterer ikke alle valgmuligheder, hele skalaen 
 
 NA betyder læsefejl, ikke nul og ikke bevis for et ikke-eksisterende register. Brugeren rettede de oprindeligt angivne 60034:NA og 60035:NA til **65534:0 og 65535:0**. Værdien 1920 på ukendte adresser er bevaret ufortolket; vi overfører ikke automatisk S1–S4-fejlkodningen til disse registre.
 
+## Direkte skrivetest med eksternt Modbus-program
+
+Brugeren bekræftede FC06-skrivning, FC03-genlæsning, korrekt displayvisning og gendannelse for nedenstående værdier. Testene er afsluttet efter brugerens ønske. Der er ikke sendt skriverammer fra Home Assistant-integrationen, og version 0.2.3 er fortsat read-only.
+
+| Menu | Register | Testede værdier og betydning |
+|---:|---:|---|
+| 8310 | 60057 | 16 ↔ 17, baggrundslys |
+| 8311 | 60058 | 10 ↔ 11, kontrast |
+| 8315 | 2027 | 0 = ENGLISH, 2 = DANSK |
+| 7198 | 11197 | 0 = OFF, 1 = ON |
+| 3015 | 11014 | 0 = OFF, 1 = 1 s |
+| 5020 | 11019 | 0 = UDE, 1 = RUM |
+| 5013 | 11012 | 0 = OFF, 1 = 1 min |
+| 5012 | 11011 | 0 = OFF, 1 = 1 % |
+
+Dette bekræfter de testede værdier og tilbageføring, ikke hele indstillingsområdet eller lagring efter strømafbrydelse.
+
 ## Mangler endnu
 
-- Alternative råkoder: ON for 4085/5021/7023/7052, OFF for 7022/7198, RUM for 5020, ABV for 7024 samt KOMFORT/REDUCER for 7141.
+- Alternative råkoder: ON for 4085/5021/7023/7052, OFF for 7022, ABV for 7024 samt KOMFORT/REDUCER for 7141.
 - ECA A/B og øvrige sprog: fysisk verifikation af eksisterende kildebaserede koder.
 - OFF-koder ved 4037, 5011, 5179, 7077 og 8310.
-- Ikke-nul-værdier for 2176, 3183 og 4036 samt positiv værdi for 3015.
+- Ikke-nul-værdier for 2176, 3183 og 4036.
 - Menu **5081 – S1-filter**: billeder viser 99, 100 og 101 uden enhed; Modbus-adresse ukendt. Ingen adresse udledt af menunummeret.
-- Ønsket S2/S3, pumpe-/ventilstatus, fulde parameterområder og alle skrivefunktioner.
+- Ønsket S2/S3, pumpe-/ventilstatus, fulde parameterområder og skrivefunktioner via Home Assistant.
 - Ingen af de 27 ukendte adresser har fået en ny sikker funktionsbetegnelse alene på baggrund af denne måling.
-
