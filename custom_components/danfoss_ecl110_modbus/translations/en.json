@@ -70,7 +70,10 @@
         }
       },
       "actuator_type": {
-        "name": "Actuator type"
+        "name": "Actuator type",
+        "state": {
+          "gear": "GEAR"
+        }
       },
       "auto_reduct": {
         "name": "Outdoor temperature threshold for setback"
@@ -94,7 +97,10 @@
         "name": "Clock calendar year"
       },
       "daylight_saving": {
-        "name": "Automatic daylight saving time"
+        "name": "Automatic daylight saving time",
+        "state": {
+          "on": "ON"
+        }
       },
       "desired_mode": {
         "name": "Desired operating mode",
@@ -112,7 +118,10 @@
         "name": "Desired flow temperature S3"
       },
       "dhw_priority": {
-        "name": "DHW priority from master"
+        "name": "DHW priority from master",
+        "state": {
+          "off": "OFF"
+        }
       },
       "display_backlight": {
         "name": "Display backlight level"
@@ -132,7 +141,10 @@
         "name": "ECL bus address"
       },
       "external_override": {
-        "name": "External override"
+        "name": "External override",
+        "state": {
+          "off": "OFF"
+        }
       },
       "flow_temperature_max": {
         "name": "Maximum flow temperature"
@@ -179,7 +191,10 @@
         "name": "Neutral zone Nz"
       },
       "optimization_basis": {
-        "name": "Optimization temperature basis"
+        "name": "Optimization temperature basis",
+        "state": {
+          "outdoor": "OUT"
+        }
       },
       "optimizer": {
         "name": "Optimization code"
@@ -191,13 +206,16 @@
         "name": "Proportional band Xp"
       },
       "pump_exercise": {
-        "name": "Pump exercise"
+        "name": "Pump exercise",
+        "state": {
+          "on": "ON"
+        }
       },
       "pump_frost_temperature": {
         "name": "Pump frost protection threshold"
       },
       "pump_heat_temperature": {
-        "name": "Desired flow temperature threshold for pump start"
+        "name": "Pump stop – desired flow temperature threshold"
       },
       "pump_state": {
         "name": "Pump status",
@@ -219,7 +237,10 @@
         "name": "Return limitation integration time"
       },
       "return_priority": {
-        "name": "Return limitation overrides minimum flow"
+        "name": "Return limitation overrides minimum flow",
+        "state": {
+          "off": "OFF"
+        }
       },
       "return_temperature_limit": {
         "name": "Return temperature limit"
@@ -231,7 +252,7 @@
         "name": "Room influence below target"
       },
       "room_integration_time": {
-        "name": "Room control integration"
+        "name": "Room control integration time"
       },
       "schedule_friday_start_1": {
         "name": "Friday start 1"
@@ -333,7 +354,10 @@
         "name": "Temperature S4"
       },
       "total_stop": {
-        "name": "Total stop during setback"
+        "name": "Total stop during setback",
+        "state": {
+          "off": "OFF"
+        }
       },
       "valve_close_signal": {
         "name": "Valve closing signal",
@@ -343,7 +367,10 @@
         }
       },
       "valve_exercise": {
-        "name": "Valve exercise"
+        "name": "Valve exercise",
+        "state": {
+          "off": "OFF"
+        }
       },
       "valve_open_signal": {
         "name": "Valve opening signal",
@@ -354,6 +381,48 @@
       },
       "valve_running_time": {
         "name": "Valve motor full travel time"
+      },
+      "room_integration_time_setting_state": {
+        "name": "Room control integration time – state",
+        "state": {
+          "off": "OFF",
+          "active": "Active"
+        }
+      },
+      "boost_setting_state": {
+        "name": "Flow temperature boost – state",
+        "state": {
+          "off": "OFF",
+          "active": "Active"
+        }
+      },
+      "reference_ramp_setting_state": {
+        "name": "Flow temperature startup ramp – state",
+        "state": {
+          "off": "OFF",
+          "active": "Active"
+        }
+      },
+      "optimizer_setting_state": {
+        "name": "Optimization code – state",
+        "state": {
+          "off": "OFF",
+          "active": "Active"
+        }
+      },
+      "motor_protection_setting_state": {
+        "name": "Motor protection activation delay – state",
+        "state": {
+          "off": "OFF",
+          "active": "Active"
+        }
+      },
+      "knee_point_setting_state": {
+        "name": "Heating curve knee point – state",
+        "state": {
+          "off": "OFF",
+          "active": "Active"
+        }
       }
     }
   }
