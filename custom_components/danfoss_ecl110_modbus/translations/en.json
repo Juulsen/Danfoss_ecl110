@@ -99,7 +99,8 @@
       "daylight_saving": {
         "name": "Automatic daylight saving time",
         "state": {
-          "on": "ON"
+          "on": "ON",
+          "off": "OFF"
         }
       },
       "desired_mode": {
@@ -193,7 +194,8 @@
       "optimization_basis": {
         "name": "Optimization temperature basis",
         "state": {
-          "outdoor": "OUT"
+          "outdoor": "OUT",
+          "room": "ROOM"
         }
       },
       "optimizer": {
