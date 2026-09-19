@@ -426,6 +426,35 @@
           "active": "Aktiv"
         }
       }
+    },
+    "number": {
+      "display_backlight_control": {"name": "Displaybelysning"},
+      "display_contrast_control": {"name": "Displaykontrast"}
+    },
+    "select": {
+      "language_control": {
+        "name": "Sprog",
+        "state": {"english": "Engelsk", "danish": "Dansk"}
+      },
+      "room_integration_time_control": {
+        "name": "Rum integrationstid",
+        "state": {"off": "OFF", "one_second": "1 sekund"}
+      },
+      "optimization_basis_control": {
+        "name": "Optimering baseret på",
+        "state": {"outdoor": "UDE", "room": "RUM"}
+      },
+      "reference_ramp_control": {
+        "name": "Referencerampe",
+        "state": {"off": "OFF", "one_minute": "1 minut"}
+      },
+      "boost_control": {
+        "name": "Boost",
+        "state": {"off": "OFF", "one_percent": "1 %"}
+      }
+    },
+    "switch": {
+      "daylight_saving_control": {"name": "Automatisk sommertid"}
     }
   }
 }
