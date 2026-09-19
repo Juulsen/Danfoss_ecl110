@@ -99,7 +99,8 @@
       "daylight_saving": {
         "name": "Automatisk sommer- og vintertid",
         "state": {
-          "on": "ON"
+          "on": "ON",
+          "off": "OFF"
         }
       },
       "desired_mode": {
@@ -193,7 +194,8 @@
       "optimization_basis": {
         "name": "Temperaturgrundlag for optimering",
         "state": {
-          "outdoor": "UDE"
+          "outdoor": "UDE",
+          "room": "RUM"
         }
       },
       "optimizer": {
