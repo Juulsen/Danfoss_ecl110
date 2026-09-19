@@ -57,5 +57,36 @@
       }
     }
   },
-  "title": "Danfoss ECL110 Modbus"
+  "title": "Danfoss ECL110 Modbus",
+  "entity": {
+    "number": {
+      "display_backlight_control": {"name": "Display backlight"},
+      "display_contrast_control": {"name": "Display contrast"}
+    },
+    "select": {
+      "language_control": {
+        "name": "Language",
+        "state": {"english": "English", "danish": "Danish"}
+      },
+      "room_integration_time_control": {
+        "name": "Room control integration time",
+        "state": {"off": "OFF", "one_second": "1 second"}
+      },
+      "optimization_basis_control": {
+        "name": "Optimization basis",
+        "state": {"outdoor": "OUT", "room": "ROOM"}
+      },
+      "reference_ramp_control": {
+        "name": "Reference ramp",
+        "state": {"off": "OFF", "one_minute": "1 minute"}
+      },
+      "boost_control": {
+        "name": "Boost",
+        "state": {"off": "OFF", "one_percent": "1 %"}
+      }
+    },
+    "switch": {
+      "daylight_saving_control": {"name": "Automatic daylight saving time"}
+    }
+  }
 }
