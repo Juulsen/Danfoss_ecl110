@@ -96,6 +96,8 @@ class EclRegister:
     )
     ecl_line: str | None = None
     options: Mapping[int, str] | None = None
+    off_raw_values: frozenset[int] = field(default_factory=frozenset)
+    observed_raw_values: tuple[int, ...] = ()
     raw_min: int | None = None
     raw_max: int | None = None
     invalid_raw_values: frozenset[int] = field(default_factory=frozenset)
@@ -135,7 +137,7 @@ class EclRegister:
             return None
 
         raw = int(raw_value) & 0xFFFF
-        if raw in self.invalid_raw_values:
+        if raw in self.invalid_raw_values or raw in self.off_raw_values:
             return None
 
         value = raw
@@ -153,7 +155,7 @@ class EclRegister:
 
         scaled = value * self.scale + self.offset
         # Preserve raw_value on the entity, but never label unconfirmed OFF
-        # sentinels (e.g. 9 or 29) as physical minutes or degrees.
+        # sentinels as physical minutes or degrees.
         if self.decoded_min is not None and scaled < self.decoded_min:
             return None
         if self.decoded_max is not None and scaled > self.decoded_max:
@@ -163,6 +165,16 @@ class EclRegister:
         if self.scale == 1:
             return int(scaled)
         return scaled
+
+    def setting_state(self, raw_value: int | None) -> str | None:
+        """Return a known OFF/numeric state without mixing text into numbers."""
+
+        if raw_value is None or not self.off_raw_values:
+            return None
+        raw = int(raw_value) & 0xFFFF
+        if raw in self.off_raw_values:
+            return "off"
+        return "active" if self.decode(raw) is not None else None
 
     def validate_raw_write(self, raw_value: int) -> None:
         """Validate a raw write without performing any communication."""
@@ -729,7 +741,7 @@ _registers.extend(
 # Display semantics: Danfoss AQ188586469712en-010801 (130) and
 # AQ188586469032en-010701 (116), valid from software 1.08.
 # Wire scaling is inferred where the reverse-engineered map has TODO: FORMAT.
-# Unknown OFF/option codes are deliberately not guessed. Numeric values outside
+# Unverified OFF/option codes are not guessed. Numeric values outside
 # documented ranges return None; the original unsigned word remains available.
 _DISPLAY_METADATA: Final = {
     'heating_curve_slope': dict(
@@ -742,8 +754,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=0.1,
         decoded_max=4.0,
-        description='Varmekurvens hældning. Manual 130, side 11. Numerisk område: 0.1–4 . Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Heating curve slope. Application 130 manual, page 11. Numeric range: 0.1–4 . Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Varmekurvens hældning. Manual 130, side 11. Numerisk område: 0.1–4 . Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Heating curve slope. Application 130 manual, page 11. Numeric range: 0.1–4 . Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'parallel_displacement': dict(
@@ -756,8 +768,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=-20.0,
         decoded_max=20.0,
-        description='Varmekurvens parallelforskydning. Manual 130, side 13. Numerisk område: -20–20 K. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Heating curve parallel displacement. Application 130 manual, page 13. Numeric range: -20–20 K. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Varmekurvens parallelforskydning. Manual 130, side 13. Numerisk område: -20–20 K. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Heating curve parallel displacement. Application 130 manual, page 13. Numeric range: -20–20 K. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.INT16,
     ),
     'flow_temperature_min': dict(
@@ -770,8 +782,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=10.0,
         decoded_max=150.0,
-        description='Minimum fremløbstemperatur. Manual 130, side 13. Numerisk område: 10–150 °C. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Minimum flow temperature. Application 130 manual, page 13. Numeric range: 10–150 °C. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Minimum fremløbstemperatur. Manual 130, side 13. Numerisk område: 10–150 °C. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Minimum flow temperature. Application 130 manual, page 13. Numeric range: 10–150 °C. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'flow_temperature_max': dict(
@@ -784,13 +796,13 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=10.0,
         decoded_max=150.0,
-        description='Maksimum fremløbstemperatur. Manual 130, side 13. Numerisk område: 10–150 °C. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Maximum flow temperature. Application 130 manual, page 13. Numeric range: 10–150 °C. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Maksimum fremløbstemperatur. Manual 130, side 13. Numerisk område: 10–150 °C. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Maximum flow temperature. Application 130 manual, page 13. Numeric range: 10–150 °C. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'room_integration_time': dict(
-        name='Rumreguleringens integration',
-        unit=None,
+        name='Rumreguleringens integrationstid',
+        unit='s',
         scale=1.0,
         precision=0,
         device_class=None,
@@ -798,8 +810,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=1.0,
         decoded_max=50.0,
-        description='Rumreguleringens integration. Manual 130, side 16. Numerisk område: 1–50 . Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet. Manualen angiver ingen tidsenhed.',
-        description_en='Room control integration. Application 130 manual, page 16. Numeric range: 1–50 . Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed. No time unit is specified by the manual.',
+        description='Rumreguleringens integrationstid. Numerisk område: 1–50 s. Modbus-dekodning udledt af manual og testværdier. Foto IMG_3956 viser 1 s på applikation 130.',
+        description_en='Room control integration time. Numeric range: 1–50 s. Modbus decoding inferred from manual and observed values. Photo IMG_3956 shows 1 s on application 130.',
         data_type=RegisterDataType.UINT16,
     ),
     'room_gain_max': dict(
@@ -812,8 +824,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=-9.9,
         decoded_max=0.0,
-        description='Rumpåvirkning over ønsket temperatur. Manual 130, side 16. Numerisk område: -9.9–0 . Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Room influence above target. Application 130 manual, page 16. Numeric range: -9.9–0 . Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Rumpåvirkning over ønsket temperatur. Manual 130, side 16. Numerisk område: -9.9–0 . Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Room influence above target. Application 130 manual, page 16. Numeric range: -9.9–0 . Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.INT16,
     ),
     'room_gain_min': dict(
@@ -826,8 +838,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=0.0,
         decoded_max=9.9,
-        description='Rumpåvirkning under ønsket temperatur. Manual 130, side 16. Numerisk område: 0–9.9 . Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Room influence below target. Application 130 manual, page 16. Numeric range: 0–9.9 . Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Rumpåvirkning under ønsket temperatur. Manual 130, side 16. Numerisk område: 0–9.9 . Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Room influence below target. Application 130 manual, page 16. Numeric range: 0–9.9 . Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.INT16,
     ),
     'return_temperature_limit': dict(
@@ -840,8 +852,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=10.0,
         decoded_max=110.0,
-        description='Returtemperaturgrænse. Manual 130, side 17. Numerisk område: 10–110 °C. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Return temperature limit. Application 130 manual, page 17. Numeric range: 10–110 °C. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Returtemperaturgrænse. Manual 130, side 17. Numerisk område: 10–110 °C. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Return temperature limit. Application 130 manual, page 17. Numeric range: 10–110 °C. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'return_gain_max': dict(
@@ -854,8 +866,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=-9.9,
         decoded_max=9.9,
-        description='Returpåvirkning over grænsen. Manual 130, side 18. Numerisk område: -9.9–9.9 . Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Return influence above limit. Application 130 manual, page 18. Numeric range: -9.9–9.9 . Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Returpåvirkning over grænsen. Manual 130, side 18. Numerisk område: -9.9–9.9 . Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Return influence above limit. Application 130 manual, page 18. Numeric range: -9.9–9.9 . Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.INT16,
     ),
     'return_gain_min': dict(
@@ -868,8 +880,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=-9.9,
         decoded_max=9.9,
-        description='Returpåvirkning under grænsen. Manual 130, side 18. Numerisk område: -9.9–9.9 . Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Return influence below limit. Application 130 manual, page 18. Numeric range: -9.9–9.9 . Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Returpåvirkning under grænsen. Manual 130, side 18. Numerisk område: -9.9–9.9 . Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Return influence below limit. Application 130 manual, page 18. Numeric range: -9.9–9.9 . Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.INT16,
     ),
     'return_integration_time': dict(
@@ -882,8 +894,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=1.0,
         decoded_max=50.0,
-        description='Returbegrænsningens integrationstid. Manual 130, side 19. Numerisk område: 1–50 s. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Return limitation integration time. Application 130 manual, page 19. Numeric range: 1–50 s. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Returbegrænsningens integrationstid. Manual 130, side 19. Numerisk område: 1–50 s. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Return limitation integration time. Application 130 manual, page 19. Numeric range: 1–50 s. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'return_priority': dict(
@@ -908,8 +920,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=-29.0,
         decoded_max=10.0,
-        description='Udetemperaturgrænse for sænkning. Manual 130, side 20. Numerisk område: -29–10 °C. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Outdoor temperature threshold for setback. Application 130 manual, page 20. Numeric range: -29–10 °C. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Udetemperaturgrænse for sænkning. Manual 130, side 20. Numerisk område: -29–10 °C. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Outdoor temperature threshold for setback. Application 130 manual, page 20. Numeric range: -29–10 °C. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.INT16,
     ),
     'boost': dict(
@@ -922,8 +934,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=1.0,
         decoded_max=99.0,
-        description='Boost af ønsket fremløbstemperatur. Manual 130, side 20. Numerisk område: 1–99 %. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Flow temperature boost. Application 130 manual, page 20. Numeric range: 1–99 %. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Boost af ønsket fremløbstemperatur. Manual 130, side 20. Numerisk område: 1–99 %. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Flow temperature boost. Application 130 manual, page 20. Numeric range: 1–99 %. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'reference_ramp': dict(
@@ -936,8 +948,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=1.0,
         decoded_max=99.0,
-        description='Opstartsrampe for ønsket fremløb. Manual 130, side 21. Numerisk område: 1–99 min. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Flow temperature startup ramp. Application 130 manual, page 21. Numeric range: 1–99 min. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Opstartsrampe for ønsket fremløb. Manual 130, side 21. Numerisk område: 1–99 min. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Flow temperature startup ramp. Application 130 manual, page 21. Numeric range: 1–99 min. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'optimizer': dict(
@@ -950,8 +962,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=10.0,
         decoded_max=59.0,
-        description='Optimeringskode. Manual 130, side 21–22. Numerisk område: 10–59 . Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet. Koden beskriver bygning, varmeanlæg og dimensioneringstemperatur; ingen tidsenhed.',
-        description_en='Optimization code. Application 130 manual, page 21–22. Numeric range: 10–59 . Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed. Code describes building, heating system and design temperature; no time unit.',
+        description='Optimeringskode. Manual 130, side 21–22. Numerisk område: 10–59 . Modbus-dekodning udledt af manual og testværdier. Koden beskriver bygning, varmeanlæg og dimensioneringstemperatur; ingen tidsenhed.',
+        description_en='Optimization code. Application 130 manual, page 21–22. Numeric range: 10–59 . Modbus decoding inferred from manual and observed values. Code describes building, heating system and design temperature; no time unit.',
         data_type=RegisterDataType.UINT16,
     ),
     'optimization_basis': dict(
@@ -988,8 +1000,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=1.0,
         decoded_max=50.0,
-        description='Udetemperaturgrænse for varmeudkobling. Manual 130, side 24. Numerisk område: 1–50 °C. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Outdoor temperature threshold for heating cut-out. Application 130 manual, page 24. Numeric range: 1–50 °C. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Udetemperaturgrænse for varmeudkobling. Manual 130, side 24. Numerisk område: 1–50 °C. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Outdoor temperature threshold for heating cut-out. Application 130 manual, page 24. Numeric range: 1–50 °C. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'motor_protection': dict(
@@ -1002,8 +1014,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=10.0,
         decoded_max=59.0,
-        description='Aktiveringsforsinkelse for motorbeskyttelse. Manual 130, side 25. Numerisk område: 10–59 min. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Motor protection activation delay. Application 130 manual, page 25. Numeric range: 10–59 min. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Aktiveringsforsinkelse for motorbeskyttelse. Manual 130, side 25. Numerisk område: 10–59 min. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Motor protection activation delay. Application 130 manual, page 25. Numeric range: 10–59 min. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'proportional_band': dict(
@@ -1016,8 +1028,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=1.0,
         decoded_max=250.0,
-        description='Proportionalbånd Xp. Manual 130, side 25. Numerisk område: 1–250 K. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet. I 116: Xp1 ved forsyningstemperatur S2 = 65 °C.',
-        description_en='Proportional band Xp. Application 130 manual, page 25. Numeric range: 1–250 K. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed. In application 116: Xp1 at supply temperature S2 = 65 °C.',
+        description='Proportionalbånd Xp. Manual 130, side 25. Numerisk område: 1–250 K. Modbus-dekodning udledt af manual og testværdier. I 116: Xp1 ved forsyningstemperatur S2 = 65 °C.',
+        description_en='Proportional band Xp. Application 130 manual, page 25. Numeric range: 1–250 K. Modbus decoding inferred from manual and observed values. In application 116: Xp1 at supply temperature S2 = 65 °C.',
         data_type=RegisterDataType.UINT16,
     ),
     'integration_time': dict(
@@ -1030,8 +1042,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=5.0,
         decoded_max=999.0,
-        description='Integrationstid Tn. Manual 130, side 25. Numerisk område: 5–999 s. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Integration time Tn. Application 130 manual, page 25. Numeric range: 5–999 s. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Integrationstid Tn. Manual 130, side 25. Numerisk område: 5–999 s. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Integration time Tn. Application 130 manual, page 25. Numeric range: 5–999 s. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'valve_running_time': dict(
@@ -1044,8 +1056,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=5.0,
         decoded_max=250.0,
-        description='Ventilmotorens fulde gangtid. Manual 130, side 25. Numerisk område: 5–250 s. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Valve motor full travel time. Application 130 manual, page 25. Numeric range: 5–250 s. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Ventilmotorens fulde gangtid. Manual 130, side 25. Numerisk område: 5–250 s. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Valve motor full travel time. Application 130 manual, page 25. Numeric range: 5–250 s. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'neutral_zone': dict(
@@ -1058,8 +1070,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=1.0,
         decoded_max=9.0,
-        description='Neutralzone Nz. Manual 130, side 26. Numerisk område: 1–9 K. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Neutral zone Nz. Application 130 manual, page 26. Numeric range: 1–9 K. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Neutralzone Nz. Manual 130, side 26. Numerisk område: 1–9 K. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Neutral zone Nz. Application 130 manual, page 26. Numeric range: 1–9 K. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'eca_address': dict(
@@ -1070,8 +1082,8 @@ _DISPLAY_METADATA: Final = {
         device_class=None,
         state_class=None,
         safe_write=False,
-        description='Rum- eller fjernbetjeningspanel. Manual 130, side 28. Valgenes Modbus-kodning er ikke bekræftet; ukodede valg vises som råtal.',
-        description_en='Room panel or remote control. Application 130 manual, page 28. Numeric Modbus option encoding is unconfirmed; unmapped options remain raw.',
+        description='ECA-panel: 0=OFF er fysisk bekræftet; A/B-koder er fra registerkilden og ikke fysisk testet.',
+        description_en='ECA panel: 0=OFF observed on hardware; A/B codes are source-backed but not hardware-tested.',
         data_type=RegisterDataType.UINT16,
     ),
     'pump_exercise': dict(
@@ -1132,12 +1144,12 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=-10.0,
         decoded_max=20.0,
-        description='Frostgrænse for pumpestart. Manual 130, side 29. Numerisk område: -10–20 °C. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet. 130 bruger udetemperaturen; 116 bruger fremløbstemperatur S3.',
-        description_en='Pump frost protection threshold. Application 130 manual, page 29. Numeric range: -10–20 °C. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed. Application 130 uses outdoor temperature; 116 uses flow temperature S3.',
+        description='Frostgrænse for pumpestart. Manual 130, side 29. Numerisk område: -10–20 °C. Modbus-dekodning udledt af manual og testværdier. 130 bruger udetemperaturen; 116 bruger fremløbstemperatur S3.',
+        description_en='Pump frost protection threshold. Application 130 manual, page 29. Numeric range: -10–20 °C. Modbus decoding inferred from manual and observed values. Application 130 uses outdoor temperature; 116 uses flow temperature S3.',
         data_type=RegisterDataType.INT16,
     ),
     'pump_heat_temperature': dict(
-        name='Ønsket fremløbstemperatur for pumpestart',
+        name='Pumpestop – grænse for ønsket fremløbstemperatur',
         unit='°C',
         scale=1.0,
         precision=0,
@@ -1146,8 +1158,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=-20.0,
         decoded_max=50.0,
-        description='Ønsket fremløbstemperatur for pumpestart. Manual 130, side 30. Numerisk område: -20–50 °C. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet. Område 130: 5–40 °C. Område 116: −20–50 °C.',
-        description_en='Desired flow temperature threshold for pump start. Application 130 manual, page 30. Numeric range: -20–50 °C. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed. Application 130 range: 5–40 °C. Application 116 range: −20–50 °C.',
+        description='Pumpestop: grænse for ønsket fremløbstemperatur. Manual 130, side 30. Numerisk område: -20–50 °C. Modbus-dekodning udledt af manual og testværdier. Område 130: 5–40 °C. Område 116: −20–50 °C.',
+        description_en='Pump stop: desired flow temperature threshold. Application 130 manual, page 30. Numeric range: -20–50 °C. Modbus decoding inferred from manual and observed values. Application 130 range: 5–40 °C. Application 116 range: −20–50 °C.',
         data_type=RegisterDataType.INT16,
     ),
     'standby_temperature': dict(
@@ -1160,8 +1172,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=5.0,
         decoded_max=40.0,
-        description='Ønsket fremløbstemperatur i standby. Manual 130, side 30. Numerisk område: 5–40 °C. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Desired standby flow temperature. Application 130 manual, page 30. Numeric range: 5–40 °C. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Ønsket fremløbstemperatur i standby. Manual 130, side 30. Numerisk område: 5–40 °C. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Desired standby flow temperature. Application 130 manual, page 30. Numeric range: 5–40 °C. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'external_override': dict(
@@ -1186,8 +1198,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=30.0,
         decoded_max=50.0,
-        description='Varmekurvens knækpunkt. Manual 130, side 31. Numerisk område: 30–50 °C. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Heating curve knee point. Application 130 manual, page 31. Numeric range: 30–50 °C. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Varmekurvens knækpunkt. Manual 130, side 31. Numerisk område: 30–50 °C. Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Heating curve knee point. Application 130 manual, page 31. Numeric range: 30–50 °C. Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'minimum_activation_time': dict(
@@ -1200,8 +1212,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=40.0,
         decoded_max=1000.0,
-        description='Minimumspuls til gearmotor. Manual 130, side 31. Numerisk område: 40–1000 ms. Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet. ECL viser trin 2–50; hvert trin er 20 ms. Trin 10 = 200 ms.',
-        description_en='Minimum gear motor pulse. Application 130 manual, page 31. Numeric range: 40–1000 ms. Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed. ECL displays steps 2–50, each step equals 20 ms. Step 10 = 200 ms.',
+        description='Minimumspuls til gearmotor. Manual 130, side 31. Numerisk område: 40–1000 ms. Modbus-dekodning udledt af manual og testværdier. ECL viser trin 2–50; hvert trin er 20 ms. Trin 10 = 200 ms.',
+        description_en='Minimum gear motor pulse. Application 130 manual, page 31. Numeric range: 40–1000 ms. Modbus decoding inferred from manual and observed values. ECL displays steps 2–50, each step equals 20 ms. Step 10 = 200 ms.',
         data_type=RegisterDataType.UINT16,
     ),
     'daylight_saving': dict(
@@ -1226,8 +1238,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=0.0,
         decoded_max=15.0,
-        description='ECL-busadresse. Manual 130, side 31–32. Numerisk område: 0–15 . Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='ECL bus address. Application 130 manual, page 31–32. Numeric range: 0–15 . Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='ECL-busadresse. Manual 130, side 31–32. Numerisk område: 0–15 . Modbus-dekodning udledt af manual og testværdier.',
+        description_en='ECL bus address. Application 130 manual, page 31–32. Numeric range: 0–15 . Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'display_backlight': dict(
@@ -1240,8 +1252,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=1.0,
         decoded_max=30.0,
-        description='Displayets baggrundslys (trin). Manual 130, side 33. Numerisk område: 1–30 . Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Display backlight level. Application 130 manual, page 33. Numeric range: 1–30 . Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Displayets baggrundslys (trin). Manual 130, side 33. Numerisk område: 1–30 . Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Display backlight level. Application 130 manual, page 33. Numeric range: 1–30 . Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'display_contrast': dict(
@@ -1254,8 +1266,8 @@ _DISPLAY_METADATA: Final = {
         safe_write=False,
         decoded_min=0.0,
         decoded_max=20.0,
-        description='Displayets kontrast (trin). Manual 130, side 33. Numerisk område: 0–20 . Modbus-dekodning udledt af manual og testværdier; OFF-kode ikke bekræftet.',
-        description_en='Display contrast level. Application 130 manual, page 33. Numeric range: 0–20 . Modbus decoding inferred from manual and observed values; OFF encoding unconfirmed.',
+        description='Displayets kontrast (trin). Manual 130, side 33. Numerisk område: 0–20 . Modbus-dekodning udledt af manual og testværdier.',
+        description_en='Display contrast level. Application 130 manual, page 33. Numeric range: 0–20 . Modbus decoding inferred from manual and observed values.',
         data_type=RegisterDataType.UINT16,
     ),
     'desired_s3': dict(
@@ -1280,6 +1292,62 @@ _DISPLAY_METADATA: Final = {
         data_type=RegisterDataType.UINT16,
     ),
 }
+
+# Application 130 display photographs and direct raw readings, 2026-09-19.
+# Only observed option codes are mapped; the opposite of 0 is not assumed.
+# These observations do not prove a full range, write access or application 116.
+_OBSERVED_OPTIONS: Final = {
+    "return_priority": {0: "off"},
+    "optimization_basis": {0: "outdoor"},
+    "total_stop": {0: "off"},
+    "pump_exercise": {1: "on"},
+    "valve_exercise": {0: "off"},
+    "actuator_type": {1: "gear"},
+    "dhw_priority": {0: "off"},
+    "external_override": {0: "off"},
+    "daylight_saving": {1: "on"},
+}
+_OBSERVED_OFF_CODES: Final = {
+    "room_integration_time": 0,
+    "boost": 0,
+    "reference_ramp": 0,
+    "optimizer": 9,
+    "motor_protection": 9,
+    "knee_point": 29,
+}
+_OBSERVED_RAW: Final = {
+    "heating_curve_slope": 7, "parallel_displacement": 0,
+    "flow_temperature_min": 25, "flow_temperature_max": 43,
+    "room_integration_time": 0, "room_gain_max": 65496, "room_gain_min": 0,
+    "return_temperature_limit": 50, "return_gain_max": 65516,
+    "return_gain_min": 0, "return_integration_time": 25, "return_priority": 0,
+    "auto_reduct": 65521, "boost": 0, "reference_ramp": 0, "optimizer": 9,
+    "optimization_basis": 0, "total_stop": 0, "heating_cutout": 20,
+    "motor_protection": 9, "proportional_band": 200, "integration_time": 60,
+    "valve_running_time": 96, "neutral_zone": 3, "eca_address": 0,
+    "pump_exercise": 1, "valve_exercise": 0, "actuator_type": 1,
+    "dhw_priority": 0, "pump_frost_temperature": 2, "pump_heat_temperature": 20,
+    "standby_temperature": 10, "external_override": 0, "knee_point": 29,
+    "minimum_activation_time": 10, "daylight_saving": 1, "ecl_address": 15,
+    "display_backlight": 16, "display_contrast": 10, "language": 2,
+    "modbus_address": 5,
+}
+for _key, _options in _OBSERVED_OPTIONS.items():
+    _DISPLAY_METADATA[_key].update(options=_options, precision=None)
+    _DISPLAY_METADATA[_key]["description"] = _DISPLAY_METADATA[_key]["description"].replace(
+        "Valgenes Modbus-kodning er ikke bekræftet; ukodede valg vises som råtal.",
+        "Kun de målte Modbus-koder er bekræftet.",
+    ) + f" Bekræftede råkoder på applikation 130: {_options}. Øvrige koder er ikke bekræftet."
+    _DISPLAY_METADATA[_key]["description_en"] = _DISPLAY_METADATA[_key]["description_en"].replace(
+        "Numeric Modbus option encoding is unconfirmed; unmapped options remain raw.",
+        "Only observed Modbus codes have been verified.",
+    ) + f" Observed raw codes on application 130: {_options}. Other codes are unconfirmed."
+for _key, _code in _OBSERVED_OFF_CODES.items():
+    _DISPLAY_METADATA[_key].update(off_raw_values=frozenset({_code}))
+    _DISPLAY_METADATA[_key]["description"] += f" Bekræftet på applikation 130: råværdi {_code} = OFF."
+    _DISPLAY_METADATA[_key]["description_en"] += f" Observed on application 130: raw {_code} = OFF."
+for _key, _raw in _OBSERVED_RAW.items():
+    _DISPLAY_METADATA.setdefault(_key, {}).update(observed_raw_values=(_raw,))
 
 _registers = [
     replace(register, **_DISPLAY_METADATA.get(register.key, {}))
@@ -1314,4 +1382,3 @@ SENSOR_REGISTERS: Final = tuple(
     for register in READABLE_REGISTERS
     if register.platform is not EntityPlatform.NONE
 )
-
