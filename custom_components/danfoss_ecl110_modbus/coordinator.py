@@ -212,3 +212,22 @@ class Ecl110DataUpdateCoordinator(
         value = self.raw_register_values().get(key)
         return int(value) if value is not None else None
 
+    async def async_write_register(self, key: str, raw_value: int) -> int:
+        """Validate, write and publish one verified register value."""
+
+        register = REGISTERS_BY_KEY[key]
+        register.validate_raw_write(raw_value)
+        read_back = await self.client.async_write_holding_register(
+            address=register.address,
+            value=raw_value,
+        )
+
+        data = dict(self.data) if isinstance(self.data, Mapping) else {}
+        registers = dict(self.raw_register_values())
+        registers[key] = read_back
+        data["registers"] = registers
+        data.setdefault("device_id", self.client.device_id)
+        data.setdefault("application", self.application or APPLICATION_ALL)
+        self.async_set_updated_data(data)
+        return read_back
+
