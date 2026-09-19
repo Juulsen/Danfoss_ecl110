@@ -1298,14 +1298,14 @@ _DISPLAY_METADATA: Final = {
 # These observations do not prove a full range, write access or application 116.
 _OBSERVED_OPTIONS: Final = {
     "return_priority": {0: "off"},
-    "optimization_basis": {0: "outdoor"},
+    "optimization_basis": {0: "outdoor", 1: "room"},
     "total_stop": {0: "off"},
     "pump_exercise": {1: "on"},
     "valve_exercise": {0: "off"},
     "actuator_type": {1: "gear"},
     "dhw_priority": {0: "off"},
     "external_override": {0: "off"},
-    "daylight_saving": {1: "on"},
+    "daylight_saving": {0: "off", 1: "on"},
 }
 _OBSERVED_OFF_CODES: Final = {
     "room_integration_time": 0,
@@ -1348,6 +1348,21 @@ for _key, _code in _OBSERVED_OFF_CODES.items():
     _DISPLAY_METADATA[_key]["description_en"] += f" Observed on application 130: raw {_code} = OFF."
 for _key, _raw in _OBSERVED_RAW.items():
     _DISPLAY_METADATA.setdefault(_key, {}).update(observed_raw_values=(_raw,))
+
+# FC06 / FC03 / display / restore tested by the user with external software.
+# This records observed values only; the integration remains read-only.
+_EXTERNAL_WRITE_TEST_VALUES: Final = {
+    "display_backlight": (16, 17),
+    "display_contrast": (10, 11),
+    "language": (2, 0),
+    "daylight_saving": (1, 0),
+    "room_integration_time": (0, 1),
+    "optimization_basis": (0, 1),
+    "reference_ramp": (0, 1),
+    "boost": (0, 1),
+}
+for _key, _values in _EXTERNAL_WRITE_TEST_VALUES.items():
+    _DISPLAY_METADATA[_key].update(observed_raw_values=_values)
 
 _registers = [
     replace(register, **_DISPLAY_METADATA.get(register.key, {}))
