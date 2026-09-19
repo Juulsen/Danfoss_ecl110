@@ -1,17 +1,20 @@
 # Danfoss ECL110 Modbus for Home Assistant
 
-[![Version](https://img.shields.io/badge/version-0.2.3-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.2.4-blue.svg)](CHANGELOG.md)
 [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Custom%20Integration-41BDF5.svg)](https://www.home-assistant.io/)
 [![HACS](https://img.shields.io/badge/HACS-preparing-orange.svg)](https://www.hacs.xyz/)
 [![Communication](https://img.shields.io/badge/Modbus-RTU%20%2F%20TCP-informational.svg)](#communication)
-[![Status](https://img.shields.io/badge/status-read--only%20testing-yellow.svg)](#project-status)
+[![Status](https://img.shields.io/badge/status-limited%20verified%20write-yellow.svg)](#project-status)
 
-A Home Assistant custom integration for monitoring the **Danfoss ECL Comfort 110** through Modbus.
+A Home Assistant custom integration for monitoring and verified control of the **Danfoss ECL Comfort 110** through Modbus.
 
 The integration is developed and maintained by **Juulsen**. It is an independent community project and is not developed, supported, or endorsed by Danfoss.
 
 > [!IMPORTANT]
-> Version 0.2.3 is a read-only test release. Home Assistant cannot write settings to the controller in this version.
+> [!CAUTION]
+> Version 0.2.4 can change eight explicitly verified settings. Each write uses
+> FC06 and is accepted only after an immediate FC03 readback returns the same
+> value. All other registers remain read-only.
 
 ## Highlights
 
@@ -28,6 +31,7 @@ The integration is developed and maintained by **Juulsen**. It is an independent
 - Conservative polling designed for a shared RS485 bus
 - Signed temperature decoding and disconnected-sensor handling
 - Register address, access type, confidence and source exposed as entity attributes
+- Eight deliberately limited writable controls verified on real hardware
 
 ## Project status
 
@@ -38,11 +42,11 @@ The integration is developed and maintained by **Juulsen**. It is an independent
 | Complete named register map | Ready for hardware testing |
 | Danish translation | Included |
 | English translation | Included |
-| Writing parameters | Disabled |
+| Writing parameters | 8 verified controls |
 | HACS custom repository | Preparing |
 | HACS default repository | Not submitted |
 
-The project currently prioritizes safe observation and verification. Registers documented as writable by the source are still exposed as read-only sensors until their scaling, ranges and behaviour have been verified on real hardware.
+The project prioritizes safe observation and verification. Registers documented as writable by the source remain read-only unless their behaviour has been verified on real hardware and explicitly whitelisted.
 
 ## Communication
 
@@ -106,8 +110,11 @@ The resulting structure must be:
 ├── coordinator.py
 ├── manifest.json
 ├── modbus_client.py
+├── number.py
 ├── registers.py
+├── select.py
 ├── sensor.py
+├── switch.py
 └── translations/
     ├── da.json
     └── en.json
@@ -140,7 +147,25 @@ The setup flow performs a harmless read-only test of register 11200 before savin
 
 For a shared RS485 bus, keep a reasonable update interval and request delay.
 
-## Decoding in version 0.2.3
+## Verified controls in version 0.2.4
+
+| Home Assistant control | ECL menu | Register | Allowed values |
+|---|---:|---:|---|
+| Display backlight | 8310 | 60057 | 1–30 |
+| Display contrast | 8311 | 60058 | 0–20 |
+| Language | 8315 | 2027 | English / Danish |
+| Automatic daylight saving | 7198 | 11197 | OFF / ON |
+| Room integration time | 3015 | 11014 | OFF / 1 second |
+| Optimization basis | 5020 | 11019 | OUT / ROOM |
+| Reference ramp | 5013 | 11012 | OFF / 1 minute |
+| Boost | 5012 | 11011 | OFF / 1 % |
+
+The complete manual range is enabled only for backlight and contrast. The six
+remaining controls expose only values physically tested with FC06, FC03,
+display confirmation and restoration. Unsupported values are rejected before
+communication. The controller acknowledgement and readback are both checked.
+
+## Decoding in version 0.2.4
 
 Application 130 display photographs and direct Modbus readings have been compared.
 See [hardware verification and raw readings](docs/hardware-verification-2026-09-19.md)
@@ -171,8 +196,7 @@ has been observed but its Modbus address is still unknown.
 
 Eight registers have also passed user-run FC06 writes, FC03 readback, display checks
 and restoration using external Modbus software: 60057, 60058, 2027, 11197, 11014,
-11019, 11012 and 11011. This establishes the tested values only. Version 0.2.3
-does not expose writable Home Assistant entities; write support is planned separately.
+11019, 11012 and 11011. Version 0.2.4 exposes only those verified controls.
 
 ## Register model
 
@@ -191,20 +215,22 @@ Each mapped register includes metadata for:
 - Confidence level
 - Safe-write status
 
-### Entity policy in version 0.2.3
+### Entity policy in version 0.2.4
 
 - S1-S4 are enabled by default.
 - All other named registers are created but disabled by default.
 - Unknown addresses are not created as Home Assistant entities.
 - Enabling an entity adds its register to the polling set.
 - Adjacent registers are grouped into bounded read blocks.
+- Writable controls are configuration entities and use the same shared polling coordinator.
+- Registers without an explicit write whitelist cannot be written by the integration.
 - Undocumented gaps are not read as part of a block.
 
 This design prevents the integration from polling every address continuously and reduces load on slower or shared RTU networks.
 
 ## Testing the complete register map
 
-After installing version 0.2.3:
+After installing version 0.2.4:
 
 1. Confirm that S1-S4 still update.
 2. Open the ECL110 device in Home Assistant.
@@ -353,4 +379,3 @@ When reporting a register issue, include the register address, ECL application, 
 ## Trademark notice
 
 Danfoss and ECL Comfort are trademarks of their respective owner. Their names are used only to identify compatible hardware. This independent project is not affiliated with, endorsed by, or supported by Danfoss.
-
