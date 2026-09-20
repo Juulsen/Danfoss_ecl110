@@ -29,8 +29,11 @@
 </head>
 <body>
   <main><ecl110-card></ecl110-card></main>
-  <script src="https://cdn.jsdelivr.net/gh/Juulsen/Danfoss_ecl110@main/custom_components/danfoss_ecl110_modbus/frontend/ecl110-card.js"></script>
   <script>
+    nativeFetch(assetRoot + "ecl110-card.js")
+      .then(response => response.text())
+      .then(source => (0, eval)(source));
+
     const states = {};
     const put = (key, state, domain = "number", attributes = {}) => {
       states[`${domain}.ecl_${key}`] = {
