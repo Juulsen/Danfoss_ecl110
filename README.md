@@ -15,32 +15,38 @@ Test new writes carefully and confirm the result on the physical controller. Ple
 
 ## Support the project
 
-If the integration is useful to you and you would like to support its continued development and testing, you can [donate through PayPal](https://www.paypal.me/MIJUTEC).
+If the integration is useful to you, you can support its continued development and testing:
 
-## Nyt i 0.4.1
+<p align="center">
+  <a href="https://www.paypal.me/MIJUTEC">
+    <img src="https://img.shields.io/badge/Donate-PayPal-0070BA?logo=paypal&logoColor=white" alt="Donate with PayPal">
+  </a>
+</p>
 
-- Register **11179** er tilføjet som skrivbar **Ønsket rumtemperatur** for applikation 130, område 10–30 °C i hele grader.
-- Register **11228** er rettet til **Aktiv ønsket rumtemperatur S2**, aflæst med 0,1 °C opløsning.
-- Displaytest bekræfter 21 °C → `11179=21` og `11228=210`, samt 22 °C → `11179=22` og `11228=220`.
-- Rumtemperaturindstillingen findes under **Indstillinger → Rumregulering** og kan også vælges i det tilpassede overblik.
-- Register **11180** er fortsat ukendt og skjult.
+## What's new in 0.4.1
 
-## Nyt i 0.4.0 · kort fortalt
+- Register **11179** has been added as the writable **Desired room temperature** for application 130, with a range of 10–30 °C in whole degrees.
+- Register **11228** has been corrected to **Active desired room temperature S2**, read with 0.1 °C resolution.
+- Display tests confirm 21 °C → `11179=21` and `11228=210`, and 22 °C → `11179=22` and `11228=220`.
+- The room-temperature setting is available under **Settings → Room control** and can also be selected in the customizable overview.
+- Register **11180** remains unknown and hidden.
 
-Layoutet beholder fanerne **Overblik · Indstillinger · Ugeprogram · Forslag**.
+## Version 0.4.0 overview
 
-| Funktion | Sådan bruges den |
+The layout keeps the tabs **Overview · Settings · Schedule · Suggestions**.
+
+| Feature | How to use it |
 |---|---|
-| Vælg felter | Tryk **Tilpas overblik**, og markér de målinger eller indstillinger, du vil se. |
-| Rækkefølge | Brug pilene op/ned ved de valgte felter. |
-| Layout | Vælg **Felter**, **Liste** eller **Ét felt i fokus**. Det første valgte felt får fokus. |
-| Størrelse | Vælg **Kompakt**, **Normal** eller **Stor**. Kortet tilpasser sig også sin bredde. |
-| Gem | **Gem visning** gemmer kun kortets visning, uden Modbus-skrivninger. |
-| Hjælp | Tryk **i** for en enkel forklaring, virkningen af en ændring og relevante eksempler. Beregninger kan foldes ud. |
+| Choose fields | Select **Customize overview**, then choose the measurements or settings you want to display. |
+| Reorder fields | Use the up/down arrows next to the selected fields. |
+| Layout | Choose **Tiles**, **List** or **First field in focus**. The first selected field is used for focus mode. |
+| Size | Choose **Compact**, **Normal** or **Large**. The card also adapts to its available width. |
+| Save | **Save view** stores only the card layout and performs no Modbus writes. |
+| Help | Select **i** for a plain-language explanation, the effect of a change and relevant examples. Calculations can be expanded when available. |
 
-Visningsvalg gemmes **pr. HA-bruger, ECL-enhed og browser**. De synkroniseres ikke automatisk mellem telefon og computer. Rydning af browserdata fjerner valgene. Sæt eventuelt fælles standarder i kortets YAML som beskrevet nedenfor. Alle 45 hjælpetekster findes på dansk og engelsk; popup-boksene indeholder ingen PDF- eller sidehenvisninger.
+Display preferences are stored **per Home Assistant user, ECL device and browser**. They are not synchronized automatically between a phone and a computer. Clearing browser data removes the saved preferences. Shared defaults can be defined in the card YAML as described below. All 45 help texts are available in Danish and English; the information dialogs contain no PDF or page references.
 
-## What is new
+## Additional 0.4.0 improvements
 
 - Customizable overview: choose existing entities, reorder them, and select tiles, list or first-field focus.
 - Compact, normal and large display sizes; responsive to the card width.
