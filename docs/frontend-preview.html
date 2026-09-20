@@ -74,9 +74,11 @@
       formatEntityState: entity => entity.state + (entity.attributes.unit_of_measurement ? ` ${entity.attributes.unit_of_measurement}` : ""),
       callService: async () => {},
     };
-    const card = document.querySelector("ecl110-card");
-    card.setConfig({ type: "custom:ecl110-card", language: "en" });
-    card.hass = hass;
+    customElements.whenDefined("ecl110-card").then(() => {
+      const card = document.querySelector("ecl110-card");
+      card.setConfig({ type: "custom:ecl110-card", language: "en" });
+      card.hass = hass;
+    });
   </script>
 </body>
 </html>
