@@ -13,11 +13,12 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 - Further safe write support only after physical verification
 - Additional translations
 - HACS metadata, validation workflows and brand assets
-- First published GitHub release
 
 ## [0.4.1] - 2026-09-20
 
 ### Added
+
+- First public GitHub release of the integration.
 
 - Writable desired room temperature on holding register 11179 for application 130, exposed as a 10–30 °C `number` control in whole-degree steps.
 - Danish/English entity names and plain-language help for desired room temperature.
