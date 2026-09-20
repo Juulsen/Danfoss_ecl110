@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ECL110 frontend preview</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 38px;
+      color: #202124;
+      font: 15px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #eaf2f4 0%, #f8fafb 55%, #e7eff1 100%);
+    }
+    main { max-width: 920px; margin: 0 auto; }
+    ecl110-card { display: block; width: 100%; filter: drop-shadow(0 16px 32px rgba(35, 66, 72, .12)); }
+  </style>
+  <script>
+    const assetRoot = "https://cdn.jsdelivr.net/gh/Juulsen/Danfoss_ecl110@main/custom_components/danfoss_ecl110_modbus/frontend/";
+    const nativeFetch = window.fetch.bind(window);
+    window.fetch = (url, options) => {
+      const name = String(url).includes("help.json") ? "help.json" : String(url).includes("catalog.json") ? "catalog.json" : null;
+      return nativeFetch(name ? assetRoot + name : url, options);
+    };
+  </script>
+</head>
+<body>
+  <main><ecl110-card></ecl110-card></main>
+  <script src="https://cdn.jsdelivr.net/gh/Juulsen/Danfoss_ecl110@main/custom_components/danfoss_ecl110_modbus/frontend/ecl110-card.js"></script>
+  <script>
+    const states = {};
+    const put = (key, state, domain = "number", attributes = {}) => {
+      states[`${domain}.ecl_${key}`] = {
+        state: String(state),
+        attributes: {
+          ecl_device: "ECL110 demo",
+          ecl_application: "130",
+          register_key: key,
+          friendly_name: key,
+          min: 0,
+          max: 150,
+          step: 1,
+          ...attributes,
+        },
+      };
+    };
+
+    [[1, 16.9], [2, 21.2], [3, 36.6], [4, 35.6]].forEach(([sensor, temperature]) =>
+      put(`temperature_s${sensor}`, temperature, "sensor", { unit_of_measurement: "°C" }));
+    put("heating_curve_slope", 0.7, "number", { min: 0.1, max: 4, step: 0.1 });
+    put("knee_point", "off", "select", { options: ["off", "30 °C", "40 °C", "50 °C"] });
+    put("flow_temperature_min", 25);
+    put("flow_temperature_max", 43);
+    put("desired_room_temperature", 22, "number", { min: 10, max: 30, step: 1, unit_of_measurement: "°C" });
+    put("desired_s2", 22, "sensor", { unit_of_measurement: "°C" });
+    put("desired_mode", "auto", "select", { options: ["auto", "comfort", "setback", "standby"] });
+
+    const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+    const slots = ["start_1", "stop_1", "start_2", "stop_2"];
+    const times = ["06:00", "08:00", "16:00", "22:00"];
+    for (const day of days) {
+      slots.forEach((slot, index) => put(`schedule_${day}_${slot}`, times[index], "select", {
+        options: ["00:00", "06:00", "07:00", "08:00", "16:00", "22:00", "24:00"],
+      }));
+    }
+
+    const hass = {
+      user: { id: "readme-demo" },
+      language: "en",
+      states,
+      formatEntityState: entity => entity.state + (entity.attributes.unit_of_measurement ? ` ${entity.attributes.unit_of_measurement}` : ""),
+      callService: async () => {},
+    };
+    const card = document.querySelector("ecl110-card");
+    card.setConfig({ type: "custom:ecl110-card", language: "en" });
+    card.hass = hass;
+  </script>
+</body>
+</html>
