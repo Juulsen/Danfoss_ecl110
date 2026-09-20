@@ -14,7 +14,7 @@ class Ecl110Card extends HTMLElement {
   async load(){
     try{
       const base='/ecl110-static/';
-      const results=await Promise.all(['catalog.json','help.json'].map(async f=>{const r=await fetch(base+f+'?v=0.4.1');if(!r.ok)throw Error(`${f}: ${r.status}`);return r.json();}));
+      const results=await Promise.all(['catalog.json','help.json'].map(async f=>{const r=await fetch(base+f+'?v=0.4.2');if(!r.ok)throw Error(`${f}: ${r.status}`);return r.json();}));
       [this.catalog,this.help]=results;this.render();
     }catch(e){this.message=String(e);this.render();}
   }
@@ -71,7 +71,7 @@ class Ecl110Card extends HTMLElement {
       @container(max-width:440px){.overview-grid.compact{grid-template-columns:repeat(2,minmax(0,1fr))}.overview-controls{grid-template-columns:1fr}.overview-editor{padding:12px}.overview-grid.large .metric{padding:16px}.overview-grid.large .value{font-size:28px}.overview-grid.focus .metric:first-child .value{font-size:32px}.overview-grid.list .metric{padding:12px 0}.overview-order button{min-height:44px}dialog{padding:18px}.row{overflow-wrap:anywhere}}
       @container(max-width:440px){ha-card{padding:14px}.row{grid-template-columns:minmax(80px,1fr) 125px 30px;gap:5px}.periods{grid-template-columns:1fr}nav button{padding:8px;font-size:13px}}
     `;r.append(style);
-    const card=el('ha-card');r.append(card);const head=el('header');head.append(el('h2','ECL110'),el('small','Juulsen · 0.4.1'));card.append(head);
+    const card=el('ha-card');r.append(card);const head=el('header');head.append(el('h2','ECL110'),el('small','Juulsen · 0.4.2'));card.append(head);
     if(!this.catalog||!this._hass){card.append(el('p',this.message||this.tr('Indlæser…','Loading…')));return;}
     if(!this.entities().length){card.append(el('p',this.tr('Vælg en ECL110-entitet i kortets YAML: entity: sensor.… Ved flere regulatorer kræves dette valg.','Choose an ECL110 entity in the card YAML: entity: sensor.… This is required with multiple controllers.')));return;}
     const nav=el('nav');[this.tr('Overblik','Overview'),this.tr('Indstillinger','Settings'),this.tr('Ugeprogram','Schedule'),this.tr('Forslag','Suggestions')].forEach((t,i)=>nav.append(this.button(t,()=>{this.tab=i;this.render();},i===this.tab?'active':'')));card.append(nav);

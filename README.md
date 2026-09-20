@@ -1,8 +1,11 @@
 # ECL110 Modbus · Juulsen
 
+[![Latest release](https://img.shields.io/github/v/release/Juulsen/Danfoss_ecl110)](https://github.com/Juulsen/Danfoss_ecl110/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 **Home Assistant control, weekly schedules and contextual help for Danfoss ECL Comfort 110.**
 
-Version **0.4.1** · Local Modbus TCP · Danish / English · Independent community project
+Version **0.4.2** · Local Modbus TCP · Danish / English · Independent community project
 
 Developed by **Juulsen**. This integration is not developed, supported or endorsed by Danfoss.
 
@@ -22,6 +25,19 @@ If the integration is useful to you, you can support its continued development a
     <img src="https://img.shields.io/badge/Donate-PayPal-0070BA?logo=paypal&logoColor=white" alt="Donate with PayPal">
   </a>
 </p>
+
+## License
+
+The original code and documentation in this repository are released under the [MIT License](LICENSE).
+
+Product names and trademarks belong to their respective owners. The license does not grant rights to the Danfoss name, logo or trademarks, and linked third-party reference material remains subject to its own terms.
+
+## What's new in 0.4.2
+
+- Added the MIT License for the project's original code and documentation.
+- Added license and release badges plus a clear third-party trademark notice.
+- Updated the integration and dashboard version to 0.4.2.
+- No Modbus registers, scaling, writes or runtime behaviour changed in this release.
 
 ## What's new in 0.4.1
 
@@ -69,7 +85,7 @@ Numeric ranges introduced in 0.3.0 use the application 130 manual and paired dis
 
 1. Download the [repository ZIP](https://github.com/Juulsen/Danfoss_ecl110/archive/refs/heads/main.zip).
 2. Extract it and copy the complete `custom_components/danfoss_ecl110_modbus` folder to `/config/custom_components/`, including its `frontend` subfolder.
-3. Restart Home Assistant. When updating the card, also change its existing resource URL to `?v=0.4.1` and reload your browser. Keep only one ECL110 JavaScript resource.
+3. Restart Home Assistant. When updating the card, also change its existing resource URL to `?v=0.4.2` and reload your browser. Keep only one ECL110 JavaScript resource.
 4. Open **Settings → Devices & services → ECL110 → Reconfigure**.
 5. Select the actual application: **130** for room heating, **116** for domestic hot water. Newly expanded heating writes require explicit selection of **130**; `all` does not unlock them.
 6. Enable **ECA 110 weekly schedule** only if the controller has its timer program. Setup tests reading all seven days before creating the 28 time selections together.
@@ -83,7 +99,7 @@ No Browser Mod or additional card dependency is needed. The integration serves i
 Add a dashboard **resource** (JavaScript module):
 
 ```text
-/ecl110-static/ecl110-card.js?v=0.4.1
+/ecl110-static/ecl110-card.js?v=0.4.2
 ```
 
 Then add a manual card:

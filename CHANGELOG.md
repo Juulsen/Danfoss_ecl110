@@ -14,6 +14,23 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 - Additional translations
 - HACS metadata, validation workflows and brand assets
 
+## [0.4.2] - 2026-09-20
+
+### Added
+
+- MIT License for the project's original code and documentation.
+- License and latest-release badges in the README.
+- A clear notice that product names, trademarks and linked third-party reference material are not relicensed by this project.
+
+### Changed
+
+- Integration manifest and dashboard resource version updated to 0.4.2.
+- README installation examples updated to the 0.4.2 cache identifier.
+
+### Scope
+
+- No Modbus registers, scaling, write permissions, entity IDs or runtime behaviour changed.
+
 ## [0.4.1] - 2026-09-20
 
 ### Added
