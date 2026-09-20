@@ -6,6 +6,17 @@ Version **0.4.1** · Local Modbus TCP · Danish / English · Independent communi
 
 Developed by **Juulsen**. This integration is not developed, supported or endorsed by Danfoss.
 
+## Project status
+
+> [!WARNING]
+> **Active test / beta.** The integration is being tested against a physical ECL110 installation. Features, register definitions and the dashboard can change as more functions are verified. Updates and corrections will be published continuously.
+
+Test new writes carefully and confirm the result on the physical controller. Please report reproducible problems through [GitHub Issues](https://github.com/Juulsen/Danfoss_ecl110/issues), including the integration version, ECL application, expected result and observed result.
+
+## Support the project
+
+If the integration is useful to you and you would like to support its continued development and testing, you can [donate through PayPal](https://www.paypal.me/MIJUTEC).
+
 ## Nyt i 0.4.1
 
 - Register **11179** er tilføjet som skrivbar **Ønsket rumtemperatur** for applikation 130, område 10–30 °C i hele grader.
