@@ -5,7 +5,7 @@ import math
 
 class WriteTests(unittest.TestCase):
     def test_signed_round_trip(self):
-        for key, value, wire in [('auto_reduct', -15, 65521),('room_gain_max',-4,65496),('return_gain_max',-2,65516),('heating_curve_slope',0.7,7),('minimum_activation_time',200,10)]:
+        for key, value, wire in [('auto_reduct', -15, 65521),('room_gain_max',-4,65496),('return_gain_max',-2,65516),('heating_curve_slope',0.7,7),('minimum_activation_time',200,10),('desired_room_temperature',22,22)]:
             r=registers.REGISTERS_BY_KEY[key]
             self.assertEqual(r.encode(value),wire)
             self.assertAlmostEqual(r.decode(wire),value)

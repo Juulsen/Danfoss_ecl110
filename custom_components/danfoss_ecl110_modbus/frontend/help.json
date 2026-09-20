@@ -580,5 +580,21 @@
       "da": "AUTO følger ugeprogrammet. KOMFORT holder komfortdrift. SÆNKNING holder sænkningsdrift. STANDBY bruger standbyfremløbet og er derfor ikke nødvendigvis helt slukket.",
       "en": "AUTO follows the weekly schedule. COMFORT holds comfort operation. SETBACK holds setback operation. STANDBY uses the standby flow target and therefore does not necessarily mean completely off."
     }
+  },
+  "desired_room_temperature": {
+    "da": "Den rumtemperatur regulatoren forsøger at holde, når rumføleren bruges.",
+    "en": "The room temperature the controller tries to maintain when a room sensor is used.",
+    "effect": {
+      "da": "En højere værdi får rumreguleringen til at bede om mere varme. En lavere værdi får den til at bede om mindre. Virkningen kræver en brugbar rumtemperatur på S2.",
+      "en": "A higher value makes room control request more heat. A lower value makes it request less. This requires a valid room temperature on S2."
+    },
+    "example": {
+      "da": "Indstillingen 22 betyder 22 °C. Registeret for den aktive ønskede S2-værdi viser den samme temperatur med én decimal, eksempelvis 220 som 22,0 °C.",
+      "en": "A setting of 22 means 22 °C. The active desired S2 register shows the same temperature with one decimal, for example raw 220 as 22.0 °C."
+    },
+    "note": {
+      "da": "Indstillingen kan vælges fra 10 til 30 °C i hele grader. Ugeprogram og driftstilstand kan påvirke, hvilken ønsket temperatur der er aktiv.",
+      "en": "The setting can be selected from 10 to 30 °C in whole degrees. The weekly schedule and operating mode can affect which desired temperature is active."
+    }
   }
 }

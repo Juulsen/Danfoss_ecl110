@@ -14,7 +14,7 @@ class Ecl110Card extends HTMLElement {
   async load(){
     try{
       const base='/ecl110-static/';
-      const results=await Promise.all(['catalog.json','help.json'].map(async f=>{const r=await fetch(base+f+'?v=0.4.0');if(!r.ok)throw Error(`${f}: ${r.status}`);return r.json();}));
+      const results=await Promise.all(['catalog.json','help.json'].map(async f=>{const r=await fetch(base+f+'?v=0.4.1');if(!r.ok)throw Error(`${f}: ${r.status}`);return r.json();}));
       [this.catalog,this.help]=results;this.render();
     }catch(e){this.message=String(e);this.render();}
   }
@@ -71,7 +71,7 @@ class Ecl110Card extends HTMLElement {
       @container(max-width:440px){.overview-grid.compact{grid-template-columns:repeat(2,minmax(0,1fr))}.overview-controls{grid-template-columns:1fr}.overview-editor{padding:12px}.overview-grid.large .metric{padding:16px}.overview-grid.large .value{font-size:28px}.overview-grid.focus .metric:first-child .value{font-size:32px}.overview-grid.list .metric{padding:12px 0}.overview-order button{min-height:44px}dialog{padding:18px}.row{overflow-wrap:anywhere}}
       @container(max-width:440px){ha-card{padding:14px}.row{grid-template-columns:minmax(80px,1fr) 125px 30px;gap:5px}.periods{grid-template-columns:1fr}nav button{padding:8px;font-size:13px}}
     `;r.append(style);
-    const card=el('ha-card');r.append(card);const head=el('header');head.append(el('h2','ECL110'),el('small','Juulsen · 0.4.0'));card.append(head);
+    const card=el('ha-card');r.append(card);const head=el('header');head.append(el('h2','ECL110'),el('small','Juulsen · 0.4.1'));card.append(head);
     if(!this.catalog||!this._hass){card.append(el('p',this.message||this.tr('Indlæser…','Loading…')));return;}
     if(!this.entities().length){card.append(el('p',this.tr('Vælg en ECL110-entitet i kortets YAML: entity: sensor.… Ved flere regulatorer kræves dette valg.','Choose an ECL110 entity in the card YAML: entity: sensor.… This is required with multiple controllers.')));return;}
     const nav=el('nav');[this.tr('Overblik','Overview'),this.tr('Indstillinger','Settings'),this.tr('Ugeprogram','Schedule'),this.tr('Forslag','Suggestions')].forEach((t,i)=>nav.append(this.button(t,()=>{this.tab=i;this.render();},i===this.tab?'active':'')));card.append(nav);
@@ -161,7 +161,7 @@ class Ecl110Card extends HTMLElement {
     const groups=[['2',this.tr('Fremløb og varmekurve','Flow and heat curve')],['3',this.tr('Rumregulering','Room control')],['4',this.tr('Returbegrænsning','Return limitation')],['5',this.tr('Optimering','Optimization')],['6',this.tr('Reguleringsparametre','Control parameters')],['7',this.tr('Anlæg og pumpe','System and pump')],['8',this.tr('Display og service','Display and service')]];
     const app=this.entities().find(([,s])=>s.attributes.ecl_application)?.[1].attributes.ecl_application;
     if(!app||app==='all')card.append(el('p',this.tr('Vælg applikation 130 i integrationens opsætning for at aktivere de nye varmeindstillinger.','Select application 130 in the integration setup to enable the new heating settings.'),'muted'));
-    for(const [prefix,title] of groups){const d=el('details');d.append(el('summary',title));const list=this.catalog.filter(m=>m.line?.startsWith(prefix)&&(!app||m.applications.includes(app))).sort((a,b)=>Number(a.line)-Number(b.line));for(const m of list)d.append(this.settingRow(m));card.append(d);}
+    for(const [prefix,title] of groups){const d=el('details');d.append(el('summary',title));const list=this.catalog.filter(m=>(m.line?.startsWith(prefix)||(prefix==='3'&&m.key==='desired_room_temperature'))&&(!app||m.applications.includes(app))).sort((a,b)=>(Number(a.line)||0)-(Number(b.line)||0));for(const m of list)d.append(this.settingRow(m));card.append(d);}
     const missing=el('details');missing.append(el('summary',this.tr('Menuer uden Modbus-adresse','Menus without a Modbus address')));missing.append(this.button('5081 · S1-filter',()=>this.showHelp({line:'5081',name:{da:'S1-filter',en:'S1 filter'}})));card.append(missing);
   }
   settingRow(meta){

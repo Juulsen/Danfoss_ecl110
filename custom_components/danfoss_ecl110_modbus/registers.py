@@ -599,10 +599,35 @@ for address, key, name, description, line, applications in (
 
 _registers.extend(
     [
-        _unknown(
-            11179,
+        _register(
+            key="desired_room_temperature",
+            address=11179,
+            name="Ønsket rumtemperatur",
+            description=(
+                "Indstilling af ønsket rumtemperatur i applikation 130. "
+                "Råværdien er temperaturen i hele grader."
+            ),
+            description_en=(
+                "Desired room temperature setting in application 130. "
+                "The raw value is the temperature in whole degrees."
+            ),
+            access=RegisterAccess.READ_WRITE,
+            platform=EntityPlatform.NUMBER,
             applications=("130",),
-            description="Muligvis ønsket rumtemperatur; formatet er ikke bekræftet.",
+            data_type=RegisterDataType.UINT16,
+            scale=1.0,
+            precision=0,
+            unit="°C",
+            device_class="temperature",
+            entity_category="configuration",
+            icon="mdi:home-thermometer",
+            observed_raw_values=(21, 22),
+            decoded_min=10.0,
+            decoded_max=30.0,
+            safe_write=True,
+            verified_write_range=(10, 30),
+            write_basis="source-and-display",
+            write_application="130",
         ),
         _unknown(
             11180,
@@ -646,16 +671,27 @@ _registers.extend(
         _register(
             key="desired_s2",
             address=11228,
-            name="Ønsket værdi S2",
+            name="Aktiv ønsket rumtemperatur S2",
             description=(
-                "Ønsket aflæsning for S2 i applikation 130. "
-                "Skalering og betydning er ikke bekræftet."
+                "Regulatorens aktive ønskede rumtemperatur i applikation 130. "
+                "Råværdien er temperaturen i tiendedele grader."
             ),
-            access=RegisterAccess.READ_UNCONFIRMED,
+            description_en=(
+                "The controller's active desired room temperature in "
+                "application 130. The raw value is the temperature in "
+                "tenths of a degree."
+            ),
+            access=RegisterAccess.READ_ONLY,
             platform=EntityPlatform.SENSOR,
             applications=("130",),
+            data_type=RegisterDataType.UINT16,
+            scale=0.1,
+            precision=1,
+            unit="°C",
+            device_class="temperature",
             enabled_by_default=False,
-            confidence=RegisterConfidence.INFERRED,
+            confidence=RegisterConfidence.CONFIRMED,
+            observed_raw_values=(210, 220),
         ),
         _register(
             key="desired_s3",

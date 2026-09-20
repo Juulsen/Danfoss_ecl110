@@ -8,12 +8,33 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 ### Planned
 
-- Hardware verification of all 85 named read-only entities
+- Hardware verification of all 86 named readable entities
 - Confirmed scaling, sign and valid ranges for configuration registers
 - Further safe write support only after physical verification
 - Additional translations
 - HACS metadata, validation workflows and brand assets
 - First published GitHub release
+
+## [0.4.1] - 2026-09-20
+
+### Added
+
+- Writable desired room temperature on holding register 11179 for application 130, exposed as a 10–30 °C `number` control in whole-degree steps.
+- Danish/English entity names and plain-language help for desired room temperature.
+- Desired room temperature appears under Room control and can be selected for the customizable overview.
+
+### Changed
+
+- Register 11228 is now the confirmed active desired S2 room temperature, decoded in tenths of a degree and exposed as a disabled-by-default temperature sensor.
+- Register 11179 is no longer unknown; register 11180 remains unknown and hidden.
+- Updated README, hardware observations, register counts and dashboard resource version.
+
+### Validation and scope
+
+- Physical display/read observations confirm 21 °C as raw 21/210 and 22 °C as raw 22/220 on registers 11179/11228.
+- Register 11179 is source-mapped R/W; the 10–30 °C display range is enforced before FC06 and every write is checked by immediate FC03 readback.
+- The first write through Home Assistant remains an installation test.
+- All 16 Python tests and the browser regression test pass.
 
 ## [0.4.0] - 2026-09-19
 
@@ -224,5 +245,4 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 - [0.1.0](https://github.com/Juulsen/Danfoss_ecl110/releases/tag/v0.1.0)
 
 > Release links become active after the corresponding GitHub releases are published.
-
 

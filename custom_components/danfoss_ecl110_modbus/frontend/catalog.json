@@ -1498,6 +1498,29 @@
     }
   },
   {
+    "key": "desired_room_temperature",
+    "line": null,
+    "address": 11179,
+    "applications": [
+      "130"
+    ],
+    "writable": true,
+    "write_application": "130",
+    "write_basis": "source-and-display",
+    "unit": "°C",
+    "scale": 1.0,
+    "minimum": 10.0,
+    "maximum": 30.0,
+    "name": {
+      "da": "Ønsket rumtemperatur",
+      "en": "Desired room temperature"
+    },
+    "description": {
+      "da": "Indstilling af ønsket rumtemperatur i applikation 130. Råværdien er temperaturen i hele grader.",
+      "en": "Desired room temperature setting in application 130. The raw value is the temperature in whole degrees."
+    }
+  },
+  {
     "key": "room_gain_max",
     "line": "3182",
     "address": 11181,
@@ -1817,17 +1840,17 @@
     "writable": false,
     "write_application": null,
     "write_basis": "disabled",
-    "unit": null,
-    "scale": 1.0,
+    "unit": "°C",
+    "scale": 0.1,
     "minimum": null,
     "maximum": null,
     "name": {
-      "da": "Ønsket værdi S2",
-      "en": "Desired value S2"
+      "da": "Aktiv ønsket rumtemperatur S2",
+      "en": "Active desired room temperature S2"
     },
     "description": {
-      "da": "Ønsket aflæsning for S2 i applikation 130. Skalering og betydning er ikke bekræftet.",
-      "en": "Ønsket aflæsning for S2 i applikation 130. Skalering og betydning er ikke bekræftet."
+      "da": "Regulatorens aktive ønskede rumtemperatur i applikation 130. Råværdien er temperaturen i tiendedele grader.",
+      "en": "The controller's active desired room temperature in application 130. The raw value is the temperature in tenths of a degree."
     }
   },
   {

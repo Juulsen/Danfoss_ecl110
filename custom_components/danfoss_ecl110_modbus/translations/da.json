@@ -117,7 +117,7 @@
         }
       },
       "desired_s2": {
-        "name": "Ønsket værdi S2"
+        "name": "Aktiv ønsket rumtemperatur S2"
       },
       "desired_s3": {
         "name": "Ønsket fremløbstemperatur S3"
@@ -429,6 +429,9 @@
           "off": "OFF",
           "active": "Aktiv"
         }
+      },
+      "desired_room_temperature": {
+        "name": "Ønsket rumtemperatur"
       }
     },
     "number": {
@@ -497,6 +500,9 @@
       },
       "minimum_activation_time_control": {
         "name": "Minimumspuls til gearmotor"
+      },
+      "desired_room_temperature_control": {
+        "name": "Ønsket rumtemperatur"
       }
     },
     "select": {

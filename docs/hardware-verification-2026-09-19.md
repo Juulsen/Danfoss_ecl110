@@ -54,6 +54,19 @@ En enkelt observeret værdi dokumenterer ikke alle valgmuligheder, hele skalaen 
 | 8315 | 2027 | 2 | DANSK |
 | 8320 | 2007 | 5 | 5 |
 
+## Ønsket rumtemperatur – bekræftet 2026-09-20
+
+Ved ændring på ECL110-displayet fulgte begge registre den valgte temperatur:
+
+| Funktion | Register | Adgang | Display | Raw |
+|---|---:|:---:|---:|---:|
+| Indstilling af ønsket rumtemperatur | 11179 | R/W | 21 °C | 21 |
+| Indstilling af ønsket rumtemperatur | 11179 | R/W | 22 °C | 22 |
+| Aktiv ønsket rumtemperatur S2 | 11228 | R | 21,0 °C | 210 |
+| Aktiv ønsket rumtemperatur S2 | 11228 | R | 22,0 °C | 220 |
+
+Register 11179 bruger hele grader. Register 11228 bruger tiendedele grader og er en aflæsning. Register 11180 er ikke identificeret og forbliver skjult.
+
 3015: Foto IMG_3956 viser **1 s**. Senere direkte test bekræftede raw 1 = 1 s og raw 0 = OFF, inklusive skrivning og gendannelse.
 
 7189: Displayet viser trin 10 og den målte råværdi er 10. Omregningen til 200 ms kommer fra manualens 20 ms pr. trin, ikke fra en måling af motorpulsen.
@@ -84,7 +97,6 @@ En enkelt observeret værdi dokumenterer ikke alle valgmuligheder, hele skalaen 
 | 2110 | 36929 | Aflæst |
 | 4614 | 0 | Aflæst |
 | 11099 | 158 | Aflæst |
-| 11179 | 22 | Aflæst |
 | 11180 | 22 | Aflæst |
 | 11189 | NA | Failed to execute Read |
 | 11190 | NA | Failed to execute Read |
@@ -125,4 +137,4 @@ Dette bekræfter de testede værdier og tilbageføring, ikke hele indstillingsom
 - Ikke-nul-værdier for 2176, 3183 og 4036.
 - Menu **5081 – S1-filter**: billeder viser 99, 100 og 101 uden enhed; Modbus-adresse ukendt. Ingen adresse udledt af menunummeret.
 - Ønsket S2/S3, pumpe-/ventilstatus, fulde parameterområder og skrivefunktioner via Home Assistant.
-- Ingen af de 27 ukendte adresser har fået en ny sikker funktionsbetegnelse alene på baggrund af denne måling.
+- De resterende 26 ukendte adresser har ikke fået en funktionsbetegnelse alene på baggrund af råmålingerne.

@@ -2,9 +2,17 @@
 
 **Home Assistant control, weekly schedules and contextual help for Danfoss ECL Comfort 110.**
 
-Version **0.4.0** · Local Modbus TCP · Danish / English · Independent community project
+Version **0.4.1** · Local Modbus TCP · Danish / English · Independent community project
 
 Developed by **Juulsen**. This integration is not developed, supported or endorsed by Danfoss.
+
+## Nyt i 0.4.1
+
+- Register **11179** er tilføjet som skrivbar **Ønsket rumtemperatur** for applikation 130, område 10–30 °C i hele grader.
+- Register **11228** er rettet til **Aktiv ønsket rumtemperatur S2**, aflæst med 0,1 °C opløsning.
+- Displaytest bekræfter 21 °C → `11179=21` og `11228=210`, samt 22 °C → `11179=22` og `11228=220`.
+- Rumtemperaturindstillingen findes under **Indstillinger → Rumregulering** og kan også vælges i det tilpassede overblik.
+- Register **11180** er fortsat ukendt og skjult.
 
 ## Nyt i 0.4.0 · kort fortalt
 
@@ -19,7 +27,7 @@ Layoutet beholder fanerne **Overblik · Indstillinger · Ugeprogram · Forslag**
 | Gem | **Gem visning** gemmer kun kortets visning, uden Modbus-skrivninger. |
 | Hjælp | Tryk **i** for en enkel forklaring, virkningen af en ændring og relevante eksempler. Beregninger kan foldes ud. |
 
-Visningsvalg gemmes **pr. HA-bruger, ECL-enhed og browser**. De synkroniseres ikke automatisk mellem telefon og computer. Rydning af browserdata fjerner valgene. Sæt eventuelt fælles standarder i kortets YAML som beskrevet nedenfor. Alle 44 hjælpetekster findes på dansk og engelsk; popup-boksene indeholder ingen PDF- eller sidehenvisninger.
+Visningsvalg gemmes **pr. HA-bruger, ECL-enhed og browser**. De synkroniseres ikke automatisk mellem telefon og computer. Rydning af browserdata fjerner valgene. Sæt eventuelt fælles standarder i kortets YAML som beskrevet nedenfor. Alle 45 hjælpetekster findes på dansk og engelsk; popup-boksene indeholder ingen PDF- eller sidehenvisninger.
 
 ## What is new
 
@@ -36,7 +44,7 @@ Visningsvalg gemmes **pr. HA-bruger, ECL-enhed og browser**. De synkroniseres ik
 - Two comfort periods per day, a timeline and copying to selected weekdays.
 - Floor-heating and radiator starting suggestions with an explicit change preview.
 - A design heat-curve calculator based on the application 130 guide.
-- 22 numeric controls, 10 setting selections and one daylight-saving switch; 28 additional schedule selections are optional.
+- 23 numeric controls, 10 setting selections and one daylight-saving switch; 28 additional schedule selections are optional.
 
 Numeric ranges introduced in 0.3.0 use the application 130 manual and paired display/raw observations. They are **not all physically write-tested**. The eight controls introduced in 0.2.4 have been reported working by the owner. Every write is still validated, sent using FC06, and checked with an immediate FC03 readback.
 
@@ -44,7 +52,7 @@ Numeric ranges introduced in 0.3.0 use the application 130 manual and paired dis
 
 1. Download the [repository ZIP](https://github.com/Juulsen/Danfoss_ecl110/archive/refs/heads/main.zip).
 2. Extract it and copy the complete `custom_components/danfoss_ecl110_modbus` folder to `/config/custom_components/`, including its `frontend` subfolder.
-3. Restart Home Assistant. When updating the card, also change its existing resource URL to `?v=0.4.0` and reload your browser. Keep only one ECL110 JavaScript resource.
+3. Restart Home Assistant. When updating the card, also change its existing resource URL to `?v=0.4.1` and reload your browser. Keep only one ECL110 JavaScript resource.
 4. Open **Settings → Devices & services → ECL110 → Reconfigure**.
 5. Select the actual application: **130** for room heating, **116** for domestic hot water. Newly expanded heating writes require explicit selection of **130**; `all` does not unlock them.
 6. Enable **ECA 110 weekly schedule** only if the controller has its timer program. Setup tests reading all seven days before creating the 28 time selections together.
@@ -58,7 +66,7 @@ No Browser Mod or additional card dependency is needed. The integration serves i
 Add a dashboard **resource** (JavaScript module):
 
 ```text
-/ecl110-static/ecl110-card.js?v=0.4.0
+/ecl110-static/ecl110-card.js?v=0.4.1
 ```
 
 Then add a manual card:
@@ -137,7 +145,7 @@ The heat-curve calculator computes a **design slope**, not the exact live target
 
 ## Coverage and limits
 
-112 register addresses are preserved; 85 named readable registers remain available as sensors, plus six optional OFF/Active sensors. Unknown registers stay hidden.
+112 register addresses are preserved; 86 named readable registers remain available as sensors, plus six optional OFF/Active sensors. The remaining 26 unknown registers stay hidden.
 
 Some items cannot honestly be called finished Modbus controls yet:
 
@@ -170,6 +178,6 @@ The tests cover observed raw readings, signed encoding, fractional step rejectio
 node tests/test_card.cjs
 ```
 
-An existing Chromium executable can be supplied through `ECL_CHROMIUM_PATH`; optional launch arguments can be supplied as a JSON array through `ECL_CHROMIUM_ARGS`. These checks do not replace installation testing against Home Assistant and the real controller. The 0.4.0 changes are frontend/help/documentation changes; Modbus mappings, scaling, write validation and entity IDs are unchanged.
+An existing Chromium executable can be supplied through `ECL_CHROMIUM_PATH`; optional launch arguments can be supplied as a JSON array through `ECL_CHROMIUM_ARGS`. These checks do not replace installation testing against Home Assistant and the real controller. Version 0.4.1 adds one writable register and corrects one read-only register. The first write from Home Assistant should be tested against the physical controller after updating.
 
 See [CHANGELOG.md](CHANGELOG.md) for version history and [hardware observations](docs/hardware-verification-2026-09-19.md) for the earlier measurement record.

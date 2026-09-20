@@ -81,10 +81,25 @@ class RegisterDecodingTests(unittest.TestCase):
         self.assertEqual(r.decode(215), 21.5)
         self.assertEqual(registers.REGISTERS_BY_KEY['clock_year'].decode(26), 2026)
 
+    def test_verified_desired_room_temperature_registers(self):
+        setting = registers.REGISTERS_BY_KEY['desired_room_temperature']
+        active = registers.REGISTERS_BY_KEY['desired_s2']
+        for degrees in (21, 22):
+            self.assertEqual(setting.decode(degrees), degrees)
+            self.assertEqual(setting.encode(degrees), degrees)
+            self.assertEqual(active.decode(degrees * 10), float(degrees))
+        self.assertEqual(setting.unit, '°C')
+        self.assertEqual(active.unit, '°C')
+        self.assertEqual(active.precision, 1)
+        self.assertTrue(setting.safe_write)
+        self.assertEqual(setting.verified_write_range, (10, 30))
+        self.assertEqual(setting.write_application, '130')
+
     def test_unknown_registers_remain_hidden(self):
         self.assertEqual(len(registers.REGISTERS), 112)
-        self.assertEqual(len(registers.SENSOR_REGISTERS), 85)
-        self.assertEqual(len([r for r in registers.REGISTERS if r.platform is registers.EntityPlatform.NONE]), 27)
+        self.assertEqual(len(registers.SENSOR_REGISTERS), 86)
+        self.assertEqual(len([r for r in registers.REGISTERS if r.platform is registers.EntityPlatform.NONE]), 26)
+        self.assertEqual(registers.REGISTERS_BY_ADDRESS[11180].platform, registers.EntityPlatform.NONE)
         self.assertNotIn('5081', BY_LINE)
 
     def test_translation_coverage(self):

@@ -8,7 +8,7 @@ const {chromium}=require('playwright');const fs=require('fs');
  await page.evaluate(()=>{
   const states={};const put=(key,state,domain='number',attr={})=>{states[domain+'.ecl_'+key]={state:String(state),attributes:{ecl_device:'test',ecl_application:'130',register_key:key,friendly_name:key,min:0,max:150,step:1,...attr}}};
   for(const [i,t] of [16.9,21.2,36.6,35.6].entries())put('temperature_s'+(i+1),t,'sensor',{unit_of_measurement:'°C'});
-  put('heating_curve_slope',0.7,'number',{min:.1,max:4,step:.1});put('knee_point','off','select',{options:['off','30 °C','40 °C','50 °C']});put('flow_temperature_min',25);put('flow_temperature_max',43);put('desired_mode','auto','select',{options:['auto','comfort','setback','standby']});
+  put('heating_curve_slope',0.7,'number',{min:.1,max:4,step:.1});put('knee_point','off','select',{options:['off','30 °C','40 °C','50 °C']});put('flow_temperature_min',25);put('flow_temperature_max',43);put('desired_room_temperature',22,'number',{min:10,max:30,step:1,unit_of_measurement:'°C'});put('desired_s2',22,'sensor',{unit_of_measurement:'°C'});put('desired_mode','auto','select',{options:['auto','comfort','setback','standby']});
   const days=['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];const slots=['start_1','stop_1','start_2','stop_2'];const times=['06:00','08:00','16:00','22:00'];
   for(const day of days)slots.forEach((slot,i)=>put('schedule_'+day+'_'+slot,times[i],'select',{options:['00:00','06:00','07:00','08:00','16:00','22:00','24:00']}));
   window.calls=[];window.fake={user:{id:'user1'},language:'da',states,formatEntityState:s=>s.state+(s.attributes.unit_of_measurement?' '+s.attributes.unit_of_measurement:''),callService:async(d,s,data)=>{window.calls.push([d,s,data]);window.fake.states[data.entity_id].state=String(data.option??data.value);}};
@@ -71,6 +71,19 @@ const {chromium}=require('playwright');const fs=require('fs');
  await page.evaluate(()=>{document.querySelector('ecl110-card').hass=window.fake;});
  assert.equal(await page.locator('dialog[open]').count(),1);
 await page.getByRole('button',{name:'Luk',exact:true}).click();
+ await page.getByText('Rumregulering',{exact:true}).click();
+ assert.equal(await page.getByLabel('Ønsket rumtemperatur',{exact:true}).inputValue(),'22');
+ await page.getByLabel('Ønsket rumtemperatur',{exact:true}).fill('21');
+ await page.getByLabel('Ønsket rumtemperatur',{exact:true}).press('Tab');
+ await page.getByText('Gemt og genlæst.',{exact:true}).waitFor();
+ let roomCalls=await page.evaluate(()=>window.calls);
+ assert.deepEqual(roomCalls.at(-1),['number','set_value',{entity_id:'number.ecl_desired_room_temperature',value:21}]);
+ await page.evaluate(()=>{window.calls=[];});
+ await page.getByText('Rumregulering',{exact:true}).click();
+ await page.getByRole('button',{name:'Info om Ønsket rumtemperatur',exact:true}).click();
+ await page.getByText('Den rumtemperatur regulatoren forsøger at holde, når rumføleren bruges.',{exact:true}).waitFor();
+ await page.getByRole('button',{name:'Luk',exact:true}).click();
+ assert.equal(await page.evaluate(()=>window.calls.length),0);
  await page.getByRole('button',{name:'Ugeprogram',exact:true}).click();await page.screenshot({path:'/tmp/ecl-week.png',fullPage:true});
  await page.getByLabel('Mandag 1 start',{exact:true}).selectOption('07:00');await page.getByRole('button',{name:'Gem dag og valgte kopier',exact:true}).first().click();await page.getByText('Program gemt og genlæst.',{exact:true}).waitFor();
  let calls=await page.evaluate(()=>window.calls);if(calls.length!==1||calls[0][2].option!=='07:00')throw Error('schedule write mismatch');
@@ -103,7 +116,7 @@ await page.getByRole('button',{name:'Luk',exact:true}).click();
  await page.addStyleTag({content:'ecl110-card{max-width:320px}'});
  assert.equal(await page.locator('.overview-controls').evaluate(e=>getComputedStyle(e).gridTemplateColumns.split(' ').length),1);
  const help=JSON.parse(fs.readFileSync(root+'help.json','utf8'));
- assert.equal(Object.keys(help).length,44);
+ assert.equal(Object.keys(help).length,45);
  for(const entry of Object.values(help)){
    for(const language of ['da','en']){
      assert.ok(entry[language]);assert.ok(entry.effect[language]);

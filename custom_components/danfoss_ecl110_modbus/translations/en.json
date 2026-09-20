@@ -117,7 +117,7 @@
         }
       },
       "desired_s2": {
-        "name": "Desired value S2"
+        "name": "Active desired room temperature S2"
       },
       "desired_s3": {
         "name": "Desired flow temperature S3"
@@ -429,6 +429,9 @@
           "off": "OFF",
           "active": "Active"
         }
+      },
+      "desired_room_temperature": {
+        "name": "Desired room temperature"
       }
     },
     "number": {
@@ -497,6 +500,9 @@
       },
       "minimum_activation_time_control": {
         "name": "Minimum gear motor pulse"
+      },
+      "desired_room_temperature_control": {
+        "name": "Desired room temperature"
       }
     },
     "select": {
