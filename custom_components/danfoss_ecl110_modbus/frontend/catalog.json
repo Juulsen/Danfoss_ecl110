@@ -11,7 +11,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -35,7 +35,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -59,7 +59,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -83,7 +83,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -107,7 +107,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -131,7 +131,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -155,7 +155,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -179,7 +179,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -203,7 +203,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -227,7 +227,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -251,7 +251,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -275,7 +275,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -299,7 +299,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -323,7 +323,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -347,7 +347,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -371,7 +371,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -395,7 +395,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -419,7 +419,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -443,7 +443,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -467,7 +467,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -491,7 +491,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -515,7 +515,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -539,7 +539,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -563,7 +563,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -587,7 +587,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -611,7 +611,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -635,7 +635,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -659,7 +659,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -683,7 +683,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -707,7 +707,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -731,7 +731,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -755,7 +755,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -779,7 +779,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -803,7 +803,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -827,7 +827,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -850,7 +850,7 @@
     "write_application": null,
     "write_basis": "source-documented",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -873,9 +873,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "°C",
-    "scale": 1.0,
-    "minimum": -29.0,
-    "maximum": 10.0,
+    "scale": 1,
+    "minimum": -29,
+    "maximum": 10,
     "name": {
       "da": "Udetemperaturgrænse for sænkning",
       "en": "Outdoor temperature threshold for setback"
@@ -896,9 +896,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "%",
-    "scale": 1.0,
-    "minimum": 1.0,
-    "maximum": 99.0,
+    "scale": 1,
+    "minimum": 1,
+    "maximum": 99,
     "name": {
       "da": "Boost af ønsket fremløbstemperatur",
       "en": "Flow temperature boost"
@@ -919,9 +919,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "min",
-    "scale": 1.0,
-    "minimum": 1.0,
-    "maximum": 99.0,
+    "scale": 1,
+    "minimum": 1,
+    "maximum": 99,
     "name": {
       "da": "Opstartsrampe for ønsket fremløb",
       "en": "Flow temperature startup ramp"
@@ -942,9 +942,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": null,
-    "scale": 1.0,
-    "minimum": 10.0,
-    "maximum": 59.0,
+    "scale": 1,
+    "minimum": 10,
+    "maximum": 59,
     "name": {
       "da": "Optimeringskode",
       "en": "Optimization code"
@@ -965,9 +965,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "s",
-    "scale": 1.0,
-    "minimum": 1.0,
-    "maximum": 50.0,
+    "scale": 1,
+    "minimum": 1,
+    "maximum": 50,
     "name": {
       "da": "Rumreguleringens integrationstid",
       "en": "Room control integration time"
@@ -988,7 +988,7 @@
     "write_application": null,
     "write_basis": "hardware-tested",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -1011,7 +1011,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -1035,7 +1035,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -1059,7 +1059,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -1082,7 +1082,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -1106,9 +1106,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "°C",
-    "scale": 1.0,
-    "minimum": 10.0,
-    "maximum": 110.0,
+    "scale": 1,
+    "minimum": 10,
+    "maximum": 110,
     "name": {
       "da": "Returtemperaturgrænse",
       "en": "Return temperature limit"
@@ -1178,9 +1178,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "s",
-    "scale": 1.0,
-    "minimum": 1.0,
-    "maximum": 50.0,
+    "scale": 1,
+    "minimum": 1,
+    "maximum": 50,
     "name": {
       "da": "Returbegrænsningens integrationstid",
       "en": "Return limitation integration time"
@@ -1201,7 +1201,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -1225,9 +1225,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "°C",
-    "scale": 1.0,
-    "minimum": -10.0,
-    "maximum": 20.0,
+    "scale": 1,
+    "minimum": -10,
+    "maximum": 20,
     "name": {
       "da": "Frostgrænse for pumpestart",
       "en": "Pump frost protection threshold"
@@ -1249,9 +1249,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "°C",
-    "scale": 1.0,
-    "minimum": -20.0,
-    "maximum": 50.0,
+    "scale": 1,
+    "minimum": -20,
+    "maximum": 50,
     "name": {
       "da": "Pumpestop – grænse for ønsket fremløbstemperatur",
       "en": "Pump stop – desired flow temperature threshold"
@@ -1272,7 +1272,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -1296,9 +1296,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "°C",
-    "scale": 1.0,
-    "minimum": 5.0,
-    "maximum": 40.0,
+    "scale": 1,
+    "minimum": 5,
+    "maximum": 40,
     "name": {
       "da": "Ønsket fremløbstemperatur i standby",
       "en": "Desired standby flow temperature"
@@ -1320,7 +1320,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -1344,9 +1344,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "°C",
-    "scale": 1.0,
-    "minimum": 30.0,
-    "maximum": 50.0,
+    "scale": 1,
+    "minimum": 30,
+    "maximum": 50,
     "name": {
       "da": "Varmekurvens knækpunkt",
       "en": "Heating curve knee point"
@@ -1368,9 +1368,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "min",
-    "scale": 1.0,
-    "minimum": 10.0,
-    "maximum": 59.0,
+    "scale": 1,
+    "minimum": 10,
+    "maximum": 59,
     "name": {
       "da": "Aktiveringsforsinkelse for motorbeskyttelse",
       "en": "Motor protection activation delay"
@@ -1393,7 +1393,7 @@
     "unit": null,
     "scale": 0.1,
     "minimum": 0.1,
-    "maximum": 4.0,
+    "maximum": 4,
     "name": {
       "da": "Varmekurvens hældning",
       "en": "Heating curve slope"
@@ -1414,9 +1414,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "K",
-    "scale": 1.0,
-    "minimum": -20.0,
-    "maximum": 20.0,
+    "scale": 1,
+    "minimum": -20,
+    "maximum": 20,
     "name": {
       "da": "Varmekurvens parallelforskydning",
       "en": "Heating curve parallel displacement"
@@ -1438,9 +1438,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "°C",
-    "scale": 1.0,
-    "minimum": 10.0,
-    "maximum": 150.0,
+    "scale": 1,
+    "minimum": 10,
+    "maximum": 150,
     "name": {
       "da": "Minimum fremløbstemperatur",
       "en": "Minimum flow temperature"
@@ -1462,9 +1462,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "°C",
-    "scale": 1.0,
-    "minimum": 10.0,
-    "maximum": 150.0,
+    "scale": 1,
+    "minimum": 10,
+    "maximum": 150,
     "name": {
       "da": "Maksimum fremløbstemperatur",
       "en": "Maximum flow temperature"
@@ -1485,9 +1485,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "°C",
-    "scale": 1.0,
-    "minimum": 1.0,
-    "maximum": 50.0,
+    "scale": 1,
+    "minimum": 1,
+    "maximum": 50,
     "name": {
       "da": "Udetemperaturgrænse for varmeudkobling",
       "en": "Outdoor temperature threshold for heating cut-out"
@@ -1508,11 +1508,11 @@
     "write_application": "130",
     "write_basis": "source-and-display",
     "unit": "°C",
-    "scale": 1.0,
-    "minimum": 10.0,
-    "maximum": 30.0,
+    "scale": 1,
+    "minimum": 10,
+    "maximum": 30,
     "name": {
-      "da": "Ønsket rumtemperatur",
+      "da": "Ønsket Rumtemperatur",
       "en": "Desired room temperature"
     },
     "description": {
@@ -1533,7 +1533,7 @@
     "unit": null,
     "scale": 0.1,
     "minimum": -9.9,
-    "maximum": 0.0,
+    "maximum": 0,
     "name": {
       "da": "Rumpåvirkning over ønsket temperatur",
       "en": "Room influence above target"
@@ -1555,7 +1555,7 @@
     "write_basis": "manual-and-display",
     "unit": null,
     "scale": 0.1,
-    "minimum": 0.0,
+    "minimum": 0,
     "maximum": 9.9,
     "name": {
       "da": "Rumpåvirkning under ønsket temperatur",
@@ -1578,9 +1578,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "K",
-    "scale": 1.0,
-    "minimum": 1.0,
-    "maximum": 250.0,
+    "scale": 1,
+    "minimum": 1,
+    "maximum": 250,
     "name": {
       "da": "Proportionalbånd Xp",
       "en": "Proportional band Xp"
@@ -1602,9 +1602,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "s",
-    "scale": 1.0,
-    "minimum": 5.0,
-    "maximum": 999.0,
+    "scale": 1,
+    "minimum": 5,
+    "maximum": 999,
     "name": {
       "da": "Integrationstid Tn",
       "en": "Integration time Tn"
@@ -1626,9 +1626,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "s",
-    "scale": 1.0,
-    "minimum": 5.0,
-    "maximum": 250.0,
+    "scale": 1,
+    "minimum": 5,
+    "maximum": 250,
     "name": {
       "da": "Ventilmotorens fulde gangtid",
       "en": "Valve motor full travel time"
@@ -1650,9 +1650,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "K",
-    "scale": 1.0,
-    "minimum": 1.0,
-    "maximum": 9.0,
+    "scale": 1,
+    "minimum": 1,
+    "maximum": 9,
     "name": {
       "da": "Neutralzone Nz",
       "en": "Neutral zone Nz"
@@ -1674,9 +1674,9 @@
     "write_application": "130",
     "write_basis": "manual-and-display",
     "unit": "ms",
-    "scale": 20.0,
-    "minimum": 40.0,
-    "maximum": 1000.0,
+    "scale": 20,
+    "minimum": 40,
+    "maximum": 1000,
     "name": {
       "da": "Minimumspuls til gearmotor",
       "en": "Minimum gear motor pulse"
@@ -1698,7 +1698,7 @@
     "write_application": null,
     "write_basis": "hardware-tested",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -1722,9 +1722,9 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
-    "minimum": 0.0,
-    "maximum": 15.0,
+    "scale": 1,
+    "minimum": 0,
+    "maximum": 15,
     "name": {
       "da": "ECL-busadresse",
       "en": "ECL bus address"
@@ -1750,7 +1750,7 @@
     "minimum": null,
     "maximum": null,
     "name": {
-      "da": "Temperatur S1",
+      "da": "Ude Temperatur(S1)",
       "en": "Temperature S1"
     },
     "description": {
@@ -1798,7 +1798,7 @@
     "minimum": null,
     "maximum": null,
     "name": {
-      "da": "Temperatur S3",
+      "da": "Fremløbs Temperatur(S3)",
       "en": "Temperature S3"
     },
     "description": {
@@ -1822,7 +1822,7 @@
     "minimum": null,
     "maximum": null,
     "name": {
-      "da": "Temperatur S4",
+      "da": "Returløbs Temperatur(S4)",
       "en": "Temperature S4"
     },
     "description": {
@@ -1889,9 +1889,9 @@
     "write_application": null,
     "write_basis": "hardware-tested",
     "unit": null,
-    "scale": 1.0,
-    "minimum": 1.0,
-    "maximum": 30.0,
+    "scale": 1,
+    "minimum": 1,
+    "maximum": 30,
     "name": {
       "da": "Displayets baggrundslys (trin)",
       "en": "Display backlight level"
@@ -1913,9 +1913,9 @@
     "write_application": null,
     "write_basis": "hardware-tested",
     "unit": null,
-    "scale": 1.0,
-    "minimum": 0.0,
-    "maximum": 20.0,
+    "scale": 1,
+    "minimum": 0,
+    "maximum": 20,
     "name": {
       "da": "Displayets kontrast (trin)",
       "en": "Display contrast level"
@@ -1937,7 +1937,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -1961,7 +1961,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -1985,7 +1985,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -2009,7 +2009,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": null,
     "maximum": null,
     "name": {
@@ -2033,7 +2033,7 @@
     "write_application": null,
     "write_basis": "disabled",
     "unit": null,
-    "scale": 1.0,
+    "scale": 1,
     "minimum": 2001,
     "maximum": 2040,
     "name": {

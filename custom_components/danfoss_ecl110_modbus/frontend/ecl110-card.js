@@ -98,7 +98,7 @@ class Ecl110Card extends HTMLElement {
   }
   overviewName(key){
     const app=this.entities()[0]?.[1].attributes.ecl_application;
-    const names=app==='130'?{temperature_s1:this.tr('Udetemperatur · S1','Outdoor · S1'),temperature_s2:this.tr('Rumtemperatur · S2','Room · S2'),temperature_s3:this.tr('Fremløb · S3','Flow · S3'),temperature_s4:this.tr('Retur · S4','Return · S4')}:{};
+    const names=app==='130'?{temperature_s1:this.tr('Ude Temperatur(S1)','Outdoor · S1'),temperature_s2:this.tr('Rumtemperatur · S2','Room · S2'),temperature_s3:this.tr('Fremløbs Temperatur(S3)','Flow · S3'),temperature_s4:this.tr('Returløbs Temperatur(S4)','Return · S4')}:{};
     return names[key]||this.name(this.catalog.find(m=>m.key===key));
   }
   overviewValue(key){

@@ -602,7 +602,7 @@ _registers.extend(
         _register(
             key="desired_room_temperature",
             address=11179,
-            name="Ønsket rumtemperatur",
+            name="Ønsket Rumtemperatur",
             description=(
                 "Indstilling af ønsket rumtemperatur i applikation 130. "
                 "Råværdien er temperaturen i hele grader."
@@ -641,12 +641,17 @@ _registers.extend(
 
 # Actual S1-S4 values are signed tenths of a degree. Raw 1920 equals
 # 192.0 °C and indicates a disconnected input.
+_temperature_sensor_names: Final = {
+    1: "Ude Temperatur(S1)",
+    3: "Fremløbs Temperatur(S3)",
+    4: "Returløbs Temperatur(S4)",
+}
 for sensor_number, address in enumerate(range(11200, 11204), start=1):
     _registers.append(
         _register(
             key=f"temperature_s{sensor_number}",
             address=address,
-            name=f"Temperatur S{sensor_number}",
+            name=_temperature_sensor_names.get(sensor_number, f"Temperatur S{sensor_number}"),
             description=(
                 f"Aktuel temperatur på følerindgang S{sensor_number}. "
                 "Følerens fysiske funktion afhænger af ECL-applikationen."

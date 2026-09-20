@@ -348,16 +348,16 @@
         "name": "Ønsket fremløbstemperatur i standby"
       },
       "temperature_s1": {
-        "name": "Temperatur S1"
+        "name": "Ude Temperatur(S1)"
       },
       "temperature_s2": {
         "name": "Temperatur S2"
       },
       "temperature_s3": {
-        "name": "Temperatur S3"
+        "name": "Fremløbs Temperatur(S3)"
       },
       "temperature_s4": {
-        "name": "Temperatur S4"
+        "name": "Returløbs Temperatur(S4)"
       },
       "total_stop": {
         "name": "Totalstop under sænkningsperioden",
@@ -431,7 +431,7 @@
         }
       },
       "desired_room_temperature": {
-        "name": "Ønsket rumtemperatur"
+        "name": "Ønsket Rumtemperatur"
       }
     },
     "number": {
@@ -502,7 +502,7 @@
         "name": "Minimumspuls til gearmotor"
       },
       "desired_room_temperature_control": {
-        "name": "Ønsket rumtemperatur"
+        "name": "Ønsket Rumtemperatur"
       }
     },
     "select": {
@@ -2325,7 +2325,6 @@
       "optimizer_control": {
         "name": "Optimeringskode",
         "state": {
-          "off": "OFF",
           "10": "10",
           "11": "11",
           "12": "12",
@@ -2375,7 +2374,8 @@
           "56": "56",
           "57": "57",
           "58": "58",
-          "59": "59"
+          "59": "59",
+          "off": "OFF"
         }
       },
       "knee_point_control": {
