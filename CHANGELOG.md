@@ -21,6 +21,7 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 - MIT License for the project's original code and documentation.
 - License and latest-release badges in the README.
 - A clear notice that product names, trademarks and linked third-party reference material are not relicensed by this project.
+- README screenshots of the actual overview and weekly schedule card, plus a reproducible frontend preview page.
 
 ### Changed
 

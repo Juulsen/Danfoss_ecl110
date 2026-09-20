@@ -37,7 +37,24 @@ Product names and trademarks belong to their respective owners. The license does
 - Added the MIT License for the project's original code and documentation.
 - Added license and release badges plus a clear third-party trademark notice.
 - Updated the integration and dashboard version to 0.4.2.
+- Added screenshots of the overview and weekly schedule, generated from the actual dashboard card.
 - No Modbus registers, scaling, writes or runtime behaviour changed in this release.
+
+## Frontend screenshots
+
+The card below is rendered from the integration's actual frontend code with simulated Home Assistant data.
+
+### Overview
+
+<p align="center">
+  <img src="docs/images/ecl110-overview-0.4.2.jpg" alt="ECL110 dashboard overview with four temperature readings and operating mode" width="900">
+</p>
+
+### Weekly schedule
+
+<p align="center">
+  <img src="docs/images/ecl110-schedule-0.4.2.jpg" alt="ECL110 weekly schedule editor with two comfort periods for each weekday" width="700">
+</p>
 
 ## What's new in 0.4.1
 
