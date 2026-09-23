@@ -5,7 +5,25 @@
 
 **Home Assistant control, weekly schedules and contextual help for Danfoss ECL Comfort 110.**
 
-Version **0.4.2** · Local Modbus TCP · Danish / English · Independent community project
+Test version **0.4.3b1** · Local Modbus TCP · Danish / English · Independent community project
+
+## Testing the next update
+
+This branch contains an unreleased test build. No new GitHub release has been published.
+
+- Visual dashboard card editor: controller, language, title, layout, size, field selection, order and custom display names.
+- Responsive tiles fill the available card width, with aligned labels and readings.
+- Click a reading to open Home Assistant's more-info dialog, including history when recorded by Home Assistant.
+- Card branding/version text removed; clearer Danish temperature names retained.
+- New connections start with an empty host; existing connections retain their saved host. Modbus device ID uses a numeric box.
+
+After installing this test build, restart Home Assistant and change the dashboard JavaScript resource to `/ecl110-static/ecl110-card.js?v=0.4.3b1`. Reload the browser. Edit the dashboard card to use the visual editor, then press **Save**. These choices are stored with the dashboard and apply across browsers. Custom names only affect this card, including its settings labels; entity IDs and controller values stay unchanged.
+
+For a wide card, use Home Assistant's card **Layout** controls and increase the containing section width. The card fills the space allocated by the dashboard; it cannot enlarge the containing section itself. On a narrow screen, tiles reflow automatically.
+
+Existing browser-only views remain supported until an explicit `overview` is saved in the card configuration. Explicit dashboard configuration takes priority. The in-card customization remains a temporary preview for configured cards; permanent changes belong in the visual editor.
+
+Climate entities and heat-curve graphs are not part of this test build. Hardware operation still needs a user check in Home Assistant; frontend tests use simulated entities.
 
 Developed by **Juulsen**. This integration is not developed, supported or endorsed by Danfoss.
 
@@ -102,7 +120,7 @@ Numeric ranges introduced in 0.3.0 use the application 130 manual and paired dis
 
 1. Download the [repository ZIP](https://github.com/Juulsen/Danfoss_ecl110/archive/refs/heads/main.zip).
 2. Extract it and copy the complete `custom_components/danfoss_ecl110_modbus` folder to `/config/custom_components/`, including its `frontend` subfolder.
-3. Restart Home Assistant. When updating the card, also change its existing resource URL to `?v=0.4.2` and reload your browser. Keep only one ECL110 JavaScript resource.
+3. Restart Home Assistant. When updating the card, also change its existing resource URL to `?v=0.4.3b1` and reload your browser. Keep only one ECL110 JavaScript resource.
 4. Open **Settings → Devices & services → ECL110 → Reconfigure**.
 5. Select the actual application: **130** for room heating, **116** for domestic hot water. Newly expanded heating writes require explicit selection of **130**; `all` does not unlock them.
 6. Enable **ECA 110 weekly schedule** only if the controller has its timer program. Setup tests reading all seven days before creating the 28 time selections together.
@@ -116,7 +134,7 @@ No Browser Mod or additional card dependency is needed. The integration serves i
 Add a dashboard **resource** (JavaScript module):
 
 ```text
-/ecl110-static/ecl110-card.js?v=0.4.2
+/ecl110-static/ecl110-card.js?v=0.4.3b1
 ```
 
 Then add a manual card:
@@ -139,9 +157,9 @@ This is a dashboard card. Home Assistant's standard device page is not replaced 
 
 **Overview:** initially four temperatures and operating mode. Use **Customize overview** to choose any named, enabled entity for this controller, including available measurements and settings. Unknown registers and schedule time fields are excluded. Disabled entities must first be enabled in Home Assistant. Missing readings show a dash; unknown and unavailable readings are labelled accordingly.
 
-Choose **tiles**, **list** or **focus**, and **compact**, **normal** or **large**. Move selected fields with the arrow buttons. **Save view** persists the layout in this browser; **Cancel** leaves the saved layout unchanged. **Default view** restores the YAML defaults (or the original four-temperature view), and needs **Save view** to persist. Display changes do not call Home Assistant services or write registers. The operating-mode control still changes the controller.
+Choose **tiles**, **list** or **focus**, and **compact**, **normal** or **large** in the visual card editor. Move selected fields with the arrow buttons and save the dashboard. For legacy cards without `overview` configuration, the in-card **Save view** still saves in this browser. For configured cards it only previews changes until reload; use the dashboard editor for permanent changes. Display changes do not call Home Assistant services or write registers. The operating-mode control still changes the controller.
 
-By default, cards for the same user/controller share saved preferences when loaded in the same browser. Give each card a different `overview_id` for independent views. Saved browser choices take priority over these optional YAML defaults:
+For legacy cards without explicit overview configuration, cards for the same user/controller share preferences within the same browser. Give each legacy card a different `overview_id` for independent views. Explicit YAML or visual-editor configuration takes priority over browser choices:
 
 ```yaml
 type: custom:ecl110-card
@@ -159,7 +177,7 @@ overview:
   size: normal   # compact | normal | large
 ```
 
-`fields` uses the stable `register_key` shown in the entity attributes, so renaming an entity does not break the selection. YAML defaults travel with the dashboard configuration; local customization is browser-specific. If browser storage is blocked, a visible message explains that choices only last for the current card session. These display sizes control content density; set the dashboard card width using Home Assistant's own layout controls.
+`fields` uses the stable `register_key` shown in the entity attributes, so renaming an entity does not break the selection. Visual-editor and YAML choices travel with the dashboard configuration. Legacy browser customization is browser-specific. These display sizes control content density; set the dashboard card width using Home Assistant's own layout controls.
 
 **Settings:** groups follow the ECL menu structure. Values are in display units; changing an input writes that individual value. The info button explains its purpose and provides relevant formulas. Unsupported or disabled registers appear as read-only; enable a diagnostic sensor if its current reading is needed.
 

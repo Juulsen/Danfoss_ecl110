@@ -6,6 +6,8 @@ const ECL_TIMES = Array.from({length:48},(_,i)=>`${String(Math.floor(i/2)).padSt
 const el = (tag, text, cls) => { const n=document.createElement(tag); if(text!==undefined)n.textContent=text; if(cls)n.className=cls; return n; };
 const minutes = t => { const [h,m]=t.split(':').map(Number); return h*60+m; };
 class Ecl110Card extends HTMLElement {
+  static getConfigElement(){return document.createElement('ecl110-card-editor');}
+  static getStubConfig(){return {overview:{fields:[...ECL_DEFAULT_FIELDS],layout:'tiles',size:'normal'}};}
   constructor(){super();this.attachShadow({mode:'open'});this.tab=0;this.pending=new Map();this.busy=false;this.message='';}
   setConfig(config){
     this.config={...config};this.overviewKey=null;this.overviewDraft=null;
@@ -14,7 +16,7 @@ class Ecl110Card extends HTMLElement {
   async load(){
     try{
       const base='/ecl110-static/';
-      const results=await Promise.all(['catalog.json','help.json'].map(async f=>{const r=await fetch(base+f+'?v=0.4.2');if(!r.ok)throw Error(`${f}: ${r.status}`);return r.json();}));
+      const results=await Promise.all(['catalog.json','help.json'].map(async f=>{const r=await fetch(base+f+'?v=0.4.3b1');if(!r.ok)throw Error(`${f}: ${r.status}`);return r.json();}));
       [this.catalog,this.help]=results;this.render();
     }catch(e){this.message=String(e);this.render();}
   }
@@ -29,7 +31,7 @@ class Ecl110Card extends HTMLElement {
     const columns=view.layout==='list'?1:view.size==='compact'?3:2;
     return 4+Math.ceil(view.fields.length/columns)*(view.size==='large'?3:2);
   }
-  getGridOptions(){return {columns:this.config?.grid_options?.columns||12,min_columns:6};}
+  getGridOptions(){return {columns:this.config?.grid_options?.columns||12,min_columns:6,rows:'auto'};}
   tr(da,en){return (this.config?.language||this._hass?.language||'en').startsWith('da')?da:en;}
   lang(){return this.tr('da','en');}
   button(text,fn,cls){const b=el('button',text,cls);b.type='button';b.disabled=this.busy;b.onclick=fn;return b;}
@@ -41,7 +43,8 @@ class Ecl110Card extends HTMLElement {
     return all.filter(([,s])=>device&&s.attributes.ecl_device===device);
   }
   find(key,writable=true){return this.entities().find(([id,s])=>s.attributes.register_key===key&&(!writable||/^(number|select|switch)\./.test(id)));}
-  name(meta){return meta?.name[this.lang()]||meta?.key||'';}
+  name(meta){return this.config?.names?.[meta?.key]||meta?.name?.[this.lang()]||meta?.name?.en||meta?.key||'';}
+  moreInfo(key){const match=this.entities().find(([id,s])=>id.startsWith('sensor.')&&s.attributes.register_key===key)||this.find(key,false);if(match)this.dispatchEvent(new CustomEvent('hass-more-info',{detail:{entityId:match[0]},bubbles:true,composed:true}));}
   textState(s){return this._hass?.formatEntityState?this._hass.formatEntityState(s):s.state;}
   render(){
     if(!this.config)return;
@@ -71,13 +74,22 @@ class Ecl110Card extends HTMLElement {
       @container(max-width:440px){.overview-grid.compact{grid-template-columns:repeat(2,minmax(0,1fr))}.overview-controls{grid-template-columns:1fr}.overview-editor{padding:12px}.overview-grid.large .metric{padding:16px}.overview-grid.large .value{font-size:28px}.overview-grid.focus .metric:first-child .value{font-size:32px}.overview-grid.list .metric{padding:12px 0}.overview-order button{min-height:44px}dialog{padding:18px}.row{overflow-wrap:anywhere}}
       @container(max-width:440px){ha-card{padding:14px}.row{grid-template-columns:minmax(80px,1fr) 125px 30px;gap:5px}.periods{grid-template-columns:1fr}nav button{padding:8px;font-size:13px}}
     `;r.append(style);
-    const card=el('ha-card');r.append(card);const head=el('header');head.append(el('h2','ECL110'),el('small','Juulsen · 0.4.2'));card.append(head);
+    style.textContent+=`
+      :host{width:100%;min-width:0}ha-card{width:100%;height:100%}
+      .overview-grid.tiles,.overview-grid.focus{grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr))}
+      .overview-grid.compact:not(.list){grid-template-columns:repeat(auto-fit,minmax(min(100%,135px),1fr))}
+      .overview-grid.large:not(.list){grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+      .overview-grid .metric{display:flex;flex-direction:column;text-align:left;justify-content:space-between;border:1px solid transparent;color:inherit}
+      .overview-grid .metric small{display:block;min-height:2.8em;line-height:1.4}
+      .overview-grid .metric .value{white-space:nowrap}.overview-grid.list .metric{flex-direction:row}.overview-grid.list .metric small{min-height:0}
+    `;
+    const card=el('ha-card');r.append(card);const head=el('header');head.append(el('h2',this.config.title||'ECL110'));card.append(head);
     if(!this.catalog||!this._hass){card.append(el('p',this.message||this.tr('Indlæser…','Loading…')));return;}
     if(!this.entities().length){card.append(el('p',this.tr('Vælg en ECL110-entitet i kortets YAML: entity: sensor.… Ved flere regulatorer kræves dette valg.','Choose an ECL110 entity in the card YAML: entity: sensor.… This is required with multiple controllers.')));return;}
     const nav=el('nav');[this.tr('Overblik','Overview'),this.tr('Indstillinger','Settings'),this.tr('Ugeprogram','Schedule'),this.tr('Forslag','Suggestions')].forEach((t,i)=>nav.append(this.button(t,()=>{this.tab=i;this.render();},i===this.tab?'active':'')));card.append(nav);
     if(this.message){const msg=el('div',this.message,'message');msg.setAttribute('role','status');card.append(msg);}
     if(this.tab===0)this.overview(card);if(this.tab===1)this.settings(card);if(this.tab===2)this.schedule(card);if(this.tab===3)this.suggestions(card);
-    card.append(el('div',this.tab===0?this.tr('Visningsvalg gemmes i denne browser. Driftstilstand ændres i regulatoren.','Display choices are saved in this browser. Operating mode changes the controller.'):this.tr('Indstillinger gemmes i regulatoren og kontrolleres ved genlæsning.','Settings are saved in the controller and checked by readback.'),'footer'));
+    card.append(el('div',this.tab===0?(this.config.overview?this.tr('Layout gemmes i den visuelle korteditor. Klik på en værdi for historik.','Save layout in the visual card editor. Click a value for history.'):this.tr('Visningsvalg gemmes i denne browser. Brug korteditoren for at gemme i dashboardet.','Display choices are saved in this browser. Use the card editor to save in the dashboard.')):this.tr('Indstillinger gemmes i regulatoren og kontrolleres ved genlæsning.','Settings are saved in the controller and checked by readback.'),'footer'));
   }
   // Preferences never call HA services. Scope them to user, controller and optional card ID.
   normalizeOverview(value){
@@ -93,10 +105,11 @@ class Ecl110Card extends HTMLElement {
     if(this.overviewKey===key)return;
     this.overviewKey=key;this.overviewDraft=null;this.overviewNotice='';
     this.overviewView=this.normalizeOverview(this.config.overview);
-    try{const raw=localStorage.getItem(key);if(raw!==null)this.overviewView=this.normalizeOverview(JSON.parse(raw));}
+    try{const raw=localStorage.getItem(key);if(!this.config.overview&&raw!==null)this.overviewView=this.normalizeOverview(JSON.parse(raw));}
     catch{this.overviewNotice=this.tr('Gemte visningsvalg kunne ikke læses. Standardvisningen bruges.','Saved display choices could not be read. Using the default view.');}
   }
   overviewName(key){
+    if(this.config.names?.[key])return this.config.names[key];
     const app=this.entities()[0]?.[1].attributes.ecl_application;
     const names=app==='130'?{temperature_s1:this.tr('Ude Temperatur(S1)','Outdoor · S1'),temperature_s2:this.tr('Rumtemperatur · S2','Room · S2'),temperature_s3:this.tr('Fremløbs Temperatur(S3)','Flow · S3'),temperature_s4:this.tr('Returløbs Temperatur(S4)','Return · S4')}:{};
     return names[key]||this.name(this.catalog.find(m=>m.key===key));
@@ -116,7 +129,7 @@ class Ecl110Card extends HTMLElement {
   overviewGrid(card){
     const view=this.overviewDraft||this.overviewView||this.normalizeOverview(this.config.overview);
     const grid=el('div',undefined,`grid overview-grid ${view.layout} ${view.size}`);
-    for(const key of view.fields){const tile=el('div',undefined,'metric');const value=el('div',this.overviewValue(key),'value');value.dataset.overviewValue=key;tile.append(el('small',this.overviewName(key)),value);grid.append(tile);}
+    for(const key of view.fields){const tile=this.button('',()=>this.moreInfo(key),'metric');tile.setAttribute('aria-label',this.tr('Historik: ','History: ')+this.overviewName(key));const value=el('div',this.overviewValue(key),'value');value.dataset.overviewValue=key;tile.append(el('small',this.overviewName(key)),value);grid.append(tile);}
     if(!view.fields.length)grid.append(el('p',this.tr('Ingen felter valgt. Vælg felter under Tilpas overblik.','No fields selected. Choose fields in Customize overview.')));
     card.append(grid);return grid;
   }
@@ -151,6 +164,7 @@ class Ecl110Card extends HTMLElement {
     };
     editor.append(list);const actions=el('div',undefined,'actions');actions.append(this.button(this.tr('Gem visning','Save view'),()=>{
       this.overviewView=this.normalizeOverview(draft);
+      if(this.config.overview){this.overviewNotice=this.tr('Gem permanente valg gennem dashboardets visuelle korteditor. Denne forhåndsvisning gælder, indtil kortet genindlæses.','Save permanent choices through the dashboard visual card editor. This preview lasts until the card reloads.');this.overviewDraft=null;this.render();return;}
       try{localStorage.setItem(this.overviewKey,JSON.stringify(this.overviewView));this.overviewNotice=this.tr('Visning gemt i denne browser.','View saved in this browser.');}
       catch{this.overviewNotice=this.tr('Browseren tillader ikke lagring. Visningen virker nu, men gemmes ikke efter genindlæsning.','Browser storage is unavailable. The view works now but will not survive a reload.');}
       this.overviewDraft=null;this.render();
@@ -162,7 +176,7 @@ class Ecl110Card extends HTMLElement {
     const app=this.entities().find(([,s])=>s.attributes.ecl_application)?.[1].attributes.ecl_application;
     if(!app||app==='all')card.append(el('p',this.tr('Vælg applikation 130 i integrationens opsætning for at aktivere de nye varmeindstillinger.','Select application 130 in the integration setup to enable the new heating settings.'),'muted'));
     for(const [prefix,title] of groups){const d=el('details');d.append(el('summary',title));const list=this.catalog.filter(m=>(m.line?.startsWith(prefix)||(prefix==='3'&&m.key==='desired_room_temperature'))&&(!app||m.applications.includes(app))).sort((a,b)=>(Number(a.line)||0)-(Number(b.line)||0));for(const m of list)d.append(this.settingRow(m));card.append(d);}
-    const missing=el('details');missing.append(el('summary',this.tr('Menuer uden Modbus-adresse','Menus without a Modbus address')));missing.append(this.button('5081 · S1-filter',()=>this.showHelp({line:'5081',name:{da:'S1-filter',en:'S1 filter'}})));card.append(missing);
+    const missing=el('details');missing.append(el('summary',this.tr('Menuer uden Modbus-adresse','Menus without a Modbus address')));missing.append(this.button(this.tr('5081 · S1-filter','5081 · S1 filter'),()=>this.showHelp({line:'5081',name:{da:'S1-filter',en:'S1 filter'}})));card.append(missing);
   }
   settingRow(meta){
     const row=el('div',undefined,'row');const label=el('div',this.name(meta));label.prepend(el('span',meta.line||'', 'line'));row.append(label);
@@ -176,13 +190,13 @@ class Ecl110Card extends HTMLElement {
     }
     const info=this.button('i',()=>this.showHelp(meta),'info');info.setAttribute('aria-label',this.tr('Info om ','About ')+this.name(meta));row.append(info);return row;
   }
-  optionLabel(v){return ({off:'OFF',on:'ON',one_second:this.tr('1 sekund','1 second'),one_minute:this.tr('1 minut','1 minute'),one_percent:'1 %',outdoor:this.tr('UDE','OUT'),room:this.tr('RUM','ROOM'),english:this.tr('Engelsk','English'),danish:this.tr('Dansk','Danish'),comfort:this.tr('Komfort','Comfort'),setback:this.tr('Sænkning','Setback'),standby:'Standby',auto:'AUTO'})[v]||v;}
+  optionLabel(v){return ({off:this.tr('Fra','Off'),on:this.tr('Til','On'),one_second:this.tr('1 sekund','1 second'),one_minute:this.tr('1 minut','1 minute'),one_percent:'1 %',outdoor:this.tr('Ude','Outdoor'),room:this.tr('Rum','Room'),english:this.tr('Engelsk','English'),danish:this.tr('Dansk','Danish'),swedish:this.tr('Svensk','Swedish'),finnish:this.tr('Finsk','Finnish'),german:this.tr('Tysk','German'),estonian:this.tr('Estisk','Estonian'),lithuanian:this.tr('Litauisk','Lithuanian'),latvian:this.tr('Lettisk','Latvian'),polish:this.tr('Polsk','Polish'),gear:this.tr('Gearmotor','Geared actuator'),comfort:this.tr('Komfort','Comfort'),setback:this.tr('Sænkning','Setback'),standby:'Standby',auto:this.tr('Automatisk','Automatic')})[v]||v;}
   async call(id,value){const domain=id.split('.')[0];const service=domain==='number'?'set_value':domain==='select'?'select_option':value?'turn_on':'turn_off';const data={entity_id:id};if(domain==='number')data.value=value;if(domain==='select')data.option=value;await this._hass.callService(domain,service,data);}
   async saveOne(id,value){this.busy=true;this.message=this.tr('Gemmer…','Saving…');this.render();try{await this.call(id,value);this.message=this.tr('Gemt og genlæst.','Saved and read back.');}catch(e){this.message=this.tr('Ændringen kunne ikke bekræftes: ','Change could not be confirmed: ')+e.message;}finally{this.busy=false;this.render();}}
   modal(title){const d=el('dialog');d.append(el('h2',title));d.addEventListener('close',()=>d.remove());this.shadowRoot.append(d);return d;}
   showHelp(meta){
     const h=this.help[meta.key?.startsWith('schedule_')?'schedule':meta.line||meta.key];const d=this.modal(this.name(meta));
-    const localized=value=>typeof value==='string'?value:value?.[this.lang()];
+    const localized=value=>typeof value==='string'?value:value?.[this.lang()]||value?.en;
     if(meta.line)d.append(el('small',this.tr('Indstilling ','Setting ')+meta.line));
     d.append(el('p',h?.[this.lang()]||this.tr('Der er endnu ingen forklaring til denne indstilling.','An explanation for this setting is not yet available.')));
     if(localized(h?.effect)){d.append(el('h3',this.tr('Hvad betyder en ændring?','What does a change do?')),el('p',localized(h.effect)));}
@@ -233,5 +247,44 @@ class Ecl110Card extends HTMLElement {
     apply.disabled=this.busy||jobs.some(j=>!j.match||['unknown','unavailable'].includes(j.match[1].state));d.append(apply,this.button(this.tr('Annullér','Cancel'),()=>d.close()));d.showModal();
   }
 }
+class Ecl110CardEditor extends HTMLElement {
+  constructor(){super();this.attachShadow({mode:'open'});}
+  setConfig(config){this.config=JSON.parse(JSON.stringify(config));this.render();if(!this.catalog&&!this.loading)this.load();}
+  set hass(value){this._hass=value;if(!this.shadowRoot.activeElement)this.render();}
+  tr(da,en){return (this.config?.language||this._hass?.language||'en').startsWith('da')?da:en;}
+  async load(){this.loading=true;try{const r=await fetch('/ecl110-static/catalog.json?v=0.4.3b1');if(!r.ok)throw Error(r.status);this.catalog=await r.json();}catch{this.error=true;}finally{this.loading=false;this.render();}}
+  changed(){this.dispatchEvent(new CustomEvent('config-changed',{detail:{config:JSON.parse(JSON.stringify(this.config))},bubbles:true,composed:true}));}
+  render(){
+    if(!this.config)return;
+    const root=this.shadowRoot;root.replaceChildren();
+    const style=el('style');style.textContent=`:host{display:block;color:var(--primary-text-color)}*{box-sizing:border-box}label{display:block;margin:12px 0}input,select,button{font:inherit;color:inherit;background:var(--card-background-color);border:1px solid var(--divider-color);border-radius:8px;padding:10px}label>input,label>select{display:block;width:100%;margin-top:6px}.field{border-top:1px solid var(--divider-color);padding:10px 0}.pick{display:flex;gap:8px;align-items:center}.pick input{width:20px;height:20px}.pick span{flex:1}.pick button{cursor:pointer}.alias{width:100%;margin-top:6px}p{color:var(--secondary-text-color);line-height:1.5}`;root.append(style);
+    const field=(title,value,change,choices)=>{const label=el('label',title);const input=el(choices?'select':'input');if(choices){for(const [v,n] of choices){const o=el('option',n);o.value=v;input.append(o);}}input.value=value;input.onchange=()=>change(input.value);label.append(input);root.append(label);return input;};
+    field(this.tr('Titel','Title'),this.config.title||'ECL110',v=>{this.config.title=v;this.changed();});
+    field(this.tr('Sprog','Language'),this.config.language||'',v=>{if(v)this.config.language=v;else delete this.config.language;this.changed();this.render();},[['',this.tr('Følg Home Assistant','Follow Home Assistant')],['da','Dansk'],['en','English']]);
+    const entities=Object.entries(this._hass?.states||{}).filter(([,s])=>s.attributes.ecl_device);
+    const devices=new Map();for(const [id,s] of entities)if(!devices.has(s.attributes.ecl_device))devices.set(s.attributes.ecl_device,[id,s]);
+    const options=[['',this.tr('Automatisk (én regulator)','Automatic (one controller)')],...[...devices.values()].map(([id,s])=>[id,s.attributes.ecl_device])];
+    if(this.config.entity&&!options.some(([id])=>id===this.config.entity))options.push([this.config.entity,this.config.entity]);
+    field(this.tr('Regulator','Controller'),this.config.entity||'',v=>{if(v)this.config.entity=v;else delete this.config.entity;this.changed();this.render();},options);
+    const view=this.config.overview||{fields:[...ECL_DEFAULT_FIELDS],layout:'tiles',size:'normal'};
+    const update=(key,value)=>{this.config.overview={...(this.config.overview||view),[key]:value};this.changed();};
+    field(this.tr('Layout','Layout'),view.layout||'tiles',v=>update('layout',v),[['tiles',this.tr('Felter','Tiles')],['list',this.tr('Liste','List')],['focus',this.tr('Ét felt i fokus','Focus on first field')]]);
+    field(this.tr('Størrelse','Size'),view.size||'normal',v=>update('size',v),[['compact',this.tr('Kompakt','Compact')],['normal',this.tr('Normal','Normal')],['large',this.tr('Stor','Large')]]);
+    root.append(el('p',this.tr('Kortet tilpasser sig pladsen. Brug dashboardets Layout-fane til kortbredde og gør afsnittet bredere for at udnytte hele skærmen. Gem med dashboardets Gem-knap; valgene følger derefter dashboardet på alle enheder.','The card adapts to the available space. Use the dashboard Layout tab for card width and widen the section to use the full screen. Save with the dashboard Save button; choices then follow the dashboard across devices.')));
+    if(!this.catalog){root.append(el('p',this.error?this.tr('Feltlisten kunne ikke hentes. Luk og åbn editoren igen.','Could not load fields. Close and reopen the editor.'):this.tr('Indlæser felter…','Loading fields…')));return;}
+    const fields=view.fields||[...ECL_DEFAULT_FIELDS];
+    const selectedDevice=this._hass?.states[this.config.entity]?.attributes.ecl_device||this.config.device||(devices.size===1?[...devices.keys()][0]:null);
+    const available=new Set(entities.filter(([,s])=>s.attributes.ecl_device===selectedDevice).map(([,s])=>s.attributes.register_key));
+    const keys=[...new Set([...fields,...this.catalog.filter(m=>available.has(m.key)&&!m.key.startsWith('schedule_')).map(m=>m.key)])];
+    for(const key of keys){
+      const meta=this.catalog.find(m=>m.key===key);if(!meta)continue;
+      const title=this.tr(meta.name.da,meta.name.en),row=el('div',undefined,'field'),pick=el('label',undefined,'pick'),check=el('input');check.type='checkbox';check.checked=fields.includes(key);check.onchange=()=>{update('fields',check.checked?[...fields,key]:fields.filter(k=>k!==key));this.render();};pick.append(check,el('span',title));
+      for(const [delta,symbol] of [[-1,'↑'],[1,'↓']]){const button=el('button',symbol);button.type='button';const i=fields.indexOf(key);button.disabled=i<0||i+delta<0||i+delta>=fields.length;button.setAttribute('aria-label',this.tr(delta<0?'Flyt op: ':'Flyt ned: ',delta<0?'Move up: ':'Move down: ')+title);button.onclick=()=>{const next=[...fields];[next[i],next[i+delta]]=[next[i+delta],next[i]];update('fields',next);this.render();};pick.append(button);}
+      const alias=el('input',undefined,'alias');alias.value=this.config.names?.[key]||'';alias.placeholder=title;alias.setAttribute('aria-label',this.tr('Visningsnavn: ','Display name: ')+title);alias.onchange=()=>{const names={...this.config.names};if(alias.value.trim())names[key]=alias.value.trim();else delete names[key];this.config.names=names;this.changed();};row.append(pick,alias);root.append(row);
+    }
+    root.append(el('p',this.tr('Egne navne gælder i dette kort og ændrer ikke entitets-ID eller Modbus-registre. Et tomt navn bruger den oversatte standardtekst. Flere felter kræver aktiverede entiteter.','Custom names apply to this card without changing entity IDs or Modbus registers. A blank name uses the translated default. More fields require enabled entities.')));
+  }
+}
+if(!customElements.get('ecl110-card-editor'))customElements.define('ecl110-card-editor',Ecl110CardEditor);
 if(!customElements.get('ecl110-card'))customElements.define('ecl110-card',Ecl110Card);
-window.customCards=window.customCards||[];window.customCards.push({type:'ecl110-card',name:'ECL110 · Juulsen',description:'ECL110 settings, weekly schedule and setting help'});
+window.customCards=window.customCards||[];window.customCards.push({type:'ecl110-card',name:'ECL110',description:'ECL110 settings, weekly schedule and setting help'});

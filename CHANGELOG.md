@@ -6,6 +6,18 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 ## [Unreleased]
 
+### 0.4.3b1 — test build
+
+- Added a Danish/English visual card editor for controller, language, title, layout, density, field selection/order and custom display names.
+- Explicit overview configuration now takes priority over legacy browser preferences and travels with the dashboard.
+- Overview readings open Home Assistant more-info/history without calling controller services.
+- Responsive tile columns use available card width; values align beneath multi-line labels.
+- Removed author/version text from the card header and author text from the card picker.
+- Retained clearer Danish outdoor, flow, return and desired room temperature labels.
+- Blank host for new connections, preserved host for reconfiguration, numeric Modbus device-ID input.
+- No register addresses, scaling or write permissions changed. Climate entities and heating-curve plots remain future work.
+- Validation: 16 Python unit tests and Node frontend event/configuration/localization contracts pass. Full Playwright visual regression was not run in the build environment because its browser download failed; Home Assistant UI testing is still required.
+
 ### Planned
 
 - Hardware verification of all 86 named readable entities
@@ -264,4 +276,3 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 - [0.1.0](https://github.com/Juulsen/Danfoss_ecl110/releases/tag/v0.1.0)
 
 > Release links become active after the corresponding GitHub releases are published.
-

@@ -35,7 +35,7 @@ APPLICATIONS: Final = (
 
 # Defaults for the mbusd gateway. All values remain configurable in the
 # upcoming config flow.
-DEFAULT_HOST: Final = "10.0.0.30"
+DEFAULT_HOST: Final = ""
 DEFAULT_PORT: Final = 502
 DEFAULT_DEVICE_ID: Final = 5
 DEFAULT_APPLICATION: Final = APPLICATION_ALL
@@ -61,4 +61,3 @@ DEFAULT_POLL_REGISTER_KEYS: Final = (
     "temperature_s3",
     "temperature_s4",
 )
-
