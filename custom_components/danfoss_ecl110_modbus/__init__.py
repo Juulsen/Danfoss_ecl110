@@ -12,6 +12,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TIMEOUT
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.helpers import config_validation as cv
 
 from .const import (
     CONF_APPLICATION,
@@ -24,10 +25,13 @@ from .const import (
     DEFAULT_REQUEST_DELAY,
     DEFAULT_SCAN_INTERVAL,
     DEFAULT_TIMEOUT,
+    DOMAIN,
     PLATFORMS,
 )
 from .coordinator import Ecl110DataUpdateCoordinator
 from .modbus_client import Ecl110ModbusClient
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 
 @dataclass(slots=True)
@@ -129,4 +133,3 @@ async def _async_update_listener(
     """Reload the integration after a reconfiguration."""
 
     await hass.config_entries.async_reload(entry.entry_id)
-
