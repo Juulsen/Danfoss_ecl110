@@ -59,14 +59,14 @@ Download the source ZIP from the [latest release](https://github.com/Juulsen/Dan
 
 Update through HACS, or replace the complete integration folder manually, then restart Home Assistant. Existing connections and entity IDs are retained. Use **Reconfigure** on the existing integration to change application or connection settings.
 
-For **0.4.3**, update the existing dashboard resource to the URL below and reload the browser. Keep only one ECL110 JavaScript resource.
+For **0.4.4**, update the existing dashboard resource to the URL below and reload the browser. Keep only one ECL110 JavaScript resource.
 
 ## Dashboard
 
 Add this dashboard resource as a **JavaScript module**:
 
 ```text
-/ecl110-static/ecl110-card.js?v=0.4.3
+/ecl110-static/ecl110-card.js?v=0.4.4
 ```
 
 Add a manual card:

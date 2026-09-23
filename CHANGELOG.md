@@ -8,6 +8,12 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 - Heat-curve graphs and direct serial RTU transport remain planned.
 
+## [0.4.4] - 2026-09-23
+
+- Added the Juulsen smart home icon in standard and high resolution.
+- Streamlined the README with project badges, a PayPal donation button and HACS submission status.
+- No changes to Modbus registers, scaling or control behavior.
+
 ## [0.4.3] - 2026-09-23
 
 ### Release packaging
