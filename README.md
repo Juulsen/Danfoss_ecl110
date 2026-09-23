@@ -5,7 +5,48 @@
 
 **Home Assistant control, weekly schedules and contextual help for Danfoss ECL Comfort 110.**
 
-Version **0.4.2** · Local Modbus TCP · Danish / English · Independent community project
+Version **0.4.3** · Local Modbus TCP · Danish / English · Independent community project
+
+## What's new in 0.4.3
+
+Room-heating climate control, a visual dashboard editor and HACS packaging are now included. The project remains under active testing and will receive ongoing updates.
+
+- Visual dashboard card editor: controller, language, title, layout, size, field selection, order and custom display names.
+- Responsive tiles fill the available card width, with aligned labels and readings.
+- Click a reading to open Home Assistant's more-info dialog, including history when recorded by Home Assistant.
+- Card branding/version text removed; clearer Danish temperature names retained.
+- New connections start with an empty host; existing connections retain their saved host. Modbus device ID uses a numeric box.
+
+After installing this release, restart Home Assistant and change the dashboard JavaScript resource to `/ecl110-static/ecl110-card.js?v=0.4.3`. Reload the browser. Edit the dashboard card to use the visual editor, then press **Save**. These choices are stored with the dashboard and apply across browsers. Custom names only affect this card, including its settings labels; entity IDs and controller values stay unchanged.
+
+For a wide card, use Home Assistant's card **Layout** controls and increase the containing section width. The card fills the space allocated by the dashboard; it cannot enlarge the containing section itself. On a narrow screen, tiles reflow automatically.
+
+Existing browser-only views remain supported until an explicit `overview` is saved in the card configuration. Explicit dashboard configuration takes priority. The in-card customization remains a temporary preview for configured cards; permanent changes belong in the visual editor.
+
+The frontend was tested successfully in Home Assistant by the project owner. The climate implementation is covered by automated tests; verify its behavior against your own controller. Heat-curve graphs remain deferred.
+
+## Room heating climate entity
+
+When application **130** is selected, a **Room heating** climate entity is created on the existing ECL110 device. In Danish it is named **Rumvarme**. After updating and restarting, open **Settings → Devices & services → ECL110 → device** to find it. Add it to a standard Home Assistant **Thermostat** card for the circular temperature control. No YAML or extra custom card is required.
+
+| Control / reading | ECL110 behavior |
+| --- | --- |
+| Target temperature | Register 11179, 10–30 °C in whole-degree steps |
+| Current temperature | Actual room sensor S2, register 11201; unknown if S2 is missing |
+| Auto | Register 4200 = 1; follows the controller's own timer when available |
+| Heat / Comfort | Register 4200 = 2 |
+| Setback preset | Register 4200 = 3; HA mode remains Heat |
+| Off / Standby preset | Register 4200 = 4; controller frost protection can remain active |
+| Turn on | Standby changes to Comfort; an already active mode is preserved |
+| `active_target_temperature` attribute | Register 11228 / 10; the controller's active desired room temperature |
+
+The thermostat target reflects the writable room setting. The active target may differ due to schedule or operating mode and is shown separately in entity attributes. Changing only the target does not change the mode or overwrite the weekly schedule. ECL110 retains responsibility for weather compensation and regulation; Home Assistant does not run a second thermostat loop.
+
+Without S2, the climate entity still controls the setpoint and mode, but has no measured room temperature. Flow/return temperatures and desired temperatures are never substituted for S2. No heating/idle action is inferred from pump state or temperature differences. Application 116 and an unspecified application do not create this room-heating entity.
+
+Existing number/select entities remain available and share the same coordinator and readback. If a service request includes both temperature and mode, both are validated first, then written sequentially with readback; the two writes are not atomic. A failure can leave the temperature updated while mode remains unchanged.
+
+Suggested first check: compare the climate target with the ECL display, change it by one whole degree, restore it, and compare Comfort/Setback/Auto/Standby with the existing mode selector. Verify that a missing S2 remains unknown.
 
 Developed by **Juulsen**. This integration is not developed, supported or endorsed by Danfoss.
 
@@ -102,12 +143,16 @@ Numeric ranges introduced in 0.3.0 use the application 130 manual and paired dis
 
 1. Download the [repository ZIP](https://github.com/Juulsen/Danfoss_ecl110/archive/refs/heads/main.zip).
 2. Extract it and copy the complete `custom_components/danfoss_ecl110_modbus` folder to `/config/custom_components/`, including its `frontend` subfolder.
-3. Restart Home Assistant. When updating the card, also change its existing resource URL to `?v=0.4.2` and reload your browser. Keep only one ECL110 JavaScript resource.
+3. Restart Home Assistant. When updating the card, also change its existing resource URL to `?v=0.4.3` and reload your browser. Keep only one ECL110 JavaScript resource.
 4. Open **Settings → Devices & services → ECL110 → Reconfigure**.
 5. Select the actual application: **130** for room heating, **116** for domestic hot water. Newly expanded heating writes require explicit selection of **130**; `all` does not unlock them.
 6. Enable **ECA 110 weekly schedule** only if the controller has its timer program. Setup tests reading all seven days before creating the 28 time selections together.
 
-HACS: the repository can be added as a custom integration repository where repository access and HACS validation permit. This is not a claim of inclusion in the HACS default store.
+### Install through HACS
+
+Requires Home Assistant **2026.6.0 or newer**. In HACS, open the three-dot menu → **Custom repositories**, enter `https://github.com/Juulsen/Danfoss_ecl110`, and choose **Integration**. Find **ECL110 Modbus by Juulsen**, download the latest release and restart Home Assistant. Add the integration under **Settings → Devices & services → Add integration**. Existing installations retain their connection and entities.
+
+HACS installs the bundled frontend along with the integration; register its JavaScript resource as described below. This repository is prepared for HACS validation but is not yet included in the default HACS catalog. Default inclusion requires a separate review by HACS maintainers.
 
 ## Add the dashboard card
 
@@ -116,7 +161,7 @@ No Browser Mod or additional card dependency is needed. The integration serves i
 Add a dashboard **resource** (JavaScript module):
 
 ```text
-/ecl110-static/ecl110-card.js?v=0.4.2
+/ecl110-static/ecl110-card.js?v=0.4.3
 ```
 
 Then add a manual card:
@@ -139,9 +184,9 @@ This is a dashboard card. Home Assistant's standard device page is not replaced 
 
 **Overview:** initially four temperatures and operating mode. Use **Customize overview** to choose any named, enabled entity for this controller, including available measurements and settings. Unknown registers and schedule time fields are excluded. Disabled entities must first be enabled in Home Assistant. Missing readings show a dash; unknown and unavailable readings are labelled accordingly.
 
-Choose **tiles**, **list** or **focus**, and **compact**, **normal** or **large**. Move selected fields with the arrow buttons. **Save view** persists the layout in this browser; **Cancel** leaves the saved layout unchanged. **Default view** restores the YAML defaults (or the original four-temperature view), and needs **Save view** to persist. Display changes do not call Home Assistant services or write registers. The operating-mode control still changes the controller.
+Choose **tiles**, **list** or **focus**, and **compact**, **normal** or **large** in the visual card editor. Move selected fields with the arrow buttons and save the dashboard. For legacy cards without `overview` configuration, the in-card **Save view** still saves in this browser. For configured cards it only previews changes until reload; use the dashboard editor for permanent changes. Display changes do not call Home Assistant services or write registers. The operating-mode control still changes the controller.
 
-By default, cards for the same user/controller share saved preferences when loaded in the same browser. Give each card a different `overview_id` for independent views. Saved browser choices take priority over these optional YAML defaults:
+For legacy cards without explicit overview configuration, cards for the same user/controller share preferences within the same browser. Give each legacy card a different `overview_id` for independent views. Explicit YAML or visual-editor configuration takes priority over browser choices:
 
 ```yaml
 type: custom:ecl110-card
@@ -159,7 +204,7 @@ overview:
   size: normal   # compact | normal | large
 ```
 
-`fields` uses the stable `register_key` shown in the entity attributes, so renaming an entity does not break the selection. YAML defaults travel with the dashboard configuration; local customization is browser-specific. If browser storage is blocked, a visible message explains that choices only last for the current card session. These display sizes control content density; set the dashboard card width using Home Assistant's own layout controls.
+`fields` uses the stable `register_key` shown in the entity attributes, so renaming an entity does not break the selection. Visual-editor and YAML choices travel with the dashboard configuration. Legacy browser customization is browser-specific. These display sizes control content density; set the dashboard card width using Home Assistant's own layout controls.
 
 **Settings:** groups follow the ECL menu structure. Values are in display units; changing an input writes that individual value. The info button explains its purpose and provides relevant formulas. Unsupported or disabled registers appear as read-only; enable a diagnostic sensor if its current reading is needed.
 
@@ -204,7 +249,7 @@ Some items cannot honestly be called finished Modbus controls yet:
 - OFF codes for auto-reduction, return integration, heating cut-out, pump frost and backlight are unresolved. Their documented numeric ranges can be used; unknown OFF codes are not sent.
 - Network/bus address changes and multi-field clock setting are not exposed for writing.
 - Application 116-specific menus **6094, 6095, 6096, 6097, 6129 and 6173** need confirmed Modbus mappings. Heating presets are never offered for 116.
-- A full climate entity and direct serial RTU transport remain future work.
+- Direct serial RTU transport and heat-curve graphs remain future work. Room-heating climate control is included for application 130.
 
 Existing sensor IDs are retained. The three OFF/numeric controls introduced as selects in 0.2.4 remain selects, with expanded choices. No forced entity-registry cleanup is performed.
 

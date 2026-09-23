@@ -10,6 +10,7 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.config_entries import ConfigFlowResult
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TIMEOUT
+from homeassistant.helpers import selector
 
 from .const import (
     APPLICATIONS,
@@ -56,7 +57,9 @@ def _config_schema(defaults: dict[str, Any]) -> vol.Schema:
             vol.Required(
                 CONF_DEVICE_ID,
                 default=defaults.get(CONF_DEVICE_ID, DEFAULT_DEVICE_ID),
-            ): vol.All(vol.Coerce(int), vol.Range(min=0, max=247)),
+            ): selector.NumberSelector(selector.NumberSelectorConfig(
+                min=0, max=247, step=1, mode=selector.NumberSelectorMode.BOX,
+            )),
             vol.Required(
                 CONF_APPLICATION,
                 default=defaults.get(
@@ -149,6 +152,9 @@ class Ecl110ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Normalize and validate form data, returning form errors."""
 
         user_input[CONF_HOST] = user_input[CONF_HOST].strip()
+        if not user_input[CONF_HOST]:
+            return {"base": "cannot_connect"}
+        user_input[CONF_DEVICE_ID] = int(user_input[CONF_DEVICE_ID])
         try:
             await _async_validate_connection(user_input)
         except EclConnectionError:
@@ -222,4 +228,3 @@ class Ecl110ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=_config_schema(user_input or dict(entry.data)),
             errors=errors,
         )
-
