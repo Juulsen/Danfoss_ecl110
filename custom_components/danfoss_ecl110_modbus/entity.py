@@ -48,10 +48,11 @@ class Ecl110WritableEntity(CoordinatorEntity[Ecl110DataUpdateCoordinator]):
         entry: ConfigEntry[Any],
         register: EclRegister,
         platform_suffix: str,
+        context: tuple[str, ...] | None = None,
     ) -> None:
         """Initialize the entity and its coordinator context."""
 
-        super().__init__(coordinator, context=register.key)
+        super().__init__(coordinator, context=context or register.key)
         self.register = register
         self._entry = entry
         self._attr_unique_id = (

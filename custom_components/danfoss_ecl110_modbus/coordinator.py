@@ -140,9 +140,10 @@ class Ecl110DataUpdateCoordinator(
         """Return registers used by enabled coordinator entities."""
 
         contexts = {
-            str(context)
+            str(key)
             for context in self.async_contexts()
             if context is not None
+            for key in (context if isinstance(context, tuple) else (context,))
         }
 
         # No entities are subscribed during the first config-entry refresh.
@@ -253,4 +254,3 @@ class Ecl110DataUpdateCoordinator(
         data.setdefault("application", self.application or APPLICATION_ALL)
         self.async_set_updated_data(data)
         return read_back
-

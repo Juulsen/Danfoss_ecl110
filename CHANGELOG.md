@@ -6,6 +6,16 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 ## [Unreleased]
 
+### 0.4.3b2 — climate test build
+
+- Added an application-130 room-heating climate entity, compatible with the native Home Assistant thermostat card.
+- Whole-degree target control (10–30 °C), Auto/Heat/Off modes and Auto/Comfort/Setback/Standby presets, with Danish/English names.
+- Current temperature comes only from S2; a missing room sensor does not disable setpoint/mode controls.
+- Active target from register 11228 is a separate attribute. Off maps to controller standby, retaining possible frost protection.
+- Shared coordinator subscriptions include all climate dependencies even when individual sensors are disabled. Existing write locking, validation and readback are reused.
+- The owner confirmed 0.4.3b1 works in Home Assistant. Climate behavior still awaits hardware testing; heating-curve graphs remain deferred.
+- Validation: 22 Python tests pass, including climate mappings, bounds, missing S2, failure handling, application gating and subscription expansion. Existing Node frontend contracts pass.
+
 ### 0.4.3b1 — test build
 
 - Added a Danish/English visual card editor for controller, language, title, layout, density, field selection/order and custom display names.

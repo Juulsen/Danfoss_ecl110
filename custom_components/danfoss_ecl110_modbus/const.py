@@ -13,6 +13,7 @@ INTEGRATION_AUTHOR: Final = "Juulsen"
 MODEL: Final = "Danfoss ECL Comfort 110"
 
 PLATFORMS: Final = (
+    Platform.CLIMATE,
     Platform.SENSOR,
     Platform.NUMBER,
     Platform.SELECT,

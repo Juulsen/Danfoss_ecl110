@@ -63,6 +63,16 @@
   },
   "title": "Danfoss ECL110 Modbus",
   "entity": {
+    "climate": {
+      "room_heating": {
+        "name": "Room heating",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {"auto": "Automatic", "comfort": "Comfort", "setback": "Setback", "standby": "Standby / frost protection"}
+          }
+        }
+      }
+    },
     "sensor": {
       "actual_mode": {
         "name": "Actual operating mode",

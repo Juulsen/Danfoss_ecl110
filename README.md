@@ -5,7 +5,7 @@
 
 **Home Assistant control, weekly schedules and contextual help for Danfoss ECL Comfort 110.**
 
-Test version **0.4.3b1** · Local Modbus TCP · Danish / English · Independent community project
+Test version **0.4.3b2** · Local Modbus TCP · Danish / English · Independent community project
 
 ## Testing the next update
 
@@ -17,13 +17,36 @@ This branch contains an unreleased test build. No new GitHub release has been pu
 - Card branding/version text removed; clearer Danish temperature names retained.
 - New connections start with an empty host; existing connections retain their saved host. Modbus device ID uses a numeric box.
 
-After installing this test build, restart Home Assistant and change the dashboard JavaScript resource to `/ecl110-static/ecl110-card.js?v=0.4.3b1`. Reload the browser. Edit the dashboard card to use the visual editor, then press **Save**. These choices are stored with the dashboard and apply across browsers. Custom names only affect this card, including its settings labels; entity IDs and controller values stay unchanged.
+After installing this test build, restart Home Assistant and change the dashboard JavaScript resource to `/ecl110-static/ecl110-card.js?v=0.4.3b2`. Reload the browser. Edit the dashboard card to use the visual editor, then press **Save**. These choices are stored with the dashboard and apply across browsers. Custom names only affect this card, including its settings labels; entity IDs and controller values stay unchanged.
 
 For a wide card, use Home Assistant's card **Layout** controls and increase the containing section width. The card fills the space allocated by the dashboard; it cannot enlarge the containing section itself. On a narrow screen, tiles reflow automatically.
 
 Existing browser-only views remain supported until an explicit `overview` is saved in the card configuration. Explicit dashboard configuration takes priority. The in-card customization remains a temporary preview for configured cards; permanent changes belong in the visual editor.
 
-Climate entities and heat-curve graphs are not part of this test build. Hardware operation still needs a user check in Home Assistant; frontend tests use simulated entities.
+The 0.4.3b1 frontend was tested successfully in Home Assistant by the project owner. This 0.4.3b2 build adds the climate entity described below; its hardware operation still needs a user check. Heat-curve graphs remain deferred.
+
+## Room heating climate entity
+
+When application **130** is selected, a **Room heating** climate entity is created on the existing ECL110 device. In Danish it is named **Rumvarme**. After updating and restarting, open **Settings → Devices & services → ECL110 → device** to find it. Add it to a standard Home Assistant **Thermostat** card for the circular temperature control. No YAML or extra custom card is required.
+
+| Control / reading | ECL110 behavior |
+| --- | --- |
+| Target temperature | Register 11179, 10–30 °C in whole-degree steps |
+| Current temperature | Actual room sensor S2, register 11201; unknown if S2 is missing |
+| Auto | Register 4200 = 1; follows the controller's own timer when available |
+| Heat / Comfort | Register 4200 = 2 |
+| Setback preset | Register 4200 = 3; HA mode remains Heat |
+| Off / Standby preset | Register 4200 = 4; controller frost protection can remain active |
+| Turn on | Standby changes to Comfort; an already active mode is preserved |
+| `active_target_temperature` attribute | Register 11228 / 10; the controller's active desired room temperature |
+
+The thermostat target reflects the writable room setting. The active target may differ due to schedule or operating mode and is shown separately in entity attributes. Changing only the target does not change the mode or overwrite the weekly schedule. ECL110 retains responsibility for weather compensation and regulation; Home Assistant does not run a second thermostat loop.
+
+Without S2, the climate entity still controls the setpoint and mode, but has no measured room temperature. Flow/return temperatures and desired temperatures are never substituted for S2. No heating/idle action is inferred from pump state or temperature differences. Application 116 and an unspecified application do not create this room-heating entity.
+
+Existing number/select entities remain available and share the same coordinator and readback. If a service request includes both temperature and mode, both are validated first, then written sequentially with readback; the two writes are not atomic. A failure can leave the temperature updated while mode remains unchanged.
+
+Suggested first check: compare the climate target with the ECL display, change it by one whole degree, restore it, and compare Comfort/Setback/Auto/Standby with the existing mode selector. Verify that a missing S2 remains unknown.
 
 Developed by **Juulsen**. This integration is not developed, supported or endorsed by Danfoss.
 
@@ -120,7 +143,7 @@ Numeric ranges introduced in 0.3.0 use the application 130 manual and paired dis
 
 1. Download the [repository ZIP](https://github.com/Juulsen/Danfoss_ecl110/archive/refs/heads/main.zip).
 2. Extract it and copy the complete `custom_components/danfoss_ecl110_modbus` folder to `/config/custom_components/`, including its `frontend` subfolder.
-3. Restart Home Assistant. When updating the card, also change its existing resource URL to `?v=0.4.3b1` and reload your browser. Keep only one ECL110 JavaScript resource.
+3. Restart Home Assistant. When updating the card, also change its existing resource URL to `?v=0.4.3b2` and reload your browser. Keep only one ECL110 JavaScript resource.
 4. Open **Settings → Devices & services → ECL110 → Reconfigure**.
 5. Select the actual application: **130** for room heating, **116** for domestic hot water. Newly expanded heating writes require explicit selection of **130**; `all` does not unlock them.
 6. Enable **ECA 110 weekly schedule** only if the controller has its timer program. Setup tests reading all seven days before creating the 28 time selections together.
@@ -134,7 +157,7 @@ No Browser Mod or additional card dependency is needed. The integration serves i
 Add a dashboard **resource** (JavaScript module):
 
 ```text
-/ecl110-static/ecl110-card.js?v=0.4.3b1
+/ecl110-static/ecl110-card.js?v=0.4.3b2
 ```
 
 Then add a manual card:
