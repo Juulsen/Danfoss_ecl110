@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/icon.png" alt="Juulsen smart home icon" width="180">
+</p>
+
 # ECL110 Modbus · Juulsen
 
 [![Latest release](https://img.shields.io/github/v/release/Juulsen/Danfoss_ecl110)](https://github.com/Juulsen/Danfoss_ecl110/releases/latest)
