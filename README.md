@@ -5,11 +5,11 @@
 
 **Home Assistant control, weekly schedules and contextual help for Danfoss ECL Comfort 110.**
 
-Test version **0.4.3b2** · Local Modbus TCP · Danish / English · Independent community project
+Version **0.4.3** · Local Modbus TCP · Danish / English · Independent community project
 
-## Testing the next update
+## What's new in 0.4.3
 
-This branch contains an unreleased test build. No new GitHub release has been published.
+Room-heating climate control, a visual dashboard editor and HACS packaging are now included. The project remains under active testing and will receive ongoing updates.
 
 - Visual dashboard card editor: controller, language, title, layout, size, field selection, order and custom display names.
 - Responsive tiles fill the available card width, with aligned labels and readings.
@@ -17,13 +17,13 @@ This branch contains an unreleased test build. No new GitHub release has been pu
 - Card branding/version text removed; clearer Danish temperature names retained.
 - New connections start with an empty host; existing connections retain their saved host. Modbus device ID uses a numeric box.
 
-After installing this test build, restart Home Assistant and change the dashboard JavaScript resource to `/ecl110-static/ecl110-card.js?v=0.4.3b2`. Reload the browser. Edit the dashboard card to use the visual editor, then press **Save**. These choices are stored with the dashboard and apply across browsers. Custom names only affect this card, including its settings labels; entity IDs and controller values stay unchanged.
+After installing this release, restart Home Assistant and change the dashboard JavaScript resource to `/ecl110-static/ecl110-card.js?v=0.4.3`. Reload the browser. Edit the dashboard card to use the visual editor, then press **Save**. These choices are stored with the dashboard and apply across browsers. Custom names only affect this card, including its settings labels; entity IDs and controller values stay unchanged.
 
 For a wide card, use Home Assistant's card **Layout** controls and increase the containing section width. The card fills the space allocated by the dashboard; it cannot enlarge the containing section itself. On a narrow screen, tiles reflow automatically.
 
 Existing browser-only views remain supported until an explicit `overview` is saved in the card configuration. Explicit dashboard configuration takes priority. The in-card customization remains a temporary preview for configured cards; permanent changes belong in the visual editor.
 
-The 0.4.3b1 frontend was tested successfully in Home Assistant by the project owner. This 0.4.3b2 build adds the climate entity described below; its hardware operation still needs a user check. Heat-curve graphs remain deferred.
+The frontend was tested successfully in Home Assistant by the project owner. The climate implementation is covered by automated tests; verify its behavior against your own controller. Heat-curve graphs remain deferred.
 
 ## Room heating climate entity
 
@@ -143,12 +143,16 @@ Numeric ranges introduced in 0.3.0 use the application 130 manual and paired dis
 
 1. Download the [repository ZIP](https://github.com/Juulsen/Danfoss_ecl110/archive/refs/heads/main.zip).
 2. Extract it and copy the complete `custom_components/danfoss_ecl110_modbus` folder to `/config/custom_components/`, including its `frontend` subfolder.
-3. Restart Home Assistant. When updating the card, also change its existing resource URL to `?v=0.4.3b2` and reload your browser. Keep only one ECL110 JavaScript resource.
+3. Restart Home Assistant. When updating the card, also change its existing resource URL to `?v=0.4.3` and reload your browser. Keep only one ECL110 JavaScript resource.
 4. Open **Settings → Devices & services → ECL110 → Reconfigure**.
 5. Select the actual application: **130** for room heating, **116** for domestic hot water. Newly expanded heating writes require explicit selection of **130**; `all` does not unlock them.
 6. Enable **ECA 110 weekly schedule** only if the controller has its timer program. Setup tests reading all seven days before creating the 28 time selections together.
 
-HACS: the repository can be added as a custom integration repository where repository access and HACS validation permit. This is not a claim of inclusion in the HACS default store.
+### Install through HACS
+
+Requires Home Assistant **2026.6.0 or newer**. In HACS, open the three-dot menu → **Custom repositories**, enter `https://github.com/Juulsen/Danfoss_ecl110`, and choose **Integration**. Find **ECL110 Modbus by Juulsen**, download the latest release and restart Home Assistant. Add the integration under **Settings → Devices & services → Add integration**. Existing installations retain their connection and entities.
+
+HACS installs the bundled frontend along with the integration; register its JavaScript resource as described below. This repository is prepared for HACS validation but is not yet included in the default HACS catalog. Default inclusion requires a separate review by HACS maintainers.
 
 ## Add the dashboard card
 
@@ -157,7 +161,7 @@ No Browser Mod or additional card dependency is needed. The integration serves i
 Add a dashboard **resource** (JavaScript module):
 
 ```text
-/ecl110-static/ecl110-card.js?v=0.4.3b2
+/ecl110-static/ecl110-card.js?v=0.4.3
 ```
 
 Then add a manual card:
@@ -245,7 +249,7 @@ Some items cannot honestly be called finished Modbus controls yet:
 - OFF codes for auto-reduction, return integration, heating cut-out, pump frost and backlight are unresolved. Their documented numeric ranges can be used; unknown OFF codes are not sent.
 - Network/bus address changes and multi-field clock setting are not exposed for writing.
 - Application 116-specific menus **6094, 6095, 6096, 6097, 6129 and 6173** need confirmed Modbus mappings. Heating presets are never offered for 116.
-- A full climate entity and direct serial RTU transport remain future work.
+- Direct serial RTU transport and heat-curve graphs remain future work. Room-heating climate control is included for application 130.
 
 Existing sensor IDs are retained. The three OFF/numeric controls introduced as selects in 0.2.4 remain selects, with expanded choices. No forced entity-registry cleanup is performed.
 

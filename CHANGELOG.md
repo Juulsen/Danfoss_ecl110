@@ -6,6 +6,17 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 ## [Unreleased]
 
+- Heat-curve graphs and direct serial RTU transport remain planned.
+
+## [0.4.3] - 2026-09-23
+
+### Release packaging
+
+- Promoted the frontend and application-130 climate implementation to 0.4.3.
+- Added the HACS manifest, local brand icon and automated HACS/Hassfest/test workflows.
+- Documented HACS custom-repository installation and a Home Assistant 2026.6.0 minimum for the packaged brand assets.
+- The project remains under active testing; inclusion in the HACS default catalog is not implied.
+
 ### 0.4.3b2 — climate test build
 
 - Added an application-130 room-heating climate entity, compatible with the native Home Assistant thermostat card.

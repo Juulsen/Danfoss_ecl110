@@ -16,7 +16,7 @@ class Ecl110Card extends HTMLElement {
   async load(){
     try{
       const base='/ecl110-static/';
-      const results=await Promise.all(['catalog.json','help.json'].map(async f=>{const r=await fetch(base+f+'?v=0.4.3b2');if(!r.ok)throw Error(`${f}: ${r.status}`);return r.json();}));
+      const results=await Promise.all(['catalog.json','help.json'].map(async f=>{const r=await fetch(base+f+'?v=0.4.3');if(!r.ok)throw Error(`${f}: ${r.status}`);return r.json();}));
       [this.catalog,this.help]=results;this.render();
     }catch(e){this.message=String(e);this.render();}
   }
@@ -252,7 +252,7 @@ class Ecl110CardEditor extends HTMLElement {
   setConfig(config){this.config=JSON.parse(JSON.stringify(config));this.render();if(!this.catalog&&!this.loading)this.load();}
   set hass(value){this._hass=value;if(!this.shadowRoot.activeElement)this.render();}
   tr(da,en){return (this.config?.language||this._hass?.language||'en').startsWith('da')?da:en;}
-  async load(){this.loading=true;try{const r=await fetch('/ecl110-static/catalog.json?v=0.4.3b2');if(!r.ok)throw Error(r.status);this.catalog=await r.json();}catch{this.error=true;}finally{this.loading=false;this.render();}}
+  async load(){this.loading=true;try{const r=await fetch('/ecl110-static/catalog.json?v=0.4.3');if(!r.ok)throw Error(r.status);this.catalog=await r.json();}catch{this.error=true;}finally{this.loading=false;this.render();}}
   changed(){this.dispatchEvent(new CustomEvent('config-changed',{detail:{config:JSON.parse(JSON.stringify(this.config))},bubbles:true,composed:true}));}
   render(){
     if(!this.config)return;
