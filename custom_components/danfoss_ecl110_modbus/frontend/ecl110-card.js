@@ -16,7 +16,7 @@ class Ecl110Card extends HTMLElement {
   async load(){
     try{
       const base='/ecl110-static/';
-      const results=await Promise.all(['catalog.json','help.json'].map(async f=>{const r=await fetch(base+f+'?v=0.4.4');if(!r.ok)throw Error(`${f}: ${r.status}`);return r.json();}));
+      const results=await Promise.all(['catalog.json','help.json'].map(async f=>{const r=await fetch(base+f+'?v=0.4.5');if(!r.ok)throw Error(`${f}: ${r.status}`);return r.json();}));
       [this.catalog,this.help]=results;this.render();
     }catch(e){this.message=String(e);this.render();}
   }
@@ -140,7 +140,18 @@ class Ecl110Card extends HTMLElement {
     if(this.overviewNotice){const notice=el('p',this.overviewNotice,'message');notice.setAttribute('role','status');card.append(notice);}
     if(this.overviewDraft)this.overviewEditor(card);
     this.overviewGrid(card);
+    this.overviewControls(card);
+  }
+  overviewControls(card){
     const mode=this.catalog.find(x=>x.key==='desired_mode');if(mode)card.append(this.settingRow(mode));
+    const app=this.entities().find(([,s])=>s.attributes.ecl_application)?.[1].attributes.ecl_application;
+    if(app!=='130')return;
+    for(const key of ['parallel_displacement','boost']){
+      const meta=this.catalog.find(x=>x.key===key);if(!meta)continue;
+      card.append(this.settingRow(meta));
+      if(!this.find(key))card.append(el('p',this.tr('Aktivér indstillingsentiteten på ECL110-enheden for at ændre denne værdi.','Enable the setting entity on the ECL110 device to change this value.'),'muted'));
+    }
+    card.append(el('p',this.tr('Parallelforskydning: −20 til +20 K (1 K svarer til 1 °C forskel). Boost: Fra eller 1–99 % ekstra varme efter sænkning; valget starter ikke et boost med det samme. Ændringer gemmes straks.','Parallel displacement: −20 to +20 K (1 K equals a 1 °C difference). Boost: Off or 1–99% extra heat after setback; changing it does not start an immediate boost. Changes are saved immediately.'),'muted'));
   }
   overviewEditor(card){
     const draft=this.overviewDraft,editor=el('section',undefined,'overview-editor');editor.append(el('h3',this.tr('Tilpas overblik','Customize overview')));
@@ -252,7 +263,7 @@ class Ecl110CardEditor extends HTMLElement {
   setConfig(config){this.config=JSON.parse(JSON.stringify(config));this.render();if(!this.catalog&&!this.loading)this.load();}
   set hass(value){this._hass=value;if(!this.shadowRoot.activeElement)this.render();}
   tr(da,en){return (this.config?.language||this._hass?.language||'en').startsWith('da')?da:en;}
-  async load(){this.loading=true;try{const r=await fetch('/ecl110-static/catalog.json?v=0.4.4');if(!r.ok)throw Error(r.status);this.catalog=await r.json();}catch{this.error=true;}finally{this.loading=false;this.render();}}
+  async load(){this.loading=true;try{const r=await fetch('/ecl110-static/catalog.json?v=0.4.5');if(!r.ok)throw Error(r.status);this.catalog=await r.json();}catch{this.error=true;}finally{this.loading=false;this.render();}}
   changed(){this.dispatchEvent(new CustomEvent('config-changed',{detail:{config:JSON.parse(JSON.stringify(this.config))},bubbles:true,composed:true}));}
   render(){
     if(!this.config)return;

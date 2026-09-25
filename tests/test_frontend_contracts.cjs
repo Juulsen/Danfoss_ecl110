@@ -7,6 +7,7 @@ class Element {
   constructor(tag){this.tag=tag;this.children=[];this.attributes={};this.events=[];}
   attachShadow(){return this.shadowRoot=new Element('shadow');}
   append(...nodes){this.children.push(...nodes);}
+  prepend(...nodes){this.children.unshift(...nodes);}
   replaceChildren(...nodes){this.children=nodes;}
   setAttribute(k,v){this.attributes[k]=v;}
   dispatchEvent(event){this.events.push(event);}
@@ -39,3 +40,36 @@ for(const [key,item] of Object.entries(help))for(const lang of ['da','en']){
   assert.doesNotMatch([item[lang],...['effect','example','formula','note'].map(f=>item[f]?.[lang]||'')].join(' '),/PDF|manual|Danfoss|page[s]? [0-9]|side[r]? [0-9]/i);
 }
 console.log('PASS: configuration precedence, legacy preferences, history event, editor persistence, custom names, option translation, DA/EN help');
+
+// Exercise the actual overview controls and their existing HA service path.
+(async()=>{
+  const quick=new Card();quick.catalog=catalog;quick.config={device:'one'};
+  const states={},calls=[];
+  const put=(id,key,state,attributes={})=>states[id]={state,attributes:{ecl_device:'one',ecl_application:'130',register_key:key,...attributes}};
+  put('select.mode','desired_mode','auto',{options:['auto','comfort','setback','standby']});
+  put('select.boost','boost','off',{options:['off','one_percent','10 %','99 %']});
+  put('number.shift','parallel_displacement','0',{min:-20,max:20,step:1});
+  quick._hass={language:'da',states,callService:async(...args)=>calls.push(args)};
+  quick.render=()=>{};
+  const draw=()=>{const host=new Element('div');quick.overviewControls(host);return host;};
+  const rows=host=>host.children.filter(n=>n.className==='row');
+  let host=draw();assert.equal(rows(host).length,3);assert.equal(calls.length,0);
+  const shift=rows(host)[1].children[1],boost=rows(host)[2].children[1];
+  assert.equal(shift.type,'number');assert.equal(shift.min,-20);assert.equal(shift.max,20);assert.equal(shift.step,1);
+  shift.reportValidity=()=>true;shift.value='-5';shift.onchange();await Promise.resolve();
+  assert.deepEqual(calls[0].slice(0,2),['number','set_value']);assert.equal(calls[0][2].entity_id,'number.shift');assert.equal(calls[0][2].value,-5);
+  boost.value='10 %';boost.onchange();await Promise.resolve();
+  assert.deepEqual(calls[1].slice(0,2),['select','select_option']);assert.equal(calls[1][2].option,'10 %');
+  boost.value='off';boost.onchange();await Promise.resolve();assert.equal(calls[2][2].option,'off');
+  shift.value='';shift.onchange();assert.equal(calls.length,3);
+  shift.value='21';shift.reportValidity=()=>false;shift.onchange();assert.equal(calls.length,3);
+  states['select.boost'].state='unavailable';assert.equal(rows(draw())[2].children[1].disabled,true);
+  quick.busy=true;assert.ok(rows(draw()).every(r=>r.children[1].disabled));quick.busy=false;
+  for(const app of ['116','all']){for(const s of Object.values(states))s.attributes.ecl_application=app;assert.equal(rows(draw()).length,1);}
+  for(const s of Object.values(states))s.attributes.ecl_application='130';
+  states['select.other_boost']={state:'off',attributes:{...states['select.boost'].attributes,ecl_device:'two',options:['off']}};
+  delete states['select.boost'];host=draw();assert.equal(rows(host)[2].children[1].tag,'span');assert.ok(host.children.some(n=>n.textContent?.includes('Aktivér indstillingsentiteten')));
+  quick._hass.language='en';assert.ok(draw().children.some(n=>n.textContent?.includes('does not start an immediate boost')));
+  quick._hass.callService=async()=>{throw Error('readback failed');};await quick.saveOne('number.shift',3);assert.match(quick.message,/could not be confirmed.*readback failed/);assert.equal(quick.busy,false);
+  console.log('PASS: overview heating controls, bounds, service writes, errors, unavailable state, device/application isolation and translations');
+})().catch(error=>{console.error(error);process.exitCode=1;});

@@ -21,6 +21,7 @@ An independent community project by **Juulsen**, under active testing with ongoi
 ## Features
 
 - **Climate entity for application 130:** room-temperature setting and Auto, Comfort, Setback and Standby modes, compatible with Home Assistant's Thermostat card.
+- **Overview controls for application 130:** operating mode, heat-curve parallel displacement and boost setting, directly below the readings.
 - **Measurements and settings:** temperatures, named parameters, display units and readable options, grouped by ECL menu.
 - **Visual dashboard editor:** select and reorder fields, set custom display names, and choose tiles, list or focus layouts in compact, normal or large sizes.
 - **History:** click readings to open Home Assistant's more-info dialog; history is available when recorded by Home Assistant.
@@ -59,14 +60,14 @@ Download the source ZIP from the [latest release](https://github.com/Juulsen/Dan
 
 Update through HACS, or replace the complete integration folder manually, then restart Home Assistant. Existing connections and entity IDs are retained. Use **Reconfigure** on the existing integration to change application or connection settings.
 
-For **0.4.4**, update the existing dashboard resource to the URL below and reload the browser. Keep only one ECL110 JavaScript resource.
+For **0.4.5**, update the existing dashboard resource to the URL below and reload the browser. Keep only one ECL110 JavaScript resource.
 
 ## Dashboard
 
 Add this dashboard resource as a **JavaScript module**:
 
 ```text
-/ecl110-static/ecl110-card.js?v=0.4.4
+/ecl110-static/ecl110-card.js?v=0.4.5
 ```
 
 Add a manual card:
@@ -88,6 +89,17 @@ Use the **visual card editor** to choose fields, order, layout, size and custom 
 Legacy cards without explicit `overview` configuration can still save browser-local preferences through **Customize overview**. For configured cards, in-card changes are temporary previews; use the visual editor for permanent changes. Appearance changes do not write to the ECL.
 
 The tabs are **Overview · Settings · Schedule · Suggestions**. The card is bundled with the integration and requires no Browser Mod. It does not replace Home Assistant's standard device page.
+
+### Quick heating controls
+
+For application **130**, **Overview** includes the existing mode selector plus:
+
+| Setting | Range and behavior |
+| --- | --- |
+| Heat-curve parallel displacement | −20 to +20 K in whole-degree steps. Shifts the curve; 1 K is a 1 °C temperature difference. |
+| Flow temperature boost | Off or 1–99%. Configures extra heat when returning from setback to comfort; this is not an immediate “boost now” command. |
+
+Changes save immediately through the existing validated number/select entities and readback. Neither control changes operating mode or the schedule. The info buttons explain each setting in Danish or English. If a setting entity is disabled, enable it on the ECL110 device page. Unavailable controls are disabled. These heating controls are not shown for application 116 or `all`.
 
 ### Screenshots
 

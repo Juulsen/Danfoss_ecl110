@@ -8,6 +8,14 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 - Heat-curve graphs and direct serial RTU transport remain planned.
 
+## [0.4.5] - 2026-09-25
+
+- Added heat-curve parallel displacement (−20 to +20 K) and boost (Off or 1–99%) directly to the dashboard Overview for application 130, alongside operating mode.
+- Reused the existing validated number/select writes and readback; no register, scaling, entity-ID or climate changes.
+- Added Danish/English guidance explaining that boost configures recovery after setback rather than starting an immediate boost.
+- Added frontend regression checks for service routing, application/device isolation and unavailable controls.
+- Updated README and frontend cache version to 0.4.5. Heat-curve graphs remain deferred.
+
 ## [0.4.4] - 2026-09-23
 
 - Added the Juulsen smart home icon in standard and high resolution.
