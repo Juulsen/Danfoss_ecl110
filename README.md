@@ -96,7 +96,7 @@ For application **130**, **Overview** includes the existing mode selector plus:
 
 | Setting | Range and behavior |
 | --- | --- |
-| Heat-curve parallel displacement | −20 to +20 K in whole-degree steps. Shifts the curve; 1 K is a 1 °C temperature difference. |
+| Heat-curve parallel displacement | −20 to +20 °C in whole-degree steps. Shifts the curve by the selected temperature difference. |
 | Flow temperature boost | Off or 1–99%. Configures extra heat when returning from setback to comfort; this is not an immediate “boost now” command. |
 
 Changes save immediately through the existing validated number/select entities and readback. Neither control changes operating mode or the schedule. The info buttons explain each setting in Danish or English. If a setting entity is disabled, enable it on the ECL110 device page. Unavailable controls are disabled. These heating controls are not shown for application 116 or `all`.

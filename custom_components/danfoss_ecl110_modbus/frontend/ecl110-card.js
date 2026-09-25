@@ -121,7 +121,7 @@ class Ecl110Card extends HTMLElement {
     if(s.state==='unavailable')return this.tr('Utilgængelig','Unavailable');
     if(s.state==='unknown')return this.tr('Ukendt','Unknown');
     if(id.startsWith('select.')||id.startsWith('switch.'))return this.optionLabel(s.state);
-    return this.textState(s);
+    return this.textState(key==='parallel_displacement'?{...s,attributes:{...s.attributes,unit_of_measurement:'°C'}}:s);
   }
   refreshOverview(){
     for(const value of this.shadowRoot.querySelectorAll('[data-overview-value]'))value.textContent=this.overviewValue(value.dataset.overviewValue);
@@ -151,7 +151,7 @@ class Ecl110Card extends HTMLElement {
       card.append(this.settingRow(meta));
       if(!this.find(key))card.append(el('p',this.tr('Aktivér indstillingsentiteten på ECL110-enheden for at ændre denne værdi.','Enable the setting entity on the ECL110 device to change this value.'),'muted'));
     }
-    card.append(el('p',this.tr('Parallelforskydning: −20 til +20 K (1 K svarer til 1 °C forskel). Boost: Fra eller 1–99 % ekstra varme efter sænkning; valget starter ikke et boost med det samme. Ændringer gemmes straks.','Parallel displacement: −20 to +20 K (1 K equals a 1 °C difference). Boost: Off or 1–99% extra heat after setback; changing it does not start an immediate boost. Changes are saved immediately.'),'muted'));
+    card.append(el('p',this.tr('Parallelforskydning: −20 til +20 °C. Boost: Fra eller 1–99 % ekstra varme efter sænkning; valget starter ikke et boost med det samme. Ændringer gemmes straks.','Parallel displacement: −20 to +20 °C. Boost: Off or 1–99% extra heat after setback; changing it does not start an immediate boost. Changes are saved immediately.'),'muted'));
   }
   overviewEditor(card){
     const draft=this.overviewDraft,editor=el('section',undefined,'overview-editor');editor.append(el('h3',this.tr('Tilpas overblik','Customize overview')));
@@ -190,7 +190,7 @@ class Ecl110Card extends HTMLElement {
     const missing=el('details');missing.append(el('summary',this.tr('Menuer uden Modbus-adresse','Menus without a Modbus address')));missing.append(this.button(this.tr('5081 · S1-filter','5081 · S1 filter'),()=>this.showHelp({line:'5081',name:{da:'S1-filter',en:'S1 filter'}})));card.append(missing);
   }
   settingRow(meta){
-    const row=el('div',undefined,'row');const label=el('div',this.name(meta));label.prepend(el('span',meta.line||'', 'line'));row.append(label);
+    const row=el('div',undefined,'row');const label=el('div',this.name(meta)+(meta.key==='parallel_displacement'?' (°C)':''));label.prepend(el('span',meta.line||'', 'line'));row.append(label);
     const match=this.find(meta.key);if(!match){const read=this.find(meta.key,false);row.append(el('span',read?this.textState(read[1]):this.tr('Kun læsning','Read only'),'muted'));}
     else{
       const [id,s]=match;const domain=id.split('.')[0];let control;

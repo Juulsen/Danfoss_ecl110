@@ -6,6 +6,8 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 ## [Unreleased]
 
+- Display heat-curve parallel displacement in °C in dashboard readings, controls and guidance. The −20 to +20 range and Modbus values are unchanged.
+
 - Heat-curve graphs and direct serial RTU transport remain planned.
 
 ## [0.4.5] - 2026-09-25
