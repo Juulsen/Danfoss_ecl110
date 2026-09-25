@@ -60,8 +60,6 @@ Download the source ZIP from the [latest release](https://github.com/Juulsen/Dan
 
 Update through HACS, or replace the complete integration folder manually, then restart Home Assistant. Existing connections and entity IDs are retained. Use **Reconfigure** on the existing integration to change application or connection settings.
 
-**0.4.5 was refreshed on 25 September 2026 to display parallel displacement in °C.** If you installed it before this correction, choose **Redownload** in HACS, select 0.4.5, restart Home Assistant and use the refreshed resource URL below. The integration version remains 0.4.5, so this does not appear as a new-version update.
-
 For **0.4.5**, update the existing dashboard resource to the URL below and reload the browser. Keep only one ECL110 JavaScript resource.
 
 ## Dashboard
@@ -69,7 +67,7 @@ For **0.4.5**, update the existing dashboard resource to the URL below and reloa
 Add this dashboard resource as a **JavaScript module**:
 
 ```text
-/ecl110-static/ecl110-card.js?v=0.4.5&rev=celsius
+/ecl110-static/ecl110-card.js?v=0.4.5
 ```
 
 Add a manual card:
