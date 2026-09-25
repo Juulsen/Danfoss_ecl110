@@ -6,13 +6,13 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 ## [Unreleased]
 
-- Display heat-curve parallel displacement in °C in dashboard readings, controls and guidance. The −20 to +20 range and Modbus values are unchanged.
-
 - Heat-curve graphs and direct serial RTU transport remain planned.
 
 ## [0.4.5] - 2026-09-25
 
-- Added heat-curve parallel displacement (−20 to +20 K) and boost (Off or 1–99%) directly to the dashboard Overview for application 130, alongside operating mode.
+- Refreshed the existing release on 25 September 2026: parallel displacement now displays in °C in dashboard readings, controls and guidance. The −20 to +20 range and Modbus values are unchanged. Existing installations need HACS Redownload and the refreshed frontend URL documented in README.
+
+- Added heat-curve parallel displacement (−20 to +20 °C) and boost (Off or 1–99%) directly to the dashboard Overview for application 130, alongside operating mode.
 - Reused the existing validated number/select writes and readback; no register, scaling, entity-ID or climate changes.
 - Added Danish/English guidance explaining that boost configures recovery after setback rather than starting an immediate boost.
 - Added frontend regression checks for service routing, application/device isolation and unavailable controls.
