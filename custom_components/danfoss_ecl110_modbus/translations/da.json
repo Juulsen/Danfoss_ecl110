@@ -20,6 +20,7 @@
           "request_delay": "Pause mellem Modbus-forespørgsler",
           "scan_interval": "Opdateringsinterval",
           "timeout": "Kommunikationstimeout",
+          "room_temperature_enabled": "Aktivér ønsket rumtemperatur",
           "schedule_enabled": "Aktivér ECA 110-ugeprogram"
         },
         "data_description": {
@@ -30,6 +31,7 @@
           "request_delay": "Pause i sekunder mellem forespørgsler for at skåne den langsommere RTU-bus.",
           "scan_interval": "Antal sekunder mellem opdateringer. Minimum 5 sekunder.",
           "timeout": "Antal sekunder der ventes på forbindelse eller Modbus-svar.",
+          "room_temperature_enabled": "Valgfrit. Opretter sætpunktet for ønsket rumtemperatur i applikation 130. Skjult indtil det aktiveres.",
           "schedule_enabled": "Kræver indbygget timerprogram. Tester læsning af alle syv dage og opretter 28 tidsvalg."
         },
         "description": "Rediger forbindelsesindstillingerne. De nye indstillinger testes, før integrationen genindlæses.",
@@ -44,6 +46,7 @@
           "request_delay": "Pause mellem Modbus-forespørgsler",
           "scan_interval": "Opdateringsinterval",
           "timeout": "Kommunikationstimeout",
+          "room_temperature_enabled": "Aktivér ønsket rumtemperatur",
           "schedule_enabled": "Aktivér ECA 110-ugeprogram"
         },
         "data_description": {
@@ -54,6 +57,7 @@
           "request_delay": "Pause i sekunder mellem forespørgsler for at skåne den langsommere RTU-bus.",
           "scan_interval": "Antal sekunder mellem opdateringer. Minimum 5 sekunder.",
           "timeout": "Antal sekunder der ventes på forbindelse eller Modbus-svar.",
+          "room_temperature_enabled": "Valgfrit. Opretter sætpunktet for ønsket rumtemperatur i applikation 130. Skjult indtil det aktiveres.",
           "schedule_enabled": "Kræver indbygget timerprogram. Tester læsning af alle syv dage og opretter 28 tidsvalg."
         },
         "description": "Konfigurer Modbus TCP-forbindelsen gennem din RTU-til-TCP-gateway. Register 11200 testlæses uden skrivning, før opsætningen gemmes.",

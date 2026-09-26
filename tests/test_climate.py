@@ -125,6 +125,10 @@ class ClimateTests(unittest.IsolatedAsyncioTestCase):
         entry.data['application']='130'
         entities=[]
         await climate.async_setup_entry(None,entry,entities.extend)
+        self.assertEqual(entities,[])
+        entry.data['room_temperature_enabled']=True
+        entities=[]
+        await climate.async_setup_entry(None,entry,entities.extend)
         self.assertEqual(len(entities),1)
         c.data['registers']['desired_mode']=99
         self.assertIsNone(e.hvac_mode)

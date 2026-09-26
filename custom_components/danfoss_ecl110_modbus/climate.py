@@ -23,7 +23,10 @@ MODE_RAW: Final = {HVACMode.AUTO: 1, HVACMode.HEAT: 2, HVACMode.OFF: 4}
 
 async def async_setup_entry(hass, entry, async_add_entities) -> None:
     """Only create room heating control for explicitly selected application 130."""
-    if configured_application(entry) == "130":
+    if (
+        configured_application(entry) == "130"
+        and entry.data.get("room_temperature_enabled", False)
+    ):
         async_add_entities([Ecl110Climate(coordinator_from_entry(entry), entry)])
 
 

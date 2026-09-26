@@ -46,6 +46,7 @@ def _config_schema(defaults: dict[str, Any]) -> vol.Schema:
     return vol.Schema(
         {
             vol.Optional("schedule_enabled", default=defaults.get("schedule_enabled", False)): bool,
+            vol.Optional("room_temperature_enabled", default=defaults.get("room_temperature_enabled", False)): bool,
             vol.Required(
                 CONF_HOST,
                 default=defaults.get(CONF_HOST, DEFAULT_HOST),
