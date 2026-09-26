@@ -90,7 +90,7 @@ async def async_setup_entry(
     try:
         await coordinator.async_config_entry_first_refresh()
     except ConfigEntryNotReady:
-        await client.async_close()
+        await coordinator.async_shutdown()
         raise
 
     entry.runtime_data = Ecl110RuntimeData(
@@ -105,7 +105,7 @@ async def async_setup_entry(
             PLATFORMS,
         )
     except Exception:
-        await client.async_close()
+        await coordinator.async_shutdown()
         raise
 
     return True
