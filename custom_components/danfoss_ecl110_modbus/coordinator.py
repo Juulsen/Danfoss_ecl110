@@ -200,8 +200,9 @@ class Ecl110DataUpdateCoordinator(
         }
 
     async def async_shutdown(self) -> None:
-        """Close the Modbus client when the config entry unloads."""
+        """Stop scheduled polls, then close the Modbus client."""
 
+        await super().async_shutdown()
         await self.client.async_close()
 
     def raw_register_values(self) -> Mapping[str, int]:

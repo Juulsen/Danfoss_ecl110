@@ -160,6 +160,7 @@ class Ecl110ModbusClient:
                 self._last_request_finished = monotonic()
 
             if response.isError():
+                self._client.close()
                 raise EclReadError(
                     f"Device {self.device_id} returned {response!s} for "
                     f"holding registers {address}-{address + count - 1}"
@@ -208,6 +209,7 @@ class Ecl110ModbusClient:
                 self._last_request_finished = monotonic()
 
             if response.isError():
+                self._client.close()
                 raise EclWriteError(
                     f"Device {self.device_id} returned {response!s} for "
                     f"holding register {address}"
@@ -216,6 +218,7 @@ class Ecl110ModbusClient:
             echoed_address = getattr(response, "address", None)
             echoed_registers = getattr(response, "registers", None)
             if echoed_address != address or not echoed_registers:
+                self._client.close()
                 raise EclWriteError(
                     f"Invalid FC06 acknowledgement for register {address}"
                 )
@@ -241,6 +244,7 @@ class Ecl110ModbusClient:
                 self._last_request_finished = monotonic()
 
             if verification.isError():
+                self._client.close()
                 raise EclWriteError(
                     f"Device {self.device_id} rejected verification read for "
                     f"holding register {address}"

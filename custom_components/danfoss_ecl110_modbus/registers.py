@@ -1531,7 +1531,7 @@ for _r in _registers:
         _DISPLAY_METADATA[_r.key] = dict(
             safe_write=True, verified_write_values=_values,
             write_basis="source-documented", write_application=None)
-    elif _r.key in ("desired_mode", "eca_address", "language"):
+    elif _r.key == "desired_mode":
         _DISPLAY_METADATA.setdefault(_r.key, {}).update(
             safe_write=True, verified_write_values=_r.options,
             write_basis="source-documented")
