@@ -20,6 +20,7 @@
           "request_delay": "Delay between Modbus requests",
           "scan_interval": "Update interval",
           "timeout": "Communication timeout",
+          "room_temperature_enabled": "Enable desired room temperature",
           "schedule_enabled": "Enable ECA 110 weekly schedule"
         },
         "data_description": {
@@ -30,6 +31,7 @@
           "request_delay": "Pause in seconds between requests to protect the slower RTU bus.",
           "scan_interval": "Seconds between updates. Minimum 5 seconds.",
           "timeout": "Seconds to wait for a connection or Modbus response.",
+          "room_temperature_enabled": "Optional. Creates the room-temperature setpoint for application 130. Hidden until enabled.",
           "schedule_enabled": "Requires the built-in timer program. Tests reads for all seven days and creates 28 time selections."
         },
         "description": "Update the connection settings. The new settings are tested before the integration is reloaded.",
@@ -44,6 +46,7 @@
           "request_delay": "Delay between Modbus requests",
           "scan_interval": "Update interval",
           "timeout": "Communication timeout",
+          "room_temperature_enabled": "Enable desired room temperature",
           "schedule_enabled": "Enable ECA 110 weekly schedule"
         },
         "data_description": {
@@ -54,6 +57,7 @@
           "request_delay": "Pause in seconds between requests to protect the slower RTU bus.",
           "scan_interval": "Seconds between updates. Minimum 5 seconds.",
           "timeout": "Seconds to wait for a connection or Modbus response.",
+          "room_temperature_enabled": "Optional. Creates the room-temperature setpoint for application 130. Hidden until enabled.",
           "schedule_enabled": "Requires the built-in timer program. Tests reads for all seven days and creates 28 time selections."
         },
         "description": "Configure the Modbus TCP connection through your RTU-to-TCP gateway. A read-only test of register 11200 is performed before the entry is created.",

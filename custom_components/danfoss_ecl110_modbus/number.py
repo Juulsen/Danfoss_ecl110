@@ -39,6 +39,7 @@ async def async_setup_entry(
         if SAFE_WRITABLE_REGISTERS_BY_KEY[key].supports_application(application)
         and (not SAFE_WRITABLE_REGISTERS_BY_KEY[key].write_application
              or SAFE_WRITABLE_REGISTERS_BY_KEY[key].write_application == application)
+        and (key != "desired_room_temperature" or entry.data.get("room_temperature_enabled", False))
     )
 
 
