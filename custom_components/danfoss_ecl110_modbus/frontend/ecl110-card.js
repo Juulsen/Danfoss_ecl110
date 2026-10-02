@@ -1,4 +1,17 @@
 /* ECL110 dashboard by Juulsen. No external card or CDN dependencies. */
+const ECL_VERSION = '0.5.0';
+async function eclLoadLibs(){
+  if(globalThis.Ecl110Plant&&globalThis.Ecl110Diagram&&globalThis.Ecl110Chart&&globalThis.Ecl110Wizard)return;
+  for(const file of ['ecl110-plant.js','ecl110-diagram.js','ecl110-chart.js','ecl110-wizard.js']){
+    await new Promise((resolve,reject)=>{
+      const script=document.createElement('script');
+      script.src='/ecl110-static/'+file+'?v='+ECL_VERSION;
+      script.onload=()=>resolve();
+      script.onerror=()=>reject(Error(file));
+      (document.head||document.documentElement).append(script);
+    });
+  }
+}
 const ECL_DEFAULT_FIELDS = ['temperature_s1','temperature_s2','temperature_s3','temperature_s4'];
 const ECL_DAYS = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
 const ECL_SLOTS = ['start_1','stop_1','start_2','stop_2'];
@@ -16,17 +29,19 @@ class Ecl110Card extends HTMLElement {
   async load(){
     try{
       const base='/ecl110-static/';
-      const results=await Promise.all(['catalog.json','help.json'].map(async f=>{const r=await fetch(base+f+'?v=0.4.5');if(!r.ok)throw Error(`${f}: ${r.status}`);return r.json();}));
+      await eclLoadLibs();
+      const results=await Promise.all(['catalog.json','help.json'].map(async f=>{const r=await fetch(base+f+'?v='+ECL_VERSION);if(!r.ok)throw Error(`${f}: ${r.status}`);return r.json();}));
       [this.catalog,this.help]=results;this.render();
     }catch(e){this.message=String(e);this.render();}
   }
   set hass(hass){
     this._hass=hass;
+    if(!this._askedPlant){this._askedPlant=true;this.loadPlant();}
     if(!this.shadowRoot.activeElement&&!this.shadowRoot.querySelector('dialog[open]')&&!this.busy&&!this.pending.size&&!this.overviewDraft)this.render();
     else this.refreshOverview();
   }
   getCardSize(){
-    if(this.tab!==0||this.overviewDraft)return 9;
+    if((this.tab&&this.tab!==0&&this.tab!=='overview')||this.overviewDraft)return 9;
     const view=this.overviewView||{fields:ECL_DEFAULT_FIELDS,size:'normal',layout:'tiles'};
     const columns=view.layout==='list'?1:view.size==='compact'?3:2;
     return 4+Math.ceil(view.fields.length/columns)*(view.size==='large'?3:2);
@@ -82,14 +97,76 @@ class Ecl110Card extends HTMLElement {
       .overview-grid .metric{display:flex;flex-direction:column;text-align:left;justify-content:space-between;border:1px solid transparent;color:inherit}
       .overview-grid .metric small{display:block;min-height:2.8em;line-height:1.4}
       .overview-grid .metric .value{white-space:nowrap}.overview-grid.list .metric{flex-direction:row}.overview-grid.list .metric small{min-height:0}
+      ha-card{background:var(--ha-card-background,var(--card-background-color,#14171c));color:var(--primary-text-color,#e8eef6);border:1px solid color-mix(in srgb,var(--divider-color,#2a3140) 80%,transparent)}
+      .brand{display:flex;gap:10px;align-items:center}.logo{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:#ff8a3d;color:#1a1008;font-size:18px}
+      .brand small{display:block;color:var(--secondary-text-color,#9aa6b5)}
+      .mode-pill{border-radius:999px;padding:6px 12px;background:#143024;color:#b6f3d0}
+      nav button{display:inline-flex;gap:6px;align-items:center;background:transparent}
+      nav button.active{background:transparent;color:var(--primary-text-color,#fff);box-shadow:inset 0 -2px 0 #ff8a3d;border-color:transparent}
+      nav{flex-wrap:nowrap;overflow:auto}nav button{padding:6px 8px;font-size:13px}
+      .diagram{border-radius:16px;overflow:hidden;background:#10141a}
+      .diagram svg{display:block}
+      .diagram [data-bind],.metric{cursor:pointer}
+      .chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+      .chip{border:1px solid var(--divider-color,#2c3442);border-radius:999px;padding:4px 8px;font-size:12px}
+      .quick{display:grid;grid-template-columns:1.4fr .8fr .7fr;gap:8px;margin-top:8px}
+      .segmented,.stepper{display:flex;border:1px solid var(--divider-color,#2c3442);border-radius:12px}
+      .segmented button,.stepper button{border:0;border-radius:0;background:transparent;flex:1}
+      .segmented button.active{background:#2a3342}
+      .stepper strong{min-width:52px;text-align:center;align-self:center}
+      .tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+      .tiles .metric{background:#171c24;border-radius:14px;padding:12px;color:#f5c16c}
+      .curve-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+      .legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px}
+      .legend b{font-weight:600}
+      .tip{position:absolute;pointer-events:none;background:#111820ee;color:#fff;padding:6px 8px;border-radius:8px;font-size:12px}
+      .banner{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;background:#2a2118;margin-bottom:10px}
+      .hidden-view{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+      .alarm{padding:8px 0;border-top:1px solid var(--divider-color,#2c3442)}
+      @media (prefers-reduced-motion: reduce){.diagram .flow{animation:none}}
+      .diagram .flow{animation:eclflow 1.6s linear infinite}
+      @keyframes eclflow{to{stroke-dashoffset:-28}}
+      .mark{display:none}
+      @container (max-width:440px){
+        .quick{grid-template-columns:1fr}
+        nav button .label{display:none}
+        nav button .mark{display:inline}
+        nav button.active .label{display:inline}
+        nav button.active .mark{display:none}
+        .tiles{grid-template-columns:1fr 1fr}
+      }
     `;
-    const card=el('ha-card');r.append(card);const head=el('header');head.append(el('h2',this.config.title||'ECL110'));card.append(head);
+    if(typeof this.tab==='number')this.tab={0:'overview',1:'settings',2:'schedule',3:'suggest'}[this.tab]||'overview';
+    const card=el('ha-card');r.append(card);const head=el('header');
+    const brand=el('div',undefined,'brand');const logo=el('div','🔥','logo');const titles=el('div');titles.append(el('h2',this.config.title||this.tr('Fjernvarme','District heating')));titles.append(el('small',this.plantSubtitle()));brand.append(logo,titles);head.append(brand);
+    const tools=el('div',undefined,'brand');
+    const mode=this.find('desired_mode',false);if(mode)tools.append(el('div',this.optionLabel(mode[1].state),'mode-pill'));
+    if(this.catalog&&this._hass&&this.entities().length){const toggle=this.button(this.viewMode()==='graphic'?this.tr('Grafisk','Graphic'):this.tr('Felter','Tiles'),()=>this.toggleView());toggle.setAttribute('aria-label',this.tr('Skift visning','Switch view'));tools.append(toggle);}
+    head.append(tools);card.append(head);
     if(!this.catalog||!this._hass){card.append(el('p',this.message||this.tr('Indlæser…','Loading…')));return;}
     if(!this.entities().length){card.append(el('p',this.tr('Vælg en ECL110-entitet i kortets YAML: entity: sensor.… Ved flere regulatorer kræves dette valg.','Choose an ECL110 entity in the card YAML: entity: sensor.… This is required with multiple controllers.')));return;}
-    const nav=el('nav');[this.tr('Overblik','Overview'),this.tr('Indstillinger','Settings'),this.tr('Ugeprogram','Schedule'),this.tr('Forslag','Suggestions')].forEach((t,i)=>nav.append(this.button(t,()=>{this.tab=i;this.render();},i===this.tab?'active':'')));card.append(nav);
+    const nav=el('nav');
+    const tabs=[['overview',this.tr('Overblik','Overview')],['curve',this.tr('Kurve','Curve')],['schedule',this.tr('Uge','Schedule')],['alarms',this.tr('Alarmer','Alarms')]];
+    if(this.isAdmin())tabs.push(['settings',this.tr('Indstillinger','Settings')],['suggest',this.tr('Forslag','Suggestions')]);
+    if(!tabs.some(([key])=>key===this.tab))this.tab='overview';
+    for(const [key,label] of tabs){
+      const button=this.button('',()=>{this.tab=key;this.render();},key===this.tab?'active':'');
+      const short=key==='settings'?'⚙':key==='suggest'?'✦':label;
+      button.append(el('span',key==='settings'||key==='suggest'?short:label.slice(0,1),'mark'),el('span',short,'label'));
+      button.setAttribute('aria-label',label);
+      nav.append(button);
+    }
+    card.append(nav);
+    if(this.isAdmin()&&!this.config.plant&&!this.remotePlant){const banner=el('div',undefined,'banner');banner.append(el('span',this.tr('Opsæt anlæg – cirka 1 min.','Set up the plant – about 1 minute.')),this.button(this.tr('Opsæt anlæg','Set up plant'),()=>this.openWizard(),'primary'));card.append(banner);}
     if(this.message){const msg=el('div',this.message,'message');msg.setAttribute('role','status');card.append(msg);}
-    if(this.tab===0)this.overview(card);if(this.tab===1)this.settings(card);if(this.tab===2)this.schedule(card);if(this.tab===3)this.suggestions(card);
-    card.append(el('div',this.tab===0?(this.config.overview?this.tr('Layout gemmes i den visuelle korteditor. Klik på en værdi for historik.','Save layout in the visual card editor. Click a value for history.'):this.tr('Visningsvalg gemmes i denne browser. Brug korteditoren for at gemme i dashboardet.','Display choices are saved in this browser. Use the card editor to save in the dashboard.')):this.tr('Indstillinger gemmes i regulatoren og kontrolleres ved genlæsning.','Settings are saved in the controller and checked by readback.'),'footer'));
+    if(this.tab==='overview')this.overview(card);
+    if(this.tab==='curve')this.curve(card);
+    if(this.tab==='schedule')this.schedule(card);
+    if(this.tab==='alarms')this.alarms(card);
+    if(this.tab==='settings'&&this.isAdmin())this.settings(card);
+    if(this.tab==='suggest'&&this.isAdmin())this.suggestions(card);
+    this.ensureHistory();
+    card.append(el('div',this.tab==='overview'||this.tab===0?(this.config.overview?this.tr('Layout gemmes i den visuelle korteditor. Klik på en værdi for historik.','Save layout in the visual card editor. Click a value for history.'):this.tr('Visningsvalg gemmes i denne browser. Brug korteditoren for at gemme i dashboardet.','Display choices are saved in this browser. Use the card editor to save in the dashboard.')):this.tr('Indstillinger gemmes i regulatoren og kontrolleres ved genlæsning.','Settings are saved in the controller and checked by readback.'),'footer'));
   }
   // Preferences never call HA services. Scope them to user, controller and optional card ID.
   normalizeOverview(value){
@@ -133,14 +210,275 @@ class Ecl110Card extends HTMLElement {
     if(!view.fields.length)grid.append(el('p',this.tr('Ingen felter valgt. Vælg felter under Tilpas overblik.','No fields selected. Choose fields in Customize overview.')));
     card.append(grid);return grid;
   }
+  isAdmin(){return !!this._hass?.user?.is_admin;}
+  viewKey(){const device=this.entities()[0]?.[1].attributes.ecl_device||'device';return 'ecl110:view:v1:'+JSON.stringify([this._hass?.user?.id||'local',device,this.config.overview_id||'default']);}
+  viewMode(){
+    const fallback=this.config.view==='overview'?'overview':'graphic';
+    try{const saved=localStorage.getItem(this.viewKey());if(saved==='graphic'||saved==='overview')return saved;}catch{}
+    return fallback;
+  }
+  toggleView(){const next=this.viewMode()==='graphic'?'overview':'graphic';try{localStorage.setItem(this.viewKey(),next);}catch{}this.render();}
+  num(key){const match=this.find(key,false);const value=Number(String(match?.[1].state??'').replace(',','.'));return Number.isFinite(value)?value:null;}
+  resolvedPlant(){
+    if(this.config?.plant)return globalThis.Ecl110Plant?Ecl110Plant.normalize(this.config.plant):this.config.plant;
+    if(this.remotePlant)return this.remotePlant;
+    return this.detectedPlant();
+  }
+  detectedPlant(){
+    const application=String(this.entities().find(([,s])=>s.attributes.ecl_application)?.[1].attributes.ecl_application||'130');
+    const present=(key)=>this.num(key)!=null;
+    const components=[];
+    for(const key of ['s1','s2','s3','s4'])if(present('temperature_'+key))components.push(key);
+    if(application!=='116'){components.push('m1','p1','radiator');}
+    const actuator=this.find('actuator_type',false)?.[1].state==='abv'?'abv':'gear';
+    const eca=this.find('eca_address',false)?.[1].state;
+    if(eca&&eca!=='off'&&eca!=='unavailable')components.push('eca');
+    if(this.find('schedule_monday_start_1',false))components.push('eca110');
+    return globalThis.Ecl110Plant?Ecl110Plant.normalize({application:application==='116'?'116':'130',type:application==='116'?'dhw_hex':'hex',actuator,components}):{application:'130',type:'hex',components,actuator,entities:{}};
+  }
+  plantSubtitle(){
+    const plant=globalThis.Ecl110Plant?this.resolvedPlant():null;
+    if(!plant)return 'ECL 110';
+    const type={hex:this.tr('veksler','exchanger'),direct:this.tr('direkte','direct'),boiler:this.tr('kedel','boiler'),dhw_hex:this.tr('brugsvand','DHW'),dhw_fs:this.tr('tapning','draw-off')}[plant.type]||plant.type;
+    return `A${plant.application} · ${type}`;
+  }
+  async entryId(){
+    if(this._entryId)return this._entryId;
+    const entity=this.entities()[0]?.[0];
+    if(!entity||!this._hass?.callWS)return null;
+    try{const listed=await this._hass.callWS({type:'config/entity_registry/get',entity_id:entity});this._entryId=listed.config_entry_id||null;}catch{this._entryId=null;}
+    return this._entryId;
+  }
+  async loadPlant(){
+    const id=await this.entryId();
+    if(!id||!this._hass?.callWS)return;
+    try{const result=await this._hass.callWS({type:'danfoss_ecl110_modbus/plant/get',entry_id:id});this.remotePlant=result?.plant||null;if(!this.shadowRoot.activeElement)this.render();}catch{}
+  }
+  async savePlant(plant,target){
+    const normalized=Ecl110Plant.normalize(plant);
+    if(target==='card'){this.config.plant=normalized;this.message=this.tr('Anlæg gemt på dette kort. Gem dashboardet for at beholde det.','Plant saved on this card. Save the dashboard to keep it.');this.render();return;}
+    const id=await this.entryId();
+    if(!id){this.message=this.tr('Kunne ikke finde integrationen. Gem i stedet på kortet.','Could not find the integration. Save on the card instead.');this.render();return;}
+    await this._hass.callWS({type:'danfoss_ecl110_modbus/plant/set',entry_id:id,plant:normalized});
+    this.remotePlant=normalized;this.message=this.tr('Anlæg gemt i integrationen.','Plant saved in the integration.');this.render();
+  }
+  async disabledCandidates(){
+    if(!this._hass?.callWS)return [];
+    const id=await this.entryId();
+    if(!id)return [];
+    try{
+      const rows=await this._hass.callWS({type:'config/entity_registry/list'});
+      return rows.filter(row=>row.config_entry_id===id&&row.disabled_by).map(row=>{
+        const key=['valve_open_signal','valve_close_signal','actual_mode','pump_state'].find(item=>(row.unique_id||'').endsWith('_'+item)||(row.unique_id||'').endsWith('_'+item+'_sensor'));
+        return key?{entity_id:row.entity_id,key,name:row.name||row.entity_id}:null;
+      }).filter(Boolean);
+    }catch{return [];}
+  }
+  confirmEnable(rows){
+    const names=rows.map(row=>row.name||row.key).join(', ');
+    return confirm(this.tr('Aktivér disse deaktiverede entiteter? ','Enable these disabled entities? ')+names);
+  }
+  async enableEntities(ids){
+    const id=await this.entryId();
+    if(!id||!ids.length)return;
+    await this._hass.callWS({type:'danfoss_ecl110_modbus/entities/enable',entry_id:id,entity_ids:ids});
+  }
+  openWizard(){if(globalThis.Ecl110Wizard)Ecl110Wizard.open(this);}
+  diagramValues(){
+    const plant=this.resolvedPlant();
+    const values={};
+    for(const key of ['temperature_s1','temperature_s2','temperature_s3','temperature_s4'])if(plant.components?.includes(key.slice(-2))||true)values[key]=this.overviewValue(key);
+    const room=plant.entities?.room&&this._hass?.states[plant.entities.room];
+    if(room&&!plant.components?.includes('s2'))values.temperature_s2=this.textState(room);
+    const power=plant.entities?.heat_power&&this._hass?.states[plant.entities.heat_power];
+    if(power)values.heat_power=this.textState(power);
+    const desired=this.num('desired_s3');
+    if(desired!=null)values.desired_flow='→ '+desired.toFixed(1)+'°';
+    if(plant.estimate_valve){const pct=this.valveEstimate();if(pct!=null)values.valve='≈ '+Math.round(pct)+' %';}
+    return values;
+  }
+  valveEstimate(){
+    const travel=this.num('valve_running_time')||96;
+    const open=this.find('valve_open_signal',false)?.[1].state==='on';
+    const close=this.find('valve_close_signal',false)?.[1].state==='on';
+    const now=Date.now();
+    if(this._valveAt==null){this._valveAt=now;this._valvePct=50;}
+    const dt=Math.min(30,(now-this._valveAt)/1000);this._valveAt=now;
+    if(open)this._valvePct=Math.min(100,this._valvePct+dt/travel*100);
+    if(close)this._valvePct=Math.max(0,this._valvePct-dt/travel*100);
+    return this._valvePct;
+  }
+  graphic(card){
+    const box=el('div',undefined,'diagram');
+    if(globalThis.Ecl110Diagram)box.innerHTML=Ecl110Diagram.markup(this.resolvedPlant(),this.diagramValues());
+    box.onclick=(event)=>{const node=event.target.closest?.('[data-bind]');const key=node?.dataset.bind;if(!key)return;const external=this.resolvedPlant().entities?.[key];if(external){this.dispatchEvent(new CustomEvent('hass-more-info',{detail:{entityId:external},bubbles:true,composed:true}));return;}this.moreInfo(key==='desired_flow'?'desired_s3':key);};
+    card.append(box);
+  }
+  chips(card){
+    const row=el('div',undefined,'chips');
+    const pump=this.find('pump_state',false);
+    row.append(el('span',pump?(pump[1].state==='on'?this.tr('P1 kører','P1 running'):this.tr('P1 stopper','P1 stopped')):this.tr('P1','P1'),'chip'));
+    const open=this.find('valve_open_signal',false)?.[1].state==='on';
+    const close=this.find('valve_close_signal',false)?.[1].state==='on';
+    const valve=open?this.tr('M1 åbner','M1 opening'):close?this.tr('M1 lukker','M1 closing'):this.tr('M1 hviler','M1 idle');
+    const extra=this.resolvedPlant().estimate_valve&&this.valveEstimate()!=null?' · ≈'+Math.round(this.valveEstimate())+' %':'';
+    row.append(el('span',valve+extra,'chip'));
+    const roomEntity=this.resolvedPlant().entities?.room;
+    const room=this.resolvedPlant().components?.includes('s2')?this.num('temperature_s2'):(roomEntity?Number(this._hass?.states[roomEntity]?.state):null);
+    const wanted=this.num('desired_s2')??this.num('desired_room_temperature');
+    if(Number.isFinite(room)&&wanted!=null)row.append(el('span',this.tr('Afv. ','Dev. ')+(room-wanted>=0?'+':'')+(room-wanted).toFixed(1)+' K','chip'));
+    const ret=this.num('temperature_s4');const limit=this.num('return_temperature_limit');
+    if(ret!=null&&limit!=null)row.append(el('span',ret<=limit?this.tr('Retur under grænse','Return below limit'):this.tr('Retur over grænse','Return above limit'),'chip'));
+    card.append(row);
+  }
+  quickBar(card){
+    const wrap=el('div',undefined,'quick');
+    const mode=this.find('desired_mode');
+    const seg=el('div',undefined,'segmented');
+    for(const [value,label] of [['auto','Auto'],['comfort',this.tr('Komfort','Comfort')],['setback',this.tr('Sænk','Setback')],['standby','Standby']]){
+      const button=this.button(label,()=>mode&&this.saveOne(mode[0],value),mode&&mode[1].state===value?'active':'');
+      button.disabled=this.busy||!mode||mode[1].state==='unavailable';
+      seg.append(button);
+    }
+    wrap.append(seg);
+    const shift=this.find('parallel_displacement');
+    const stepper=el('div',undefined,'stepper');
+    const current=shift?Number(shift[1].state):0;
+    const apply=(delta)=>{if(!shift)return;const next=Math.max(-20,Math.min(20,current+delta));this.saveOne(shift[0],next);};
+    stepper.append(this.button('−',()=>apply(-1)),el('strong',(Number.isFinite(current)?current:0)+' K'),this.button('+',()=>apply(1)));
+    for(const button of stepper.querySelectorAll('button'))button.disabled=this.busy||!shift;
+    wrap.append(stepper);
+    const boost=this.find('boost');
+    if(boost){const select=el('select');select.setAttribute('aria-label','Boost');for(const opt of boost[1].attributes.options||[]){const o=el('option',opt==='off'?this.tr('Fra','Off'):opt);o.value=opt;select.append(o);}select.value=boost[1].state;select.disabled=this.busy||boost[1].state==='unavailable';select.onchange=()=>this.saveOne(boost[0],select.value);wrap.append(select);}
+    card.append(wrap);
+  }
   overview(card){
-    const bar=el('div',undefined,'overview-toolbar');bar.append(el('span',this.tr('Dit overblik','Your overview'),'muted'),this.button(this.overviewDraft?this.tr('Fortryd tilpasning','Cancel customization'):this.tr('Tilpas overblik','Customize overview'),()=>{
+    const bar=el('div',undefined,'overview-toolbar');bar.append(el('span',this.viewMode()==='graphic'?this.tr('Grafisk','Graphic'):this.tr('Overblik','Overview'),'muted'),this.button(this.overviewDraft?this.tr('Fortryd tilpasning','Cancel customization'):this.tr('Tilpas overblik','Customize overview'),()=>{
       this.overviewDraft=this.overviewDraft?null:JSON.parse(JSON.stringify(this.overviewView));this.render();
     }));card.append(bar);
     if(this.overviewNotice){const notice=el('p',this.overviewNotice,'message');notice.setAttribute('role','status');card.append(notice);}
     if(this.overviewDraft)this.overviewEditor(card);
-    this.overviewGrid(card);
-    this.overviewControls(card);
+    if(this.viewMode()==='graphic'&&!this.overviewDraft){this.graphic(card);this.chips(card);}
+    const grid=this.overviewGrid(card);
+    if(this.viewMode()!=='overview'&&!this.overviewDraft)grid.classList.add('hidden-view');
+    else for(const metric of grid.querySelectorAll('.metric')){const spark=el('div');spark.dataset.spark=metric.querySelector('[data-overview-value]')?.dataset.overviewValue;metric.append(spark);}
+    this.quickBar(card);
+  }
+  curve(card){
+    const slope=this.num('heating_curve_slope');
+    const parallel=this.num('parallel_displacement')||0;
+    const outdoor=this.num('temperature_s1');
+    const flow=this.num('temperature_s3');
+    const room=this.num('desired_room_temperature')||20;
+    if(!this.curveDraft)this.curveDraft={slope,parallel};
+    const box=el('div');
+    if(globalThis.Ecl110Chart)box.innerHTML=Ecl110Chart.heatCurve({slope,parallel,previewSlope:this.curveDraft.slope,previewParallel:this.curveDraft.parallel,outdoor,flow,room});
+    card.append(box);
+    const legend=el('div',undefined,'legend');
+    legend.append(el('span',this.tr('Kurvens hældning ','Curve slope ')+(slope??'—')));
+    legend.append(el('span',this.tr('Ude ','Outdoor ')+(outdoor??'—')+'°'));
+    legend.append(el('span',this.tr('Frem ','Flow ')+(flow??'—')+'°'));
+    card.append(legend);
+    if(this.isAdmin()){
+      const actions=el('div',undefined,'curve-actions');
+      const slopeInput=el('input');slopeInput.type='number';slopeInput.min='0.1';slopeInput.max='4';slopeInput.step='0.1';slopeInput.value=this.curveDraft.slope??'';slopeInput.setAttribute('aria-label',this.tr('Hældning','Slope'));
+      const shiftInput=el('input');shiftInput.type='number';shiftInput.min='-20';shiftInput.max='20';shiftInput.step='1';shiftInput.value=this.curveDraft.parallel??0;shiftInput.setAttribute('aria-label',this.tr('Parallel','Parallel'));
+      const preview=()=>{this.curveDraft={slope:Number(slopeInput.value),parallel:Number(shiftInput.value)};if(globalThis.Ecl110Chart)box.innerHTML=Ecl110Chart.heatCurve({slope,parallel,previewSlope:this.curveDraft.slope,previewParallel:this.curveDraft.parallel,outdoor,flow,room});};
+      slopeInput.oninput=preview;shiftInput.oninput=preview;
+      actions.append(el('span',this.tr('Hældning','Slope')),slopeInput,el('span',this.tr('Parallel','Parallel')),shiftInput);
+      actions.append(this.button(this.tr('Fortryd','Undo'),()=>{this.curveDraft={slope,parallel};this.render();}));
+      actions.append(this.button(this.tr('Gem i ECL','Save to ECL'),async()=>{
+        if(!confirm(this.tr('Skriv hældning og parallelforskydning til ECL?','Write slope and parallel shift to the ECL?')))return;
+        const slopeEntity=this.find('heating_curve_slope');const shiftEntity=this.find('parallel_displacement');
+        if(!slopeEntity||!shiftEntity){this.message=this.tr('Aktivér hældning og parallelforskydning på enheden.','Enable slope and parallel displacement on the device.');this.render();return;}
+        this.busy=true;this.render();
+        try{await this.call(slopeEntity[0],Number(slopeInput.value));await this.call(shiftEntity[0],Number(shiftInput.value));this.message=this.tr('Varmekurve gemt og genlæst.','Heat curve saved and read back.');}
+        catch(e){this.message=this.tr('Ændringen kunne ikke bekræftes: ','Change could not be confirmed: ')+e.message;}
+        finally{this.busy=false;this.render();}
+      },'primary'));
+      card.append(actions);
+      card.append(el('p',this.tr('Forhåndsvisningen skriver ikke, før du bekræfter Gem i ECL. Kurven er en forenklet beregning.','The preview does not write until you confirm Save to ECL. The curve is a simplified calculation.'),'muted'));
+    }else card.append(el('p',this.tr('Kun administratorer kan skrive en ny hældning til ECL.','Only administrators can write a new slope to the ECL.'),'muted'));
+    const history=el('div');history.className='history';card.append(history);this.drawHistory(history);
+  }
+  alarms(card){
+    const checks=[];
+    const ret=this.num('temperature_s4');const limit=this.num('return_temperature_limit');
+    if(ret!=null&&limit!=null)checks.push([ret<=limit,ret<=limit?this.tr('Retur er under grænsen','Return is below the limit'):this.tr('Retur er over grænsen','Return is above the limit')]);
+    for(const key of ['temperature_s1','temperature_s3','temperature_s4']){
+      const state=this.find(key,false)?.[1].state;
+      if(state==='unavailable'||state==='unknown')checks.push([false,this.overviewName(key)+' '+this.tr('mangler','is missing')]);
+    }
+    const fresh=this.entities().some(([,s])=>s.state!=='unavailable');
+    checks.push([fresh,fresh?this.tr('Kommunikation OK','Communication OK'):this.tr('Ingen tilgængelige værdier','No available values')]);
+    if(!checks.length)card.append(el('p',this.tr('Ingen kontroller endnu.','No checks yet.')));
+    for(const [ok,text] of checks)card.append(el('div',(ok?'● ':'○ ')+text,'alarm'));
+    const log=el('div');card.append(el('h3',this.tr('Logbog','Logbook')),log);
+    this.loadLog(log);
+  }
+  async loadLog(node){
+    if(!this._hass?.callWS){node.textContent=this.tr('Logbog kræver Home Assistant.','Logbook requires Home Assistant.');return;}
+    try{
+      const events=await this._hass.callWS({type:'logbook/get_events',start_time:new Date(Date.now()-86400000).toISOString(),entity_ids:this.entities().slice(0,12).map(([id])=>id)});
+      node.replaceChildren();
+      for(const event of (events||[]).slice(-8).reverse())node.append(el('div',`${event.when||event.when_time_fired||''} ${event.name||''} ${event.state||event.message||''}`,'alarm'));
+      if(!events?.length)node.append(el('p',this.tr('Ingen nylige hændelser.','No recent events.'),'muted'));
+    }catch{node.textContent=this.tr('Logbogen kunne ikke hentes.','The logbook could not be loaded.');}
+  }
+  async ensureHistory(){
+    if(this._historyLoading||!this._hass?.callWS)return;
+    const now=Date.now();
+    if(this._historyAt&&now-this._historyAt<60000)return;
+    this._historyLoading=true;
+    try{
+      const ids=this.entities().filter(([id,s])=>id.startsWith('sensor.')&&['temperature_s1','temperature_s2','temperature_s3','temperature_s4'].includes(s.attributes.register_key)).map(([id])=>id);
+      const room=this.resolvedPlant().entities?.room;
+      if(room)ids.push(room);
+      if(!ids.length)return;
+      const start=new Date(now-86400000).toISOString();
+      const rows=await this._hass.callWS({type:'history/history_during_period',start_time:start,entity_ids:ids,minimal_response:true,no_attributes:true});
+      this._history=rows;this._historyAt=now;this.paintSparks();
+      const box=this.shadowRoot.querySelector('.history');if(box)this.drawHistory(box);
+    }catch{}
+    finally{this._historyLoading=false;}
+  }
+  historySeries(){
+    const rows=this._history||{};
+    const list=Array.isArray(rows)?rows:Object.values(rows);
+    return list.map(points=>{
+      const id=points?.[0]?.entity_id||points?.entity_id;
+      const samples=(Array.isArray(points)?points:[]).map(point=>[new Date(point.last_changed||point.lu||point.last_updated||0).getTime(),Number(point.state??point.s)]).filter(point=>Number.isFinite(point[1]));
+      const key=this._hass?.states[id]?.attributes.register_key||id;
+      return {id:key,name:this.overviewName(key),points:samples};
+    }).filter(item=>item.points.length);
+  }
+  drawHistory(node){
+    const series=this.historySeries();
+    if(!globalThis.Ecl110Chart){node.textContent='';return;}
+    node.innerHTML=Ecl110Chart.history(series);
+    const legend=el('div',undefined,'legend');
+    for(const item of series){const last=item.points.at(-1);legend.append(el('span',item.name+' '+(last?last[1].toFixed(1)+'°':'')));}
+    node.append(legend);
+    const svg=node.querySelector('svg');
+    const tip=el('div',undefined,'tip');tip.hidden=true;node.style.position='relative';node.append(tip);
+    const move=(event)=>{
+      if(!svg)return;
+      const rect=svg.getBoundingClientRect();
+      const ratio=Math.min(1,Math.max(0,(event.clientX-rect.left)/rect.width));
+      const hit=Ecl110Chart.nearest(series,ratio);
+      if(!hit)return;
+      tip.hidden=false;tip.style.left=Math.round(ratio*rect.width)+'px';tip.textContent=hit.rows.map(row=>row.name+' '+row.value.toFixed(1)+'°').join(' · ');
+      const cursor=svg.querySelector('[data-cursor]');if(cursor){cursor.setAttribute('visibility','visible');cursor.setAttribute('x1',ratio*420);cursor.setAttribute('x2',ratio*420);}
+    };
+    svg?.addEventListener('pointermove',move);
+    svg?.addEventListener('pointerleave',()=>{tip.hidden=true;});
+  }
+  paintSparks(){
+    if(!globalThis.Ecl110Chart)return;
+    for(const node of this.shadowRoot.querySelectorAll('[data-spark]')){
+      const series=this.historySeries().find(item=>item.id===node.dataset.spark);
+      node.innerHTML=series?Ecl110Chart.spark(series.points):'';
+    }
   }
   overviewControls(card){
     const mode=this.catalog.find(x=>x.key==='desired_mode');if(mode)card.append(this.settingRow(mode));
@@ -263,8 +601,14 @@ class Ecl110CardEditor extends HTMLElement {
   constructor(){super();this.attachShadow({mode:'open'});}
   setConfig(config){this.config=JSON.parse(JSON.stringify(config));this.render();if(!this.catalog&&!this.loading)this.load();}
   set hass(value){this._hass=value;if(!this.shadowRoot.activeElement)this.render();}
+  resolvedPlant(){return globalThis.Ecl110Plant?Ecl110Plant.normalize(this.config.plant||{}): (this.config.plant||{});}
+  diagramValues(){return {};}
+  async disabledCandidates(){return [];}
+  confirmEnable(rows){return confirm(this.tr('Aktivér disse deaktiverede entiteter? ','Enable these disabled entities? ')+rows.map(row=>row.name||row.key).join(', '));}
+  async enableEntities(){}
+  async savePlant(plant,target){const normalized=globalThis.Ecl110Plant?Ecl110Plant.normalize(plant):plant;this.config.plant=normalized;if(target==='integration')this.config.plant_target='integration';this.changed();}
   tr(da,en){return (this.config?.language||this._hass?.language||'en').startsWith('da')?da:en;}
-  async load(){this.loading=true;try{const r=await fetch('/ecl110-static/catalog.json?v=0.4.5');if(!r.ok)throw Error(r.status);this.catalog=await r.json();}catch{this.error=true;}finally{this.loading=false;this.render();}}
+  async load(){this.loading=true;try{await eclLoadLibs();const r=await fetch('/ecl110-static/catalog.json?v='+ECL_VERSION);if(!r.ok)throw Error(r.status);this.catalog=await r.json();}catch{this.error=true;}finally{this.loading=false;this.render();}}
   changed(){this.dispatchEvent(new CustomEvent('config-changed',{detail:{config:JSON.parse(JSON.stringify(this.config))},bubbles:true,composed:true}));}
   render(){
     if(!this.config)return;
@@ -279,8 +623,10 @@ class Ecl110CardEditor extends HTMLElement {
     if(this.config.entity&&!options.some(([id])=>id===this.config.entity))options.push([this.config.entity,this.config.entity]);
     field(this.tr('Regulator','Controller'),this.config.entity||'',v=>{if(v)this.config.entity=v;else delete this.config.entity;this.changed();this.render();},options);
     const roomLabel=el('label',this.tr('Vis ønsket rumtemperatur','Show desired room temperature'));const room=el('input');room.type='checkbox';room.checked=!!this.config.show_room_temperature;room.onchange=()=>{this.config.show_room_temperature=room.checked;this.changed();};roomLabel.append(room);root.append(roomLabel);
+    const setup=el('button',this.tr('Opsæt anlæg…','Set up plant…'));setup.type='button';setup.onclick=()=>globalThis.Ecl110Wizard&&Ecl110Wizard.open(this);root.append(setup);
     const view=this.config.overview||{fields:[...ECL_DEFAULT_FIELDS],layout:'tiles',size:'normal'};
     const update=(key,value)=>{this.config.overview={...(this.config.overview||view),[key]:value};this.changed();};
+    field(this.tr('Standardvisning','Default view'),this.config.view||'graphic',v=>{this.config.view=v;this.changed();},[['graphic',this.tr('Grafisk','Graphic')],['overview',this.tr('Overblik','Overview')]]);
     field(this.tr('Layout','Layout'),view.layout||'tiles',v=>update('layout',v),[['tiles',this.tr('Felter','Tiles')],['list',this.tr('Liste','List')],['focus',this.tr('Ét felt i fokus','Focus on first field')]]);
     field(this.tr('Størrelse','Size'),view.size||'normal',v=>update('size',v),[['compact',this.tr('Kompakt','Compact')],['normal',this.tr('Normal','Normal')],['large',this.tr('Stor','Large')]]);
     root.append(el('p',this.tr('Kortet tilpasser sig pladsen. Brug dashboardets Layout-fane til kortbredde og gør afsnittet bredere for at udnytte hele skærmen. Gem med dashboardets Gem-knap; valgene følger derefter dashboardet på alle enheder.','The card adapts to the available space. Use the dashboard Layout tab for card width and widen the section to use the full screen. Save with the dashboard Save button; choices then follow the dashboard across devices.')));

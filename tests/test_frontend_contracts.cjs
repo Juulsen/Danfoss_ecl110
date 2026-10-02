@@ -40,6 +40,28 @@ for(const [key,item] of Object.entries(help))for(const lang of ['da','en']){
   assert.doesNotMatch([item[lang],...['effect','example','formula','note'].map(f=>item[f]?.[lang]||'')].join(' '),/PDF|manual|Danfoss|page[s]? [0-9]|side[r]? [0-9]/i);
 }
 console.log('PASS: configuration precedence, legacy preferences, history event, editor persistence, custom names, option translation, DA/EN help');
+for(const file of ['ecl110-plant.js','ecl110-diagram.js','ecl110-chart.js','ecl110-wizard.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context);
+const variants=[
+  {application:'130',type:'hex',components:['s1','s3','s4','m1','p1','radiator','meter']},
+  {application:'130',type:'direct',components:['s1','s2','s3','s4','m1','p1','radiator','eca','floor']},
+  {application:'130',type:'boiler',components:['s1','s3','s4','m1','p1','radiator']},
+  {application:'116',type:'dhw_hex',components:['s3','s4','m1','p1']},
+  {application:'116',type:'dhw_fs',components:['s2','s3','s4','m1','fs']},
+];
+for(const variant of variants){
+  const plant=context.Ecl110Plant.normalize({...variant,type:variant.application==='116'&&variant.type==='hex'?'dhw_hex':variant.type,future:true});
+  assert.equal(JSON.stringify(plant.components),JSON.stringify(variant.components));
+  const markup=context.Ecl110Diagram.markup(plant,{temperature_s1:'15,2°'});
+  assert.match(markup,new RegExp('data-plant-type="'+plant.type+'"'));
+  const found=[...markup.matchAll(/data-part="([a-z0-9]+)"/g)].map(match=>match[1]);
+  assert.equal(JSON.stringify([...found].sort()),JSON.stringify([...variant.components].sort()));
+  assert.equal(new Set(found).size,found.length);
+}
+assert.equal(context.Ecl110Plant.normalize({application:'130',type:'dhw_fs'}).type,'hex');
+assert.ok(context.Ecl110Chart.flowAt(-12,1.2,20)>40);
+assert.match(context.Ecl110Chart.heatCurve({slope:0.7,parallel:0,previewSlope:0.8,outdoor:15.2,flow:31.5,room:21}),/data-point="live"/);
+assert.match(context.Ecl110Chart.history([{id:'temperature_s1',name:'Ude',points:[[0,15],[1,16]]}]),/data-series="temperature_s1"/);
+console.log('PASS: plant schema, five diagram variants and charts');
 
 // Exercise the actual overview controls and their existing HA service path.
 (async()=>{

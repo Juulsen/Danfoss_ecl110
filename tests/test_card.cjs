@@ -2,7 +2,7 @@ const {chromium}=require('playwright');const fs=require('fs');
 (async()=>{
  const root=require('path').join(__dirname,'../custom_components/danfoss_ecl110_modbus/frontend/');
  const options={headless:true,args:['--no-sandbox']};if(process.env.ECL_CHROMIUM_PATH)options.executablePath=process.env.ECL_CHROMIUM_PATH;if(process.env.ECL_CHROMIUM_ARGS)options.args=JSON.parse(process.env.ECL_CHROMIUM_ARGS);const browser=await chromium.launch(options);const page=await browser.newPage({viewport:{width:1050,height:1100}});
- await page.route('http://ecl.test/**',r=>{const name=new URL(r.request().url()).pathname.split('/').pop();if(['help.json','catalog.json'].includes(name))return r.fulfill({contentType:'application/json',body:fs.readFileSync(root+name,'utf8')});return r.fulfill({contentType:'text/html',body:'<style>body{background:#edf3f4;font:15px system-ui;padding:25px}ecl110-card{display:block;max-width:780px;margin:auto}</style><ecl110-card></ecl110-card>'});});
+ await page.route('http://ecl.test/**',r=>{const name=new URL(r.request().url()).pathname.split('/').pop().split('?')[0];if(['help.json','catalog.json'].includes(name))return r.fulfill({contentType:'application/json',body:fs.readFileSync(root+name,'utf8')});if(name.endsWith('.js')&&fs.existsSync(root+name))return r.fulfill({contentType:'text/javascript',body:fs.readFileSync(root+name,'utf8')});return r.fulfill({contentType:'text/html',body:'<style>body{background:#111418;color:#e8eef6;font:15px system-ui;padding:16px}ecl110-card{display:block;max-width:480px;margin:auto}</style><ecl110-card></ecl110-card>'});});
  const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('dialog',d=>d.accept());
  await page.goto('http://ecl.test/');await page.addScriptTag({path:root+'ecl110-card.js'});
  await page.evaluate(()=>{
@@ -11,10 +11,10 @@ const {chromium}=require('playwright');const fs=require('fs');
   put('heating_curve_slope',0.7,'number',{min:.1,max:4,step:.1});put('knee_point','off','select',{options:['off','30 °C','40 °C','50 °C']});put('flow_temperature_min',25);put('flow_temperature_max',43);put('desired_room_temperature',22,'number',{min:10,max:30,step:1,unit_of_measurement:'°C'});put('desired_s2',22,'sensor',{unit_of_measurement:'°C'});put('desired_mode','auto','select',{options:['auto','comfort','setback','standby']});
   const days=['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];const slots=['start_1','stop_1','start_2','stop_2'];const times=['06:00','08:00','16:00','22:00'];
   for(const day of days)slots.forEach((slot,i)=>put('schedule_'+day+'_'+slot,times[i],'select',{options:['00:00','06:00','07:00','08:00','16:00','22:00','24:00']}));
-  window.calls=[];window.fake={user:{id:'user1'},language:'da',states,formatEntityState:s=>s.state+(s.attributes.unit_of_measurement?' '+s.attributes.unit_of_measurement:''),callService:async(d,s,data)=>{window.calls.push([d,s,data]);window.fake.states[data.entity_id].state=String(data.option??data.value);}};
+  window.calls=[];window.fake={user:{id:'user1',is_admin:true},language:'da',states,formatEntityState:s=>s.state+(s.attributes.unit_of_measurement?' '+s.attributes.unit_of_measurement:''),callService:async(d,s,data)=>{window.calls.push([d,s,data]);window.fake.states[data.entity_id].state=String(data.option??data.value);}};
   const card=document.querySelector('ecl110-card');card.setConfig({type:'custom:ecl110-card'});card.hass=window.fake;
  });
- await page.getByRole('button',{name:'Ugeprogram',exact:true}).waitFor();await page.screenshot({path:'/tmp/ecl-overview.png'});
+ await page.getByRole('button',{name:'Uge',exact:true}).waitFor();await page.screenshot({path:'/tmp/ecl-overview.png'});
 
  // Overview customization is local only; verify order, persistence and incoming HA updates.
  const assert=require('node:assert/strict');
@@ -39,9 +39,10 @@ const {chromium}=require('playwright');const fs=require('fs');
  // Independent card views, users and devices must not inherit one another's local preferences.
  await page.evaluate(()=>{const c=document.querySelector('ecl110-card');c.setConfig({type:'custom:ecl110-card',overview_id:'second'});});
  assert.equal(await page.locator('.overview-grid .metric').count(),4);
- await page.evaluate(()=>{const c=document.querySelector('ecl110-card');c.setConfig({type:'custom:ecl110-card'});window.fake.user={id:'user2'};c.hass=window.fake;c.render();});
+ await page.evaluate(()=>{const c=document.querySelector('ecl110-card');c.setConfig({type:'custom:ecl110-card'});window.fake.user={id:'user2',is_admin:true};c.hass=window.fake;c.render();});
  assert.equal(await page.locator('.overview-grid .metric').count(),4);
- await page.evaluate(()=>{const c=document.querySelector('ecl110-card');window.fake.user={id:'user1'};c.hass=window.fake;c.render();});
+ await page.evaluate(()=>{const c=document.querySelector('ecl110-card');window.fake.user={id:'user1',is_admin:true};c.hass=window.fake;c.render();});
+ await page.getByRole('button',{name:'Skift visning',exact:true}).click();
  assert.equal(await page.locator('.overview-grid .metric').count(),5);
  // Recreating the element restores the saved view without depending on in-memory state.
  await page.evaluate(()=>{const old=document.querySelector('ecl110-card'),fresh=document.createElement('ecl110-card');old.replaceWith(fresh);fresh.setConfig({type:'custom:ecl110-card'});fresh.hass=window.fake;});
@@ -84,12 +85,12 @@ await page.getByRole('button',{name:'Luk',exact:true}).click();
  await page.getByText('Den rumtemperatur regulatoren forsøger at holde, når rumføleren bruges.',{exact:true}).waitFor();
  await page.getByRole('button',{name:'Luk',exact:true}).click();
  assert.equal(await page.evaluate(()=>window.calls.length),0);
- await page.getByRole('button',{name:'Ugeprogram',exact:true}).click();await page.screenshot({path:'/tmp/ecl-week.png',fullPage:true});
+ await page.getByRole('button',{name:'Uge',exact:true}).click();await page.screenshot({path:'/tmp/ecl-week.png',fullPage:true});
  await page.getByLabel('Mandag 1 start',{exact:true}).selectOption('07:00');await page.getByRole('button',{name:'Gem dag og valgte kopier',exact:true}).first().click();await page.getByText('Program gemt og genlæst.',{exact:true}).waitFor();
  let calls=await page.evaluate(()=>window.calls);if(calls.length!==1||calls[0][2].option!=='07:00')throw Error('schedule write mismatch');
  await page.getByRole('button',{name:'Forslag',exact:true}).click();await page.getByRole('button',{name:'Vis ændringer',exact:true}).first().click();if((await page.evaluate(()=>window.calls.length))!==1)throw Error('preset wrote before confirmation');await page.getByRole('button',{name:'Anvend de viste ændringer',exact:true}).click();
  await page.getByText('Forslag gemt og genlæst.',{exact:true}).waitFor();calls=await page.evaluate(()=>window.calls);if(calls.length!==3)throw Error('preset missing calls');
- await page.setViewportSize({width:390,height:850});await page.getByRole('button',{name:'Ugeprogram',exact:true}).click();await page.screenshot({path:'/tmp/ecl-mobile.png',fullPage:true});
+ await page.setViewportSize({width:390,height:850});await page.getByRole('button',{name:'Uge',exact:true}).click();await page.screenshot({path:'/tmp/ecl-mobile.png',fullPage:true});
 
  // English help is fully localized and contains no PDF/page attribution.
  await page.evaluate(()=>{const c=document.querySelector('ecl110-card');c.setConfig({type:'custom:ecl110-card',language:'en'});c.tab=1;c.render();c.showHelp(c.catalog.find(m=>m.line==='3182'));});

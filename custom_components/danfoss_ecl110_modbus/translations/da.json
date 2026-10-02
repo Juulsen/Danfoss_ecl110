@@ -8,7 +8,8 @@
       "cannot_connect": "Der kunne ikke oprettes forbindelse til Modbus TCP-gatewayen.",
       "cannot_read": "En læsning af S1 eller ugeprogrammet fejlede. Kontrollér slave-ID, RS485 og timerunderstøttelse.",
       "modbus_error": "ECL110 returnerede en Modbus-kommunikationsfejl.",
-      "unknown": "Der opstod en uventet fejl. Kontroller Home Assistant-loggen."
+      "unknown": "Der opstod en uventet fejl. Kontroller Home Assistant-loggen.",
+      "plant_type": "Anlægstypen hører ikke til den valgte applikation."
     },
     "step": {
       "reconfigure": {
@@ -62,6 +63,42 @@
         },
         "description": "Konfigurer Modbus TCP-forbindelsen gennem din RTU-til-TCP-gateway. Register 11200 testlæses uden skrivning, før opsætningen gemmes.",
         "title": "Forbind til Danfoss ECL Comfort 110"
+      },
+      "plant_app": {
+        "title": "Anlæg · applikation",
+        "description": "ECL 110 kører kun applikation 130 (vejrkompenseret varme) eller 116 (varmt brugsvand). Selve applikationen skiftes på regulatoren, menu 7000.",
+        "data": {
+          "application": "Applikation",
+          "type": "Anlægstype"
+        },
+        "data_description": {
+          "type": "130: hex (indirekte med veksler), direct (shunt) eller boiler (3-vejs). 116: dhw_hex (veksler og cirkulationspumpe) eller dhw_fs (tapning med flowswitch)."
+        }
+      },
+      "plant_components": {
+        "title": "Anlæg · komponenter",
+        "description": "Hardwaren har kun S1–S4, én 3-punkts- eller termoaktuator og én pumpeudgang. En varmemåler er aldrig en indgang på regulatoren.",
+        "data": {
+          "actuator": "Aktuator",
+          "emitters": "Varmeafgivere",
+          "components": "Dele der skal tegnes",
+          "estimate_valve": "Estimeret ventilåbning"
+        },
+        "data_description": {
+          "estimate_valve": "Valgfrit. Viser en omtrentlig procent ud fra gangtiden på 96 s. Den er markeret som et estimat og er ikke en målt stilling."
+        }
+      },
+      "plant_entities": {
+        "title": "Anlæg · eksterne data",
+        "description": "Rumtemperatur og varmemåler kommer fra andre Home Assistant-entiteter. Lad et felt stå tomt for at springe det over.",
+        "data": {
+          "room": "Rumtemperatur",
+          "heat_power": "Varmemåler · effekt",
+          "heat_energy": "Varmemåler · energi",
+          "heat_flow": "Varmemåler · flow",
+          "site": "Tekst ved forsyning",
+          "consumer": "Tekst ved forbruger"
+        }
       }
     }
   },
