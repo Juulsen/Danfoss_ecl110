@@ -12,7 +12,12 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 ## [0.5.1] - unreleased
 
-- Visual polish of the 0.5.0 card: themed controls, sans-serif type, header view toggle, icon tabs, and a closer process diagram. Not released yet.
+- Polished the dashboard card so controls follow the Home Assistant theme, with dark fallbacks when theme variables are missing.
+- Switched the card and process diagram to the Home Assistant font variable and a sans-serif stack.
+- Replaced the view switch with a compact icon toggle, and the tabs with icons plus full labels.
+- Placed parallel shift and boost side by side, stacking them on a narrow column.
+- Drew the heat exchanger, valve, sensor badges, desired-flow pill and status dots closer to the approved layout. Danish temperatures use a decimal comma.
+- Replaced the README card screenshots with the 0.5.1 renders and added a short Danish summary.
 
 ## [0.5.0] - 2026-10-02
 
