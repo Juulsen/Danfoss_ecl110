@@ -73,10 +73,10 @@
     let extras = '';
     if (!has('s2') && v.room) extras += loose(228, 22, v.room_target ? 'RUM · EKST. → ' + v.room_target : 'RUM · EKST.', 'room', v.room, false);
     if (v.desired_flow) extras += loose(286, 92, '', 'desired_flow', v.desired_flow, true);
-    return `<svg viewBox="0 0 420 220" width="100%" data-plant-type="${plant.type}" role="img">
+    return `<svg viewBox="0 -32 420 268" width="100%" data-plant-type="${plant.type}" role="img">
       <style>text{font-family:${FONT}}</style>
       <defs><pattern id="ecldots" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.7" fill="#ffffff18"/></pattern></defs>
-      <rect width="420" height="220" rx="12" fill="#10141a"/><rect width="420" height="220" fill="url(#ecldots)"/>
+      <rect x="0" y="-32" width="420" height="268" rx="12" fill="#10141a"/><rect x="0" y="-32" width="420" height="268" fill="url(#ecldots)"/>
       <path d="M16 92 H158" stroke="#ff5a45" stroke-width="7" fill="none" stroke-linecap="round"/>
       <path d="M16 92 H158" stroke="#ffb0a4" stroke-width="2" fill="none" opacity="0.55"/>
       <path d="M194 92 H372" stroke="${hot}" stroke-width="7" fill="none" stroke-linecap="round"/>
