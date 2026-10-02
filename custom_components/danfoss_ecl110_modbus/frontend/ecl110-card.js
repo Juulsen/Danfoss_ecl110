@@ -1,5 +1,5 @@
 /* ECL110 dashboard by Juulsen. No external card or CDN dependencies. */
-const ECL_VERSION = '0.5.0';
+const ECL_VERSION = '0.5.1';
 async function eclLoadLibs(){
   if(globalThis.Ecl110Plant&&globalThis.Ecl110Diagram&&globalThis.Ecl110Chart&&globalThis.Ecl110Wizard)return;
   for(const file of ['ecl110-plant.js','ecl110-diagram.js','ecl110-chart.js','ecl110-wizard.js']){
@@ -66,18 +66,31 @@ class Ecl110Card extends HTMLElement {
     this.ensureOverview();
     const r=this.shadowRoot;r.replaceChildren();
     const style=el('style');style.textContent=`
-      :host{display:block;container-type:inline-size;color:var(--primary-text-color,#172c34)}*{box-sizing:border-box}
-      ha-card{display:block;padding:22px;background:var(--ha-card-background,var(--card-background-color,#fff));border-radius:20px;overflow:hidden}
-      header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}h2{font-size:23px;margin:0}small,.muted{color:var(--secondary-text-color,#667881)}
-      nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}button,input,select{font:inherit;border:1px solid var(--divider-color,#dce4e8);border-radius:10px;padding:9px 12px;color:inherit;background:var(--card-background-color,#fff)}
-      button{cursor:pointer}button:hover{border-color:var(--primary-color,#168c99)}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--primary-color,#168c99);outline-offset:2px}
-      button.active,.primary{background:var(--primary-color,#168c99);color:var(--text-primary-color,#fff)}button:disabled{opacity:.5;cursor:wait}
+      :host{display:block;container-type:inline-size;
+        --ecl-bg:var(--ha-card-background,var(--card-background-color,#14171c));
+        --ecl-fg:var(--primary-text-color,#e8eef6);
+        --ecl-muted:var(--secondary-text-color,#93a0b0);
+        --ecl-line:var(--divider-color,#2a3342);
+        --ecl-control:var(--secondary-background-color,#1b212b);
+        --ecl-font:var(--ha-font-family-body,var(--paper-font-body1_-_font-family,var(--mdc-typography-body1-font-family,Roboto,ui-sans-serif,system-ui,"Segoe UI",sans-serif)));
+        font-family:var(--ecl-font);color:var(--ecl-fg)}
+      *{box-sizing:border-box;font-family:inherit}
+      ha-card{display:block;padding:16px 16px 12px;background:var(--ecl-bg);color:var(--ecl-fg);border-radius:20px;overflow:hidden;border:1px solid var(--ecl-line)}
+      header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}h2{font-size:20px;margin:0;font-weight:650}small,.muted{color:var(--ecl-muted)}
+      nav{display:flex;gap:2px;flex-wrap:nowrap;overflow:auto;margin-bottom:10px;border-bottom:1px solid var(--ecl-line)}
+      button,input,select{font-family:inherit;font-size:14px;border:1px solid var(--ecl-line);border-radius:10px;padding:8px 10px;color:var(--ecl-fg);background:var(--ecl-control)}
+      button{cursor:pointer}button:hover{border-color:color-mix(in srgb,var(--ecl-fg) 35%,var(--ecl-line))}
+      button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #ff8a3d;outline-offset:2px}
+      button.active{background:color-mix(in srgb,var(--ecl-fg) 12%,var(--ecl-control));color:var(--ecl-fg)}
+      .primary{background:#ff8a3d;color:#1a1008;border-color:transparent}
+      button:disabled{opacity:.5;cursor:wait}
+      select{max-width:100%}option{background:var(--ecl-control);color:var(--ecl-fg)}
       .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.metric{padding:18px;border-radius:14px;background:var(--secondary-background-color,#eff6f7)}.value{font-size:28px;font-weight:600;margin-top:8px}
       details{border-top:1px solid var(--divider-color,#dde5e8);padding:14px 0}summary{cursor:pointer;font-weight:600}.row{display:grid;grid-template-columns:minmax(100px,1fr) auto 36px;align-items:center;gap:8px;padding:11px 0}.row input,.row select{max-width:165px;width:100%}.info{padding:6px;border-radius:50%;width:30px;height:30px;font-style:italic;font-weight:700}
       .line{display:block;font-size:11px;letter-spacing:.05em;color:var(--secondary-text-color,#78878e)}.message{white-space:pre-wrap;padding:12px;background:var(--secondary-background-color,#eef5f6);border-radius:10px;margin-bottom:12px}
       .day{border:1px solid var(--divider-color,#dce4e8);border-radius:12px;padding:14px;margin:10px 0}.periods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.periods select{width:100%;padding:7px 2px}.times{display:grid;grid-template-columns:1fr 1fr;gap:5px}.bar{position:relative;height:10px;background:var(--divider-color,#e2e9ec);border-radius:10px;margin:10px 0;overflow:hidden}.segment{position:absolute;top:0;height:100%;background:var(--primary-color,#168c99)}
       .copy{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.footer{font-size:12px;margin-top:16px;color:var(--secondary-text-color,#78878e)}
-      dialog{max-width:min(620px,92vw);max-height:85vh;overflow:auto;border:1px solid var(--divider-color,#ddd);border-radius:18px;padding:24px;background:var(--card-background-color,#fff);color:inherit}dialog::backdrop{background:#0008}dialog p{line-height:1.6;white-space:pre-wrap}.formula{padding:14px;background:var(--secondary-background-color,#eff5f6);border-radius:8px;white-space:pre-wrap}.calc label{display:block;margin:12px 0}.calc input{width:100%}
+      dialog{max-width:min(620px,92vw);max-height:85vh;overflow:auto;border:1px solid var(--ecl-line);border-radius:18px;padding:24px;background:var(--ecl-bg);color:var(--ecl-fg);font-family:inherit}dialog::backdrop{background:#0008}dialog p{line-height:1.6;white-space:pre-wrap}dialog button,dialog input,dialog select{color:var(--ecl-fg);background:var(--ecl-control)}.formula{padding:14px;background:var(--ecl-control);border-radius:8px;white-space:pre-wrap}.calc label{display:block;margin:12px 0}.calc input{width:100%}
       .overview-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
       .overview-grid{margin-bottom:12px}.overview-grid .metric{min-width:0;overflow-wrap:anywhere}.overview-grid .value{font-variant-numeric:tabular-nums}
       .overview-grid.compact{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.overview-grid.compact .metric{padding:12px}.overview-grid.compact .value{font-size:22px}
@@ -97,23 +110,36 @@ class Ecl110Card extends HTMLElement {
       .overview-grid .metric{display:flex;flex-direction:column;text-align:left;justify-content:space-between;border:1px solid transparent;color:inherit}
       .overview-grid .metric small{display:block;min-height:2.8em;line-height:1.4}
       .overview-grid .metric .value{white-space:nowrap}.overview-grid.list .metric{flex-direction:row}.overview-grid.list .metric small{min-height:0}
-      ha-card{background:var(--ha-card-background,var(--card-background-color,#14171c));color:var(--primary-text-color,#e8eef6);border:1px solid color-mix(in srgb,var(--divider-color,#2a3140) 80%,transparent)}
-      .brand{display:flex;gap:10px;align-items:center}.logo{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:#ff8a3d;color:#1a1008;font-size:18px}
-      .brand small{display:block;color:var(--secondary-text-color,#9aa6b5)}
-      .mode-pill{border-radius:999px;padding:6px 12px;background:#143024;color:#b6f3d0}
-      nav button{display:inline-flex;gap:6px;align-items:center;background:transparent}
-      nav button.active{background:transparent;color:var(--primary-text-color,#fff);box-shadow:inset 0 -2px 0 #ff8a3d;border-color:transparent}
-      nav{flex-wrap:nowrap;overflow:auto}nav button{padding:6px 8px;font-size:13px}
+      .brand{display:flex;gap:10px;align-items:center;min-width:0}.logo{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:#ff8a3d;color:#1a1008;font-size:18px;flex:none}
+      .brand small{display:block;color:var(--ecl-muted)}
+      .head-tools{display:flex;align-items:center;gap:8px;flex:none}
+      .mode-pill{border-radius:999px;padding:6px 12px;background:#143024;color:#b6f3d0;font-size:13px;font-weight:650}
+      .view-toggle{display:flex;border:1px solid var(--ecl-line);border-radius:12px;overflow:hidden;background:var(--ecl-control)}
+      .view-toggle button{border:0;border-radius:0;background:transparent;padding:6px 8px;line-height:0;color:var(--ecl-muted)}
+      .view-toggle button.active{background:color-mix(in srgb,var(--ecl-fg) 14%,var(--ecl-control));color:var(--ecl-fg)}
+      .view-toggle svg{width:16px;height:16px;display:block}
+      nav button{display:inline-flex;gap:6px;align-items:center;background:transparent;border-color:transparent;border-radius:0;padding:8px 8px 10px;color:var(--ecl-muted);white-space:nowrap}
+      nav button svg{width:16px;height:16px;flex:none}
+      nav button.active{background:transparent;color:var(--ecl-fg);box-shadow:inset 0 -2px 0 #ff8a3d}
+      nav button.admin .label{display:none}
       .diagram{border-radius:16px;overflow:hidden;background:#10141a}
       .diagram svg{display:block}
       .diagram [data-bind],.metric{cursor:pointer}
       .chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
-      .chip{border:1px solid var(--divider-color,#2c3442);border-radius:999px;padding:4px 8px;font-size:12px}
-      .quick{display:grid;grid-template-columns:1.4fr .8fr .7fr;gap:8px;margin-top:8px}
-      .segmented,.stepper{display:flex;border:1px solid var(--divider-color,#2c3442);border-radius:12px}
-      .segmented button,.stepper button{border:0;border-radius:0;background:transparent;flex:1}
-      .segmented button.active{background:#2a3342}
-      .stepper strong{min-width:52px;text-align:center;align-self:center}
+      .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ecl-line);border-radius:999px;padding:4px 8px;font-size:12px;background:transparent;color:var(--ecl-fg)}
+      .dot{width:7px;height:7px;border-radius:50%;background:#9aa6b5;display:inline-block}
+      .dot.ok{background:#3dd68c}.dot.idle{background:#9aa6b5}.dot.warn{background:#ffb15a}.dot.info{background:#4aa3ff}
+      .controls{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+      .segmented{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+      .segmented button{border-radius:12px;background:var(--ecl-control);color:var(--ecl-fg)}
+      .segmented button.active{background:color-mix(in srgb,var(--ecl-fg) 16%,var(--ecl-control));font-weight:650}
+      .adjust{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+      .adjust-box{display:flex;align-items:center;gap:8px;min-width:0;border:1px solid var(--ecl-line);border-radius:12px;padding:4px 8px;background:transparent}
+      .adjust-box .cap{color:var(--ecl-muted);font-size:12px;flex:none}
+      .stepper{display:flex;align-items:center;gap:4px;min-width:0;flex:1}
+      .stepper button{width:32px;height:32px;padding:0;border-radius:50%;flex:none}
+      .stepper strong{flex:1;text-align:center}
+      .adjust-box select{flex:1;min-width:0;width:100%;background:var(--ecl-control);color:var(--ecl-fg)}
       .tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
       .tiles .metric{background:#171c24;border-radius:14px;padding:12px;color:#f5c16c}
       .curve-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
@@ -126,34 +152,50 @@ class Ecl110Card extends HTMLElement {
       @media (prefers-reduced-motion: reduce){.diagram .flow{animation:none}}
       .diagram .flow{animation:eclflow 1.6s linear infinite}
       @keyframes eclflow{to{stroke-dashoffset:-28}}
-      .mark{display:none}
+      .ghost{background:transparent;border-color:transparent;color:var(--ecl-muted);padding:4px 8px}
+      .footer{display:flex;justify-content:space-between;gap:8px}
       @container (max-width:440px){
-        .quick{grid-template-columns:1fr}
+        .adjust{grid-template-columns:1fr}
         nav button .label{display:none}
-        nav button .mark{display:inline}
         nav button.active .label{display:inline}
-        nav button.active .mark{display:none}
-        .tiles{grid-template-columns:1fr 1fr}
+        ha-card{padding:12px}
       }
     `;
     if(typeof this.tab==='number')this.tab={0:'overview',1:'settings',2:'schedule',3:'suggest'}[this.tab]||'overview';
     const card=el('ha-card');r.append(card);const head=el('header');
     const brand=el('div',undefined,'brand');const logo=el('div','🔥','logo');const titles=el('div');titles.append(el('h2',this.config.title||this.tr('Fjernvarme','District heating')));titles.append(el('small',this.plantSubtitle()));brand.append(logo,titles);head.append(brand);
-    const tools=el('div',undefined,'brand');
+    const tools=el('div',undefined,'head-tools');
     const mode=this.find('desired_mode',false);if(mode)tools.append(el('div',this.optionLabel(mode[1].state),'mode-pill'));
-    if(this.catalog&&this._hass&&this.entities().length){const toggle=this.button(this.viewMode()==='graphic'?this.tr('Grafisk','Graphic'):this.tr('Felter','Tiles'),()=>this.toggleView());toggle.setAttribute('aria-label',this.tr('Skift visning','Switch view'));tools.append(toggle);}
+    if(this.catalog&&this._hass&&this.entities().length){
+      const toggle=el('div',undefined,'view-toggle');toggle.setAttribute('role','group');toggle.setAttribute('aria-label',this.tr('Skift visning','Switch view'));
+      const icons={graphic:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M1 7h14M5 3v4"/></svg>',overview:'<svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>'};
+      for(const [value,label] of [['graphic',this.tr('Grafisk','Graphic')],['overview',this.tr('Felter','Tiles')]]){
+        const button=this.button('',()=>this.setView(value),this.viewMode()===value?'active':'');
+        button.innerHTML=icons[value];button.setAttribute('aria-label',label);button.setAttribute('aria-pressed',this.viewMode()===value?'true':'false');toggle.append(button);
+      }
+      tools.append(toggle);
+    }
     head.append(tools);card.append(head);
     if(!this.catalog||!this._hass){card.append(el('p',this.message||this.tr('Indlæser…','Loading…')));return;}
     if(!this.entities().length){card.append(el('p',this.tr('Vælg en ECL110-entitet i kortets YAML: entity: sensor.… Ved flere regulatorer kræves dette valg.','Choose an ECL110 entity in the card YAML: entity: sensor.… This is required with multiple controllers.')));return;}
     const nav=el('nav');
+    const icon={
+      overview:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 10c3-6 5-6 7 0s4 6 7 0"/></svg>',
+      curve:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12c2-1 3-6 6-6s3 4 6 3"/></svg>',
+      schedule:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="3" width="12" height="11" rx="1.5"/><path d="M2 7h12M5 1.5v3M11 1.5v3"/></svg>',
+      alarms:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2a4 4 0 0 0-4 4v2l-1 2h10l-1-2V6a4 4 0 0 0-4-4zM6.5 13a1.5 1.5 0 0 0 3 0"/></svg>',
+      settings:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.2 3.2l1.4 1.4M11.4 11.4l1.4 1.4M12.8 3.2l-1.4 1.4M4.6 11.4l-1.4 1.4"/></svg>',
+      suggest:'<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1l1.2 3.6L13 6l-3.8 1.2L8 11 6.8 7.2 3 6l3.8-1.4z"/></svg>'
+    };
     const tabs=[['overview',this.tr('Overblik','Overview')],['curve',this.tr('Kurve','Curve')],['schedule',this.tr('Uge','Schedule')],['alarms',this.tr('Alarmer','Alarms')]];
     if(this.isAdmin())tabs.push(['settings',this.tr('Indstillinger','Settings')],['suggest',this.tr('Forslag','Suggestions')]);
     if(!tabs.some(([key])=>key===this.tab))this.tab='overview';
     for(const [key,label] of tabs){
       const button=this.button('',()=>{this.tab=key;this.render();},key===this.tab?'active':'');
-      const short=key==='settings'?'⚙':key==='suggest'?'✦':label;
-      button.append(el('span',key==='settings'||key==='suggest'?short:label.slice(0,1),'mark'),el('span',short,'label'));
+      if(key==='settings'||key==='suggest')button.classList.add('admin');
+      button.innerHTML=icon[key]+`<span class="label">${label}</span>`;
       button.setAttribute('aria-label',label);
+      button.title=label;
       nav.append(button);
     }
     card.append(nav);
@@ -166,7 +208,9 @@ class Ecl110Card extends HTMLElement {
     if(this.tab==='settings'&&this.isAdmin())this.settings(card);
     if(this.tab==='suggest'&&this.isAdmin())this.suggestions(card);
     this.ensureHistory();
-    card.append(el('div',this.tab==='overview'||this.tab===0?(this.config.overview?this.tr('Layout gemmes i den visuelle korteditor. Klik på en værdi for historik.','Save layout in the visual card editor. Click a value for history.'):this.tr('Visningsvalg gemmes i denne browser. Brug korteditoren for at gemme i dashboardet.','Display choices are saved in this browser. Use the card editor to save in the dashboard.')):this.tr('Indstillinger gemmes i regulatoren og kontrolleres ved genlæsning.','Settings are saved in the controller and checked by readback.'),'footer'));
+    const foot=el('div',undefined,'footer');
+    foot.append(el('span',this.tab==='overview'||this.tab===0?this.tr('Tryk på en værdi for historik','Tap a value for history'):this.tr('Indstillinger gemmes i regulatoren og kontrolleres ved genlæsning.','Settings are saved in the controller and checked by readback.')),el('span','Juulsen · '+ECL_VERSION));
+    card.append(foot);
   }
   // Preferences never call HA services. Scope them to user, controller and optional card ID.
   normalizeOverview(value){
@@ -217,7 +261,9 @@ class Ecl110Card extends HTMLElement {
     try{const saved=localStorage.getItem(this.viewKey());if(saved==='graphic'||saved==='overview')return saved;}catch{}
     return fallback;
   }
-  toggleView(){const next=this.viewMode()==='graphic'?'overview':'graphic';try{localStorage.setItem(this.viewKey(),next);}catch{}this.render();}
+  toggleView(){this.setView(this.viewMode()==='graphic'?'overview':'graphic');}
+  setView(mode){try{localStorage.setItem(this.viewKey(),mode);}catch{}this.render();}
+  fmt(value,digits=1,unit=''){if(!Number.isFinite(Number(value)))return '—';let text=Number(value).toFixed(digits);if(this.lang()==='da')text=text.replace('.',',');return unit?text+' '+unit:text;}
   num(key){const match=this.find(key,false);const value=Number(String(match?.[1].state??'').replace(',','.'));return Number.isFinite(value)?value:null;}
   resolvedPlant(){
     if(this.config?.plant)return globalThis.Ecl110Plant?Ecl110Plant.normalize(this.config.plant):this.config.plant;
@@ -287,13 +333,15 @@ class Ecl110Card extends HTMLElement {
   diagramValues(){
     const plant=this.resolvedPlant();
     const values={};
-    for(const key of ['temperature_s1','temperature_s2','temperature_s3','temperature_s4'])if(plant.components?.includes(key.slice(-2))||true)values[key]=this.overviewValue(key);
+    for(const key of ['temperature_s1','temperature_s2','temperature_s3','temperature_s4'])values[key]=this.fmt(this.num(key),1,'°C');
     const room=plant.entities?.room&&this._hass?.states[plant.entities.room];
-    if(room&&!plant.components?.includes('s2'))values.temperature_s2=this.textState(room);
+    if(room&&!plant.components?.includes('s2'))values.room=this.fmt(Number(String(room.state).replace(',','.')),1,'°C');
+    const target=this.num('desired_room_temperature')??this.num('desired_s2');
+    if(target!=null&&values.room)values.room_target=this.fmt(target,0,'°');
     const power=plant.entities?.heat_power&&this._hass?.states[plant.entities.heat_power];
     if(power)values.heat_power=this.textState(power);
     const desired=this.num('desired_s3');
-    if(desired!=null)values.desired_flow='→ '+desired.toFixed(1)+'°';
+    if(desired!=null)values.desired_flow='→ '+this.fmt(desired,1,'°');
     if(plant.estimate_valve){const pct=this.valveEstimate();if(pct!=null)values.valve='≈ '+Math.round(pct)+' %';}
     return values;
   }
@@ -314,25 +362,27 @@ class Ecl110Card extends HTMLElement {
     box.onclick=(event)=>{const node=event.target.closest?.('[data-bind]');const key=node?.dataset.bind;if(!key)return;const external=this.resolvedPlant().entities?.[key];if(external){this.dispatchEvent(new CustomEvent('hass-more-info',{detail:{entityId:external},bubbles:true,composed:true}));return;}this.moreInfo(key==='desired_flow'?'desired_s3':key);};
     card.append(box);
   }
+  chip(kind,text){const node=el('span',undefined,'chip');const dot=el('i',undefined,'dot '+kind);node.append(dot,document.createTextNode(text));return node;}
   chips(card){
     const row=el('div',undefined,'chips');
     const pump=this.find('pump_state',false);
-    row.append(el('span',pump?(pump[1].state==='on'?this.tr('P1 kører','P1 running'):this.tr('P1 stopper','P1 stopped')):this.tr('P1','P1'),'chip'));
+    const running=!pump||pump[1].state==='on';
+    row.append(this.chip(running?'ok':'idle',pump?(running?this.tr('P1 kører','P1 running'):this.tr('P1 stopper','P1 stopped')):this.tr('P1','P1')));
     const open=this.find('valve_open_signal',false)?.[1].state==='on';
     const close=this.find('valve_close_signal',false)?.[1].state==='on';
     const valve=open?this.tr('M1 åbner','M1 opening'):close?this.tr('M1 lukker','M1 closing'):this.tr('M1 hviler','M1 idle');
     const extra=this.resolvedPlant().estimate_valve&&this.valveEstimate()!=null?' · ≈'+Math.round(this.valveEstimate())+' %':'';
-    row.append(el('span',valve+extra,'chip'));
+    row.append(this.chip('idle',valve+extra));
     const roomEntity=this.resolvedPlant().entities?.room;
-    const room=this.resolvedPlant().components?.includes('s2')?this.num('temperature_s2'):(roomEntity?Number(this._hass?.states[roomEntity]?.state):null);
+    const room=this.resolvedPlant().components?.includes('s2')?this.num('temperature_s2'):(roomEntity?Number(String(this._hass?.states[roomEntity]?.state).replace(',','.')):null);
     const wanted=this.num('desired_s2')??this.num('desired_room_temperature');
-    if(Number.isFinite(room)&&wanted!=null)row.append(el('span',this.tr('Afv. ','Dev. ')+(room-wanted>=0?'+':'')+(room-wanted).toFixed(1)+' K','chip'));
+    if(Number.isFinite(room)&&wanted!=null){const delta=room-wanted;row.append(this.chip('warn',this.tr('Afv. ','Dev. ')+(delta>=0?'+':'')+this.fmt(delta,1,'K')));}
     const ret=this.num('temperature_s4');const limit=this.num('return_temperature_limit');
-    if(ret!=null&&limit!=null)row.append(el('span',ret<=limit?this.tr('Retur under grænse','Return below limit'):this.tr('Retur over grænse','Return above limit'),'chip'));
+    if(ret!=null&&limit!=null)row.append(this.chip(ret<=limit?'info':'warn',ret<=limit?this.tr('Retur under grænse','Return below limit'):this.tr('Retur over grænse','Return above limit')));
     card.append(row);
   }
   quickBar(card){
-    const wrap=el('div',undefined,'quick');
+    const wrap=el('div',undefined,'controls');
     const mode=this.find('desired_mode');
     const seg=el('div',undefined,'segmented');
     for(const [value,label] of [['auto','Auto'],['comfort',this.tr('Komfort','Comfort')],['setback',this.tr('Sænk','Setback')],['standby','Standby']]){
@@ -341,21 +391,24 @@ class Ecl110Card extends HTMLElement {
       seg.append(button);
     }
     wrap.append(seg);
+    const adjust=el('div',undefined,'adjust');
     const shift=this.find('parallel_displacement');
+    const shiftBox=el('div',undefined,'adjust-box');shiftBox.append(el('span',this.tr('Parallel','Parallel'),'cap'));
     const stepper=el('div',undefined,'stepper');
     const current=shift?Number(shift[1].state):0;
     const apply=(delta)=>{if(!shift)return;const next=Math.max(-20,Math.min(20,current+delta));this.saveOne(shift[0],next);};
     stepper.append(this.button('−',()=>apply(-1)),el('strong',(Number.isFinite(current)?current:0)+' K'),this.button('+',()=>apply(1)));
     for(const button of stepper.querySelectorAll('button'))button.disabled=this.busy||!shift;
-    wrap.append(stepper);
+    shiftBox.append(stepper);adjust.append(shiftBox);
     const boost=this.find('boost');
-    if(boost){const select=el('select');select.setAttribute('aria-label','Boost');for(const opt of boost[1].attributes.options||[]){const o=el('option',opt==='off'?this.tr('Fra','Off'):opt);o.value=opt;select.append(o);}select.value=boost[1].state;select.disabled=this.busy||boost[1].state==='unavailable';select.onchange=()=>this.saveOne(boost[0],select.value);wrap.append(select);}
+    if(boost){const boostBox=el('div',undefined,'adjust-box');boostBox.append(el('span','Boost','cap'));const select=el('select');select.setAttribute('aria-label','Boost');for(const opt of boost[1].attributes.options||[]){const o=el('option',opt==='off'?this.tr('Fra','Off'):opt);o.value=opt;select.append(o);}select.value=boost[1].state;select.disabled=this.busy||boost[1].state==='unavailable';select.onchange=()=>this.saveOne(boost[0],select.value);boostBox.append(select);adjust.append(boostBox);}
+    wrap.append(adjust);
     card.append(wrap);
   }
   overview(card){
-    const bar=el('div',undefined,'overview-toolbar');bar.append(el('span',this.viewMode()==='graphic'?this.tr('Grafisk','Graphic'):this.tr('Overblik','Overview'),'muted'),this.button(this.overviewDraft?this.tr('Fortryd tilpasning','Cancel customization'):this.tr('Tilpas overblik','Customize overview'),()=>{
+    const bar=el('div',undefined,'overview-toolbar');const customize=this.button(this.overviewDraft?this.tr('Fortryd tilpasning','Cancel customization'):this.tr('Tilpas overblik','Customize overview'),()=>{
       this.overviewDraft=this.overviewDraft?null:JSON.parse(JSON.stringify(this.overviewView));this.render();
-    }));card.append(bar);
+    },'ghost');bar.append(customize);card.append(bar);
     if(this.overviewNotice){const notice=el('p',this.overviewNotice,'message');notice.setAttribute('role','status');card.append(notice);}
     if(this.overviewDraft)this.overviewEditor(card);
     if(this.viewMode()==='graphic'&&!this.overviewDraft){this.graphic(card);this.chips(card);}

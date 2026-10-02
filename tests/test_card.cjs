@@ -42,7 +42,7 @@ const {chromium}=require('playwright');const fs=require('fs');
  await page.evaluate(()=>{const c=document.querySelector('ecl110-card');c.setConfig({type:'custom:ecl110-card'});window.fake.user={id:'user2',is_admin:true};c.hass=window.fake;c.render();});
  assert.equal(await page.locator('.overview-grid .metric').count(),4);
  await page.evaluate(()=>{const c=document.querySelector('ecl110-card');window.fake.user={id:'user1',is_admin:true};c.hass=window.fake;c.render();});
- await page.getByRole('button',{name:'Skift visning',exact:true}).click();
+ await page.getByRole('button',{name:'Felter',exact:true}).click();
  assert.equal(await page.locator('.overview-grid .metric').count(),5);
  // Recreating the element restores the saved view without depending on in-memory state.
  await page.evaluate(()=>{const old=document.querySelector('ecl110-card'),fresh=document.createElement('ecl110-card');old.replaceWith(fresh);fresh.setConfig({type:'custom:ecl110-card'});fresh.hass=window.fake;});

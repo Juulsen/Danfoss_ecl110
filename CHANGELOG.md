@@ -10,6 +10,10 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 - Direct serial RTU transport remains planned.
 
+## [0.5.1] - unreleased
+
+- Visual polish of the 0.5.0 card: themed controls, sans-serif type, header view toggle, icon tabs, and a closer process diagram. Not released yet.
+
 ## [0.5.0] - 2026-10-02
 
 - Redesigned the dashboard card for a narrow column: graphic process diagram and tile overview, curve, schedule, alarms, and admin-only settings and suggestions.
