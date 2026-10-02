@@ -8,7 +8,15 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 - Display heat-curve parallel displacement in °C in dashboard readings, controls and guidance. The −20 to +20 range and Modbus values are unchanged.
 
-- Heat-curve graphs and direct serial RTU transport remain planned.
+- Direct serial RTU transport remains planned.
+
+## [0.5.0] - 2026-10-02
+
+- Redesigned the dashboard card for a narrow column: graphic process diagram and tile overview, curve, schedule, alarms, and admin-only settings and suggestions.
+- The diagram follows a plant description (application 130 or 116 and the matching plant types only). Store it in the integration options, or override it on one card.
+- Added an options flow and the websocket commands `plant/get`, `plant/set` and `entities/enable`. Disabled entities are enabled only after an explicit admin confirmation.
+- Curve edits write slope and parallel displacement only for admins, and only after confirmation. An optional valve position is marked as an estimate from the travel time.
+- `desired_s2` and `desired_s3` now use `state_class: measurement` so history graphs can use them.
 
 ## [0.4.5] - 2026-09-25
 

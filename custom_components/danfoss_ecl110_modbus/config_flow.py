@@ -12,10 +12,12 @@ from homeassistant.config_entries import ConfigFlowResult
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TIMEOUT
 from homeassistant.helpers import selector
 
+from .plant import ACTUATORS, EMITTERS, TYPES_BY_APPLICATION, normalize_plant
 from .const import (
     APPLICATIONS,
     CONF_APPLICATION,
     CONF_DEVICE_ID,
+    CONF_PLANT,
     CONF_REQUEST_DELAY,
     CONF_SCAN_INTERVAL,
     DEFAULT_APPLICATION,
@@ -229,3 +231,167 @@ class Ecl110ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=_config_schema(user_input or dict(entry.data)),
             errors=errors,
         )
+
+    @staticmethod
+    def async_get_options_flow(
+        config_entry: config_entries.ConfigEntry,
+    ) -> config_entries.OptionsFlow:
+        """Plant setup stored on the config entry."""
+
+        del config_entry
+        return Ecl110OptionsFlow()
+
+
+class Ecl110OptionsFlow(config_entries.OptionsFlow):
+    """Three-step plant description. Connection settings stay in reconfigure."""
+
+    def __init__(self) -> None:
+        """Hold the in-progress plant between steps."""
+
+        self._plant: dict[str, Any] = {}
+
+    def _stored(self) -> dict[str, Any]:
+        current = self.config_entry.options.get(CONF_PLANT)
+        return normalize_plant(current if isinstance(current, dict) else None)
+
+    async def async_step_init(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> ConfigFlowResult:
+        """Start at the application step."""
+
+        return await self.async_step_plant_app(user_input)
+
+    async def async_step_plant_app(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> ConfigFlowResult:
+        """Choose application 130 or 116 and a matching plant type."""
+
+        errors: dict[str, str] = {}
+        current = {**self._stored(), **self._plant}
+        if user_input is not None:
+            application = str(user_input["application"])
+            plant_type = str(user_input["type"])
+            if plant_type not in TYPES_BY_APPLICATION[application]:
+                errors["type"] = "plant_type"
+            else:
+                self._plant = {**current, "application": application, "type": plant_type}
+                return await self.async_step_plant_components()
+        application = str(current.get("application") or "130")
+        if application not in TYPES_BY_APPLICATION:
+            application = "130"
+        choices = TYPES_BY_APPLICATION[application]
+        plant_type = current.get("type") if current.get("type") in choices else choices[0]
+        schema = vol.Schema(
+            {
+                vol.Required("application", default=application): vol.In(["130", "116"]),
+                vol.Required("type", default=plant_type): vol.In(
+                    ["hex", "direct", "boiler", "dhw_hex", "dhw_fs"]
+                ),
+            }
+        )
+        return self.async_show_form(
+            step_id="plant_app",
+            data_schema=schema,
+            errors=errors,
+        )
+
+    async def async_step_plant_components(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> ConfigFlowResult:
+        """Actuator, emitters and the parts the diagram should draw."""
+
+        current = {**self._stored(), **self._plant}
+        if user_input is not None:
+            self._plant = {
+                **current,
+                "actuator": user_input["actuator"],
+                "emitters": user_input.get("emitters", "radiator"),
+                "components": list(user_input.get("components") or []),
+                "estimate_valve": bool(user_input.get("estimate_valve")),
+            }
+            return await self.async_step_plant_entities()
+        application = str(self._plant.get("application") or current["application"])
+        schema_fields: dict[Any, Any] = {
+            vol.Required("actuator", default=current.get("actuator", "gear")): vol.In(ACTUATORS),
+            vol.Optional(
+                "components",
+                default=list(current.get("components") or []),
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=[
+                        "s1",
+                        "s2",
+                        "s3",
+                        "s4",
+                        "m1",
+                        "p1",
+                        "radiator",
+                        "floor",
+                        "eca",
+                        "eca110",
+                        "safety",
+                        "ext",
+                        "fs",
+                        "meter",
+                    ],
+                    multiple=True,
+                    mode=selector.SelectSelectorMode.LIST,
+                )
+            ),
+            vol.Optional(
+                "estimate_valve",
+                default=bool(current.get("estimate_valve")),
+            ): bool,
+        }
+        if application == "130":
+            schema_fields[vol.Required("emitters", default=current.get("emitters", "radiator"))] = vol.In(
+                EMITTERS
+            )
+        return self.async_show_form(
+            step_id="plant_components",
+            data_schema=vol.Schema(schema_fields),
+        )
+
+    async def async_step_plant_entities(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> ConfigFlowResult:
+        """Optional external Home Assistant entities. Heat meters are never on the ECL."""
+
+        current = {**self._stored(), **self._plant}
+        entities = current.get("entities") if isinstance(current.get("entities"), dict) else {}
+        if user_input is not None:
+            plant = normalize_plant(
+                {
+                    **current,
+                    "entities": {
+                        "room": user_input.get("room") or None,
+                        "heat_power": user_input.get("heat_power") or None,
+                        "heat_energy": user_input.get("heat_energy") or None,
+                        "heat_flow": user_input.get("heat_flow") or None,
+                    },
+                    "labels": {
+                        "site": user_input.get("site") or "",
+                        "consumer": user_input.get("consumer") or "",
+                    },
+                }
+            )
+            return self.async_create_entry(
+                title="",
+                data={**self.config_entry.options, CONF_PLANT: plant},
+            )
+        sensor = selector.EntitySelector(selector.EntitySelectorConfig(domain="sensor"))
+        schema = vol.Schema(
+            {
+                vol.Optional("room", description={"suggested_value": entities.get("room") or ""}): sensor,
+                vol.Optional("heat_power", description={"suggested_value": entities.get("heat_power") or ""}): sensor,
+                vol.Optional("heat_energy", description={"suggested_value": entities.get("heat_energy") or ""}): sensor,
+                vol.Optional("heat_flow", description={"suggested_value": entities.get("heat_flow") or ""}): sensor,
+                vol.Optional("site", default=(current.get("labels") or {}).get("site", "")): str,
+                vol.Optional("consumer", default=(current.get("labels") or {}).get("consumer", "")): str,
+            }
+        )
+        return self.async_show_form(step_id="plant_entities", data_schema=schema)

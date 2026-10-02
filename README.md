@@ -60,14 +60,14 @@ Download the source ZIP from the [latest release](https://github.com/Juulsen/Dan
 
 Update through HACS, or replace the complete integration folder manually, then restart Home Assistant. Existing connections and entity IDs are retained. Use **Reconfigure** on the existing integration to change application or connection settings.
 
-For **0.4.5**, update the existing dashboard resource to the URL below and reload the browser. Keep only one ECL110 JavaScript resource.
+For **0.5.0**, update the existing dashboard resource to the URL below and reload the browser. Restart Home Assistant once so the plant options flow and websocket commands are registered. Keep only one ECL110 JavaScript resource.
 
 ## Dashboard
 
 Add this dashboard resource as a **JavaScript module**:
 
 ```text
-/ecl110-static/ecl110-card.js?v=0.4.5
+/ecl110-static/ecl110-card.js?v=0.5.0
 ```
 
 Add a manual card:
@@ -88,7 +88,43 @@ Use the **visual card editor** to choose fields, order, layout, size and custom 
 
 Legacy cards without explicit `overview` configuration can still save browser-local preferences through **Customize overview**. For configured cards, in-card changes are temporary previews; use the visual editor for permanent changes. Appearance changes do not write to the ECL.
 
-The tabs are **Overview · Settings · Schedule · Suggestions**. The card is bundled with the integration and requires no Browser Mod. It does not replace Home Assistant's standard device page.
+The tabs are **Overview · Curve · Schedule · Alarms**. **Settings** and **Suggestions** are shown only to administrators. The card is bundled with the integration and requires no Browser Mod. It does not replace Home Assistant's standard device page.
+
+### Version 0.5.0 card
+
+Overview has two views, **Graphic** and **Tiles**. Graphic draws a compact process diagram from the plant configuration. Tiles show the same readings, and a value opens Home Assistant history. The choice is stored in the browser; the visual editor sets the default with `view: graphic` or `view: overview`.
+
+**Curve** plots a simplified heat curve, a preview of a new slope, and a 24 hour history chart with a shared tooltip. Only an administrator can write the slope and parallel shift, and the card asks for confirmation first.
+
+**Alarms** lists calculated checks (return limit, missing sensors, communication) and recent logbook rows.
+
+The first time an administrator opens the card, a setup banner starts a three-step wizard: application and plant type, components, then optional external entities. ECL 110 supports application **130** (indirect heat exchanger, direct shunt, or boiler mixing valve) and **116** (DHW with a circulation pump, or draw-off with a flow switch). Hardware in the diagram is S1–S4, a 3-point gear motor or ABV thermo actuator, and one pump. ECA 61 and ECA 110 are optional. A heat meter and a substitute room temperature come only from other Home Assistant entities.
+
+The wizard asks before it enables any disabled entity (valve open/close signals, actual mode, pump state). It never enables them silently. An optional valve percent is calculated from the 96 second travel time and is labelled as an estimate.
+
+Plant configuration is stored on the integration (**Settings → Devices & services → ECL110 → Configure**) and can be overridden on one card with `plant:`. Priority is the card, then the integration, then values detected from the controller. Changing the options flow reloads the integration; a Home Assistant restart is the reliable way to pick up this version's Python changes.
+
+```yaml
+type: custom:ecl110-card
+view: graphic
+plant:
+  version: 1
+  application: "130"
+  type: hex
+  actuator: gear
+  emitters: radiator
+  components: [s1, s3, s4, m1, p1, radiator]
+  estimate_valve: true
+  entities:
+    room: sensor.stue_temperatur
+    heat_power: sensor.varmemaaler_effekt
+```
+
+![Graphic overview](docs/images/ecl110-graphic-0.5.0.png)
+
+![Curve](docs/images/ecl110-curve-0.5.0.png)
+
+![Mobile](docs/images/ecl110-mobile-0.5.0.png)
 
 ### Quick heating controls
 

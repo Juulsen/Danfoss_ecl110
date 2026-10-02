@@ -24,6 +24,7 @@ CONF_DEVICE_ID: Final = "device_id"
 CONF_APPLICATION: Final = "application"
 CONF_SCAN_INTERVAL: Final = "scan_interval"
 CONF_REQUEST_DELAY: Final = "request_delay"
+CONF_PLANT: Final = "plant"
 
 APPLICATION_ALL: Final = "all"
 APPLICATION_116: Final = "116"

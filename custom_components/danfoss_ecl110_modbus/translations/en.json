@@ -8,7 +8,8 @@
       "cannot_connect": "Unable to connect to the Modbus TCP gateway.",
       "cannot_read": "A read of S1 or the weekly schedule failed. Check slave ID, RS485 and timer support.",
       "modbus_error": "The ECL110 returned a Modbus communication error.",
-      "unknown": "An unexpected error occurred. Check the Home Assistant log."
+      "unknown": "An unexpected error occurred. Check the Home Assistant log.",
+      "plant_type": "That plant type does not belong to the selected application."
     },
     "step": {
       "reconfigure": {
@@ -62,6 +63,42 @@
         },
         "description": "Configure the Modbus TCP connection through your RTU-to-TCP gateway. A read-only test of register 11200 is performed before the entry is created.",
         "title": "Connect to Danfoss ECL Comfort 110"
+      },
+      "plant_app": {
+        "title": "Plant · application",
+        "description": "ECL 110 only runs application 130 (weather-compensated heating) or 116 (domestic hot water). The application itself is changed on the controller, menu 7000.",
+        "data": {
+          "application": "Application",
+          "type": "Plant type"
+        },
+        "data_description": {
+          "type": "130: hex (indirect heat exchanger), direct (shunt) or boiler (3-way). 116: dhw_hex (exchanger and circulation pump) or dhw_fs (draw-off with flow switch)."
+        }
+      },
+      "plant_components": {
+        "title": "Plant · components",
+        "description": "Only S1–S4, one 3-point or thermo actuator and one pump output exist on the hardware. A heat meter is never a controller input.",
+        "data": {
+          "actuator": "Actuator",
+          "emitters": "Heat emitters",
+          "components": "Parts to draw",
+          "estimate_valve": "Estimated valve position"
+        },
+        "data_description": {
+          "estimate_valve": "Optional. Shows an approximate percent from the 96 s travel time. It is marked as an estimate and is not a measured position."
+        }
+      },
+      "plant_entities": {
+        "title": "Plant · external data",
+        "description": "Room temperature and heat-meter values come from other Home Assistant entities. Leave a field empty to skip it.",
+        "data": {
+          "room": "Room temperature",
+          "heat_power": "Heat meter power",
+          "heat_energy": "Heat meter energy",
+          "heat_flow": "Heat meter flow",
+          "site": "Supply label",
+          "consumer": "Consumer label"
+        }
       }
     }
   },
