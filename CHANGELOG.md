@@ -10,6 +10,17 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 - Direct serial RTU transport remains planned.
 
+## [0.5.1] - 2026-10-02
+
+- Polished the dashboard card so controls follow the Home Assistant theme, with dark fallbacks when theme variables are missing.
+- Switched the card and process diagram to the Home Assistant font variable and a sans-serif stack.
+- Replaced the view switch with a compact icon toggle, and the tabs with icons plus full labels.
+- Placed parallel shift and boost side by side, stacking them on a narrow column.
+- Drew the heat exchanger, valve, sensor badges, desired-flow pill and status dots closer to the approved layout. Danish temperatures use a decimal comma.
+- Expanded the diagram viewBox so captions such as "RUM · EKST." stay inside the frame at every width.
+- Replaced the README card screenshots with the 0.5.1 renders and added a short Danish summary.
+- Declared `pymodbus` as a minimum version so hassfest accepts the requirement.
+
 ## [0.5.0] - 2026-10-02
 
 - Redesigned the dashboard card for a narrow column: graphic process diagram and tile overview, curve, schedule, alarms, and admin-only settings and suggestions.

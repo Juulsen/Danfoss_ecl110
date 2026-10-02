@@ -18,6 +18,12 @@
 
 An independent community project by **Juulsen**, under active testing with ongoing updates. Not developed, supported or endorsed by Danfoss. Donations help support development and testing.
 
+## Dansk
+
+ECL110 Modbus læser og styrer en Danfoss ECL Comfort 110 fra Home Assistant. Kortet viser et anlægsdiagram, varmekurve, ugeprogram og alarmer. Teksten er på dansk, når Home Assistant eller kortet er sat til dansk.
+
+Efter opdatering til 0.5.x skal Home Assistant genstartes én gang. Sæt dashboard-ressourcen til `/ecl110-static/ecl110-card.js?v=0.5.1`, og behold kun én ECL110-ressource. Anlægget gemmes på integrationen under **Indstillinger → Enheder og tjenester → ECL110 → Konfigurer**. Guiden spørger, før den aktiverer deaktiverede entiteter.
+
 ## Features
 
 - **Climate entity for application 130:** room-temperature setting and Auto, Comfort, Setback and Standby modes, compatible with Home Assistant's Thermostat card.
@@ -29,7 +35,7 @@ An independent community project by **Juulsen**, under active testing with ongoi
 - **Danish and English:** frontend and plain-language help with examples and relevant calculations.
 - **Heating suggestions:** preview floor-heating or radiator starting values before applying them.
 
-See the [changelog](CHANGELOG.md) for release history. Heat-curve graphs and direct serial RTU support remain future work.
+See the [changelog](CHANGELOG.md) for release history. Direct serial RTU support remains future work.
 
 ## Requirements
 
@@ -60,14 +66,14 @@ Download the source ZIP from the [latest release](https://github.com/Juulsen/Dan
 
 Update through HACS, or replace the complete integration folder manually, then restart Home Assistant. Existing connections and entity IDs are retained. Use **Reconfigure** on the existing integration to change application or connection settings.
 
-For **0.5.0**, update the existing dashboard resource to the URL below and reload the browser. Restart Home Assistant once so the plant options flow and websocket commands are registered. Keep only one ECL110 JavaScript resource.
+For **0.5.1**, update the existing dashboard resource to the URL below and reload the browser. Restart Home Assistant once so the plant options flow and websocket commands are registered. Keep only one ECL110 JavaScript resource.
 
 ## Dashboard
 
 Add this dashboard resource as a **JavaScript module**:
 
 ```text
-/ecl110-static/ecl110-card.js?v=0.5.0
+/ecl110-static/ecl110-card.js?v=0.5.1
 ```
 
 Add a manual card:
@@ -90,7 +96,7 @@ Legacy cards without explicit `overview` configuration can still save browser-lo
 
 The tabs are **Overview · Curve · Schedule · Alarms**. **Settings** and **Suggestions** are shown only to administrators. The card is bundled with the integration and requires no Browser Mod. It does not replace Home Assistant's standard device page.
 
-### Version 0.5.0 card
+### Version 0.5.1 card
 
 Overview has two views, **Graphic** and **Tiles**. Graphic draws a compact process diagram from the plant configuration. Tiles show the same readings, and a value opens Home Assistant history. The choice is stored in the browser; the visual editor sets the default with `view: graphic` or `view: overview`.
 
@@ -120,11 +126,15 @@ plant:
     heat_power: sensor.varmemaaler_effekt
 ```
 
-![Graphic overview](docs/images/ecl110-graphic-0.5.0.png)
+![Graphic overview, dark](docs/images/ecl110-graphic-0.5.1.png)
 
-![Curve](docs/images/ecl110-curve-0.5.0.png)
+![Graphic overview, light](docs/images/ecl110-light-0.5.1.png)
 
-![Mobile](docs/images/ecl110-mobile-0.5.0.png)
+![Mobile](docs/images/ecl110-mobile-0.5.1.png)
+
+![Curve](docs/images/ecl110-curve-0.5.1.png)
+
+![Plant wizard, step 2](docs/images/ecl110-wizard-0.5.1.png)
 
 ### Quick heating controls
 
