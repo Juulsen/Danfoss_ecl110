@@ -44,11 +44,11 @@
     const parts = [];
     if (has('m1')) {
       const gear = plant.actuator !== 'abv';
-      parts.push(symbol('m1', `<g transform="translate(78 92)">
-        <rect x="-12" y="-30" width="24" height="16" rx="3" fill="#242b36" stroke="#e6ebf2"/>
-        <text y="-19" text-anchor="middle" fill="#fff" font-size="10" font-family="${FONT}">${gear ? 'M' : 'ABV'}</text>
+      parts.push(symbol('m1', `<g transform="translate(86 92)">
+        <rect x="-11" y="-28" width="22" height="14" rx="3" fill="#242b36" stroke="#e6ebf2"/>
+        <text y="-18" text-anchor="middle" fill="#fff" font-size="10" font-family="${FONT}">${gear ? 'M' : 'ABV'}</text>
         <path d="M0 -14 v8" stroke="#e6ebf2"/>
-        <path d="M-8 -2 L0 6 L8 -2 M-8 14 L0 6 L8 14" fill="none" stroke="#f2f5f8" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M-9 -5 L0 0 L-9 5 Z M9 -5 L0 0 L9 5 Z" fill="#f4f7fb"/>
       </g>`));
     }
     if (has('p1')) {
@@ -71,9 +71,8 @@
     if (has('ext')) parts.push(symbol('ext', `<text x="330" y="214" fill="#9aa6b5" font-size="8" font-family="${FONT}">EXT</text>`));
     if (has('fs')) parts.push(symbol('fs', `<g transform="translate(330 150)"><rect width="26" height="16" rx="3" fill="#102033" stroke="#7eb6ff"/><text x="13" y="11" text-anchor="middle" fill="#d7e8ff" font-size="8" font-family="${FONT}">FS</text></g>`));
     let extras = '';
-    if (!has('s2') && v.room) extras += loose(248, 12, 'RUM · EKST.', 'room', v.room, false);
-    if (v.room_target) extras += `<text x="360" y="28" fill="#9aa6b5" font-size="10" font-family="${FONT}">→ ${esc(v.room_target)}</text>`;
-    if (v.desired_flow) extras += loose(300, 96, '', '', 'desired_flow', v.desired_flow, true);
+    if (!has('s2') && v.room) extras += loose(228, 22, v.room_target ? 'RUM · EKST. → ' + v.room_target : 'RUM · EKST.', 'room', v.room, false);
+    if (v.desired_flow) extras += loose(286, 92, '', 'desired_flow', v.desired_flow, true);
     return `<svg viewBox="0 0 420 220" width="100%" data-plant-type="${plant.type}" role="img">
       <style>text{font-family:${FONT}}</style>
       <defs><pattern id="ecldots" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.7" fill="#ffffff18"/></pattern></defs>

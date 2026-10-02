@@ -28,7 +28,7 @@
     const draft = root.Ecl110Plant.normalize(host.plantDraft || host.resolvedPlant?.() || {});
     const dialog = document.createElement('dialog');
     dialog.className = 'ecl-wizard';
-    let step = 0;
+    let step = Number(host._wizardStep) || 0;
     const paint = () => {
       dialog.replaceChildren();
       const title = document.createElement('h2');

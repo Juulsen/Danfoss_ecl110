@@ -85,13 +85,13 @@ class Ecl110Card extends HTMLElement {
       .primary{background:#ff8a3d;color:#1a1008;border-color:transparent}
       button:disabled{opacity:.5;cursor:wait}
       select{max-width:100%}option{background:var(--ecl-control);color:var(--ecl-fg)}
-      .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.metric{padding:18px;border-radius:14px;background:var(--secondary-background-color,#eff6f7)}.value{font-size:28px;font-weight:600;margin-top:8px}
+      .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.metric{padding:18px;border-radius:14px;background:var(--ecl-control,#1b212b)}.value{font-size:28px;font-weight:600;margin-top:8px}
       details{border-top:1px solid var(--divider-color,#dde5e8);padding:14px 0}summary{cursor:pointer;font-weight:600}.row{display:grid;grid-template-columns:minmax(100px,1fr) auto 36px;align-items:center;gap:8px;padding:11px 0}.row input,.row select{max-width:165px;width:100%}.info{padding:6px;border-radius:50%;width:30px;height:30px;font-style:italic;font-weight:700}
       .line{display:block;font-size:11px;letter-spacing:.05em;color:var(--secondary-text-color,#78878e)}.message{white-space:pre-wrap;padding:12px;background:var(--secondary-background-color,#eef5f6);border-radius:10px;margin-bottom:12px}
       .day{border:1px solid var(--divider-color,#dce4e8);border-radius:12px;padding:14px;margin:10px 0}.periods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.periods select{width:100%;padding:7px 2px}.times{display:grid;grid-template-columns:1fr 1fr;gap:5px}.bar{position:relative;height:10px;background:var(--divider-color,#e2e9ec);border-radius:10px;margin:10px 0;overflow:hidden}.segment{position:absolute;top:0;height:100%;background:var(--primary-color,#168c99)}
       .copy{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.footer{font-size:12px;margin-top:16px;color:var(--secondary-text-color,#78878e)}
-      dialog{max-width:min(620px,92vw);max-height:85vh;overflow:auto;border:1px solid var(--ecl-line);border-radius:18px;padding:24px;background:var(--ecl-bg);color:var(--ecl-fg);font-family:inherit}dialog::backdrop{background:#0008}dialog p{line-height:1.6;white-space:pre-wrap}dialog button,dialog input,dialog select{color:var(--ecl-fg);background:var(--ecl-control)}.formula{padding:14px;background:var(--ecl-control);border-radius:8px;white-space:pre-wrap}.calc label{display:block;margin:12px 0}.calc input{width:100%}
-      .overview-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+      dialog{max-width:min(560px,94vw);max-height:85vh;overflow:auto;border:1px solid var(--ecl-line);border-radius:18px;padding:20px;background:var(--ecl-bg);color:var(--ecl-fg);font-family:inherit}dialog::backdrop{background:#0008}dialog p{line-height:1.5;white-space:pre-wrap}dialog button,dialog input,dialog select{color:var(--ecl-fg);background:var(--ecl-control)}dialog label{display:flex;gap:8px;align-items:center;margin:6px 0}dialog select{display:block;width:100%;margin:8px 0}.formula{padding:14px;background:var(--ecl-control);border-radius:8px;white-space:pre-wrap}.calc label{display:block;margin:12px 0}.calc input{width:100%}
+      .overview-toolbar{display:flex;justify-content:flex-end;margin:0 0 4px}
       .overview-grid{margin-bottom:12px}.overview-grid .metric{min-width:0;overflow-wrap:anywhere}.overview-grid .value{font-variant-numeric:tabular-nums}
       .overview-grid.compact{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.overview-grid.compact .metric{padding:12px}.overview-grid.compact .value{font-size:22px}
       .overview-grid.large .metric{padding:24px}.overview-grid.large .value{font-size:36px}
@@ -130,8 +130,8 @@ class Ecl110Card extends HTMLElement {
       .dot{width:7px;height:7px;border-radius:50%;background:#9aa6b5;display:inline-block}
       .dot.ok{background:#3dd68c}.dot.idle{background:#9aa6b5}.dot.warn{background:#ffb15a}.dot.info{background:#4aa3ff}
       .controls{display:flex;flex-direction:column;gap:8px;margin-top:4px}
-      .segmented{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
-      .segmented button{border-radius:12px;background:var(--ecl-control);color:var(--ecl-fg)}
+      .segmented{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--ecl-line);border-radius:14px;overflow:hidden;background:var(--ecl-control)}
+      .segmented button{border:0;border-radius:0;background:transparent;color:var(--ecl-fg)}
       .segmented button.active{background:color-mix(in srgb,var(--ecl-fg) 16%,var(--ecl-control));font-weight:650}
       .adjust{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
       .adjust-box{display:flex;align-items:center;gap:8px;min-width:0;border:1px solid var(--ecl-line);border-radius:12px;padding:4px 8px;background:transparent}
@@ -373,10 +373,8 @@ class Ecl110Card extends HTMLElement {
     const valve=open?this.tr('M1 åbner','M1 opening'):close?this.tr('M1 lukker','M1 closing'):this.tr('M1 hviler','M1 idle');
     const extra=this.resolvedPlant().estimate_valve&&this.valveEstimate()!=null?' · ≈'+Math.round(this.valveEstimate())+' %':'';
     row.append(this.chip('idle',valve+extra));
-    const roomEntity=this.resolvedPlant().entities?.room;
-    const room=this.resolvedPlant().components?.includes('s2')?this.num('temperature_s2'):(roomEntity?Number(String(this._hass?.states[roomEntity]?.state).replace(',','.')):null);
-    const wanted=this.num('desired_s2')??this.num('desired_room_temperature');
-    if(Number.isFinite(room)&&wanted!=null){const delta=room-wanted;row.append(this.chip('warn',this.tr('Afv. ','Dev. ')+(delta>=0?'+':'')+this.fmt(delta,1,'K')));}
+    const flow=this.num('temperature_s3');const desiredFlow=this.num('desired_s3');
+    if(flow!=null&&desiredFlow!=null){const delta=flow-desiredFlow;row.append(this.chip('warn',this.tr('Afv. ','Dev. ')+(delta>=0?'+':'')+this.fmt(delta,1,'K')));}
     const ret=this.num('temperature_s4');const limit=this.num('return_temperature_limit');
     if(ret!=null&&limit!=null)row.append(this.chip(ret<=limit?'info':'warn',ret<=limit?this.tr('Retur under grænse','Return below limit'):this.tr('Retur over grænse','Return above limit')));
     card.append(row);
@@ -428,9 +426,9 @@ class Ecl110Card extends HTMLElement {
     if(globalThis.Ecl110Chart)box.innerHTML=Ecl110Chart.heatCurve({slope,parallel,previewSlope:this.curveDraft.slope,previewParallel:this.curveDraft.parallel,outdoor,flow,room});
     card.append(box);
     const legend=el('div',undefined,'legend');
-    legend.append(el('span',this.tr('Kurvens hældning ','Curve slope ')+(slope??'—')));
-    legend.append(el('span',this.tr('Ude ','Outdoor ')+(outdoor??'—')+'°'));
-    legend.append(el('span',this.tr('Frem ','Flow ')+(flow??'—')+'°'));
+    legend.append(el('span',this.tr('Kurvens hældning ','Curve slope ')+this.fmt(slope,1)));
+    legend.append(el('span',this.tr('Ude ','Outdoor ')+this.fmt(outdoor,1,'°C')));
+    legend.append(el('span',this.tr('Frem ','Flow ')+this.fmt(flow,1,'°C')));
     card.append(legend);
     if(this.isAdmin()){
       const actions=el('div',undefined,'curve-actions');
