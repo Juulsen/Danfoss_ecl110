@@ -1,5 +1,5 @@
 /* ECL110 dashboard by Juulsen. No external card or CDN dependencies. */
-const ECL_VERSION = '0.5.1';
+const ECL_VERSION = '0.5.2';
 async function eclLoadLibs(){
   if(globalThis.Ecl110Plant&&globalThis.Ecl110Diagram&&globalThis.Ecl110Chart&&globalThis.Ecl110Wizard)return;
   for(const file of ['ecl110-plant.js','ecl110-diagram.js','ecl110-chart.js','ecl110-wizard.js']){
@@ -142,10 +142,15 @@ class Ecl110Card extends HTMLElement {
       .adjust-box select{flex:1;min-width:0;width:100%;background:var(--ecl-control);color:var(--ecl-fg)}
       .tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
       .tiles .metric{background:#171c24;border-radius:14px;padding:12px;color:#f5c16c}
+      h3{font-size:13px;font-weight:650;margin:12px 0 4px}
       .curve-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
-      .legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px}
-      .legend b{font-weight:600}
-      .tip{position:absolute;pointer-events:none;background:#111820ee;color:#fff;padding:6px 8px;border-radius:8px;font-size:12px}
+      .legend{display:flex;flex-wrap:wrap;gap:8px 12px;font-size:12px;margin:6px 0 8px;align-items:center}
+      .legend span{display:inline-flex;align-items:center;gap:6px}
+      .swatch{width:16px;height:3px;border-radius:2px;display:inline-block;background:#f5c16c}
+      .swatch.faint{opacity:0.35}
+      .swatch.dot{width:8px;height:8px;border-radius:50%;background:#ff8a3d}
+      .history{position:relative;margin-top:8px}
+      .tip{position:absolute;top:8px;z-index:2;pointer-events:none;background:#111820ee;color:#fff;padding:6px 8px;border-radius:8px;font-size:12px;max-width:240px}
       .banner{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;background:#2a2118;margin-bottom:10px}
       .hidden-view{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
       .alarm{padding:8px 0;border-top:1px solid var(--divider-color,#2c3442)}
@@ -264,7 +269,7 @@ class Ecl110Card extends HTMLElement {
   toggleView(){this.setView(this.viewMode()==='graphic'?'overview':'graphic');}
   setView(mode){try{localStorage.setItem(this.viewKey(),mode);}catch{}this.render();}
   fmt(value,digits=1,unit=''){if(!Number.isFinite(Number(value)))return '—';let text=Number(value).toFixed(digits);if(this.lang()==='da')text=text.replace('.',',');return unit?text+' '+unit:text;}
-  num(key){const match=this.find(key,false);const value=Number(String(match?.[1].state??'').replace(',','.'));return Number.isFinite(value)?value:null;}
+  num(key){const match=this.find(key,false);if(!match)return null;const raw=String(match[1].state??'').trim();if(!raw||raw==='unavailable'||raw==='unknown'||raw==='none')return null;const value=Number(raw.replace(',','.'));return Number.isFinite(value)?value:null;}
   resolvedPlant(){
     if(this.config?.plant)return globalThis.Ecl110Plant?Ecl110Plant.normalize(this.config.plant):this.config.plant;
     if(this.remotePlant)return this.remotePlant;
@@ -412,7 +417,7 @@ class Ecl110Card extends HTMLElement {
     if(this.viewMode()==='graphic'&&!this.overviewDraft){this.graphic(card);this.chips(card);}
     const grid=this.overviewGrid(card);
     if(this.viewMode()!=='overview'&&!this.overviewDraft)grid.classList.add('hidden-view');
-    else for(const metric of grid.querySelectorAll('.metric')){const spark=el('div');spark.dataset.spark=metric.querySelector('[data-overview-value]')?.dataset.overviewValue;metric.append(spark);}
+    const trend=el('div',undefined,'history');card.append(trend);this.drawHistory(trend);
     this.quickBar(card);
   }
   curve(card){
@@ -423,18 +428,17 @@ class Ecl110Card extends HTMLElement {
     const room=this.num('desired_room_temperature')||20;
     if(!this.curveDraft)this.curveDraft={slope,parallel};
     const box=el('div');
-    if(globalThis.Ecl110Chart)box.innerHTML=Ecl110Chart.heatCurve({slope,parallel,previewSlope:this.curveDraft.slope,previewParallel:this.curveDraft.parallel,outdoor,flow,room});
+    const paintCurve=()=>this.paintCurve(box,slope,parallel,outdoor,flow,room);
+    paintCurve();
     card.append(box);
     const legend=el('div',undefined,'legend');
-    legend.append(el('span',this.tr('Kurvens hældning ','Curve slope ')+this.fmt(slope,1)));
-    legend.append(el('span',this.tr('Ude ','Outdoor ')+this.fmt(outdoor,1,'°C')));
-    legend.append(el('span',this.tr('Frem ','Flow ')+this.fmt(flow,1,'°C')));
+    this.curveLegend(legend,slope,parallel,outdoor,flow,room);
     card.append(legend);
     if(this.isAdmin()){
       const actions=el('div',undefined,'curve-actions');
       const slopeInput=el('input');slopeInput.type='number';slopeInput.min='0.1';slopeInput.max='4';slopeInput.step='0.1';slopeInput.value=this.curveDraft.slope??'';slopeInput.setAttribute('aria-label',this.tr('Hældning','Slope'));
       const shiftInput=el('input');shiftInput.type='number';shiftInput.min='-20';shiftInput.max='20';shiftInput.step='1';shiftInput.value=this.curveDraft.parallel??0;shiftInput.setAttribute('aria-label',this.tr('Parallel','Parallel'));
-      const preview=()=>{this.curveDraft={slope:Number(slopeInput.value),parallel:Number(shiftInput.value)};if(globalThis.Ecl110Chart)box.innerHTML=Ecl110Chart.heatCurve({slope,parallel,previewSlope:this.curveDraft.slope,previewParallel:this.curveDraft.parallel,outdoor,flow,room});};
+      const preview=()=>{this.curveDraft={slope:Number(slopeInput.value),parallel:Number(shiftInput.value)};paintCurve();this.curveLegend(legend,slope,parallel,outdoor,flow,room);};
       slopeInput.oninput=preview;shiftInput.oninput=preview;
       actions.append(el('span',this.tr('Hældning','Slope')),slopeInput,el('span',this.tr('Parallel','Parallel')),shiftInput);
       actions.append(this.button(this.tr('Fortryd','Undo'),()=>{this.curveDraft={slope,parallel};this.render();}));
@@ -450,7 +454,31 @@ class Ecl110Card extends HTMLElement {
       card.append(actions);
       card.append(el('p',this.tr('Forhåndsvisningen skriver ikke, før du bekræfter Gem i ECL. Kurven er en forenklet beregning.','The preview does not write until you confirm Save to ECL. The curve is a simplified calculation.'),'muted'));
     }else card.append(el('p',this.tr('Kun administratorer kan skrive en ny hældning til ECL.','Only administrators can write a new slope to the ECL.'),'muted'));
-    const history=el('div');history.className='history';card.append(history);this.drawHistory(history);
+    const history=el('div',undefined,'history');card.append(el('h3',this.tr('Seneste 24 timer','Last 24 hours')));card.append(history);this.drawHistory(history);
+  }
+  curveOpts(slope,parallel,outdoor,flow,room){
+    const set=globalThis.Ecl110Chart?Ecl110Chart.flowAt(outdoor,slope,room):null;
+    const now=this.tr('Nu: ','Now: ')+this.fmt(outdoor,1,'°C')+this.tr(' ude · ',' outdoor · ')+this.fmt(flow,1,'°C')+this.tr(' frem',' flow');
+    return {slope,parallel,previewSlope:this.curveDraft.slope,previewParallel:this.curveDraft.parallel,outdoor,flow,room,comma:this.lang()==='da',nowLabel:this.tr('Nu','Now'),nowText:now,xTitle:this.tr('Udetemperatur','Outdoor temperature'),yTitle:this.tr('Fremløb','Flow'),setpoint:set==null?null:set+parallel};
+  }
+  paintCurve(box,slope,parallel,outdoor,flow,room){
+    if(!globalThis.Ecl110Chart)return;
+    box.innerHTML=Ecl110Chart.heatCurve(this.curveOpts(slope,parallel,outdoor,flow,room));
+  }
+  curveLegend(legend,slope,parallel,outdoor,flow,room){
+    const opts=this.curveOpts(slope,parallel,outdoor,flow,room);
+    const differs=Math.abs((opts.previewSlope??slope)-slope)>0.001||Math.abs((opts.previewParallel??parallel)-parallel)>0.001;
+    const item=(swatch,text)=>{const span=el('span');const mark=el('i',undefined,'swatch '+swatch);span.append(mark,document.createTextNode(text));return span;};
+    legend.replaceChildren();
+    if(differs){
+      legend.append(item('faint',this.tr('Gemt kurve','Saved curve')));
+      legend.append(item('',this.tr('Forhåndsvisning','Preview')));
+    }else legend.append(item('',this.tr('Kurve (beregnet)','Curve (calculated)')));
+    legend.append(item('dot',this.tr('Aktuel','Actual')));
+    legend.append(el('span',opts.nowText));
+    if(opts.setpoint!=null)legend.append(el('span',this.tr('Beregnet frem ved ','Calculated flow at ')+this.fmt(outdoor,1,'°C')+this.tr(' ude: ',' outdoor: ')+this.fmt(opts.setpoint,1,'°C')));
+    const previewSet=globalThis.Ecl110Chart?Ecl110Chart.flowAt(outdoor,opts.previewSlope,room):null;
+    if(differs&&previewSet!=null)legend.append(el('span',this.tr('Forhåndsvisning: ','Preview: ')+this.fmt(previewSet+(opts.previewParallel||0),1,'°C')));
   }
   alarms(card){
     const checks=[];
@@ -488,8 +516,8 @@ class Ecl110Card extends HTMLElement {
       if(!ids.length)return;
       const start=new Date(now-86400000).toISOString();
       const rows=await this._hass.callWS({type:'history/history_during_period',start_time:start,entity_ids:ids,minimal_response:true,no_attributes:true});
-      this._history=rows;this._historyAt=now;this.paintSparks();
-      const box=this.shadowRoot.querySelector('.history');if(box)this.drawHistory(box);
+      this._history=rows;this._historyAt=now;
+      for(const box of this.shadowRoot.querySelectorAll('.history'))this.drawHistory(box);
     }catch{}
     finally{this._historyLoading=false;}
   }
@@ -503,33 +531,50 @@ class Ecl110Card extends HTMLElement {
       return {id:key,name:this.overviewName(key),points:samples};
     }).filter(item=>item.points.length);
   }
+  chartName(key){
+    return {temperature_s1:this.tr('Ude','Outdoor'),temperature_s2:this.tr('Rum','Room'),temperature_s3:this.tr('Frem','Flow'),temperature_s4:this.tr('Retur','Return')}[key]||this.overviewName(key);
+  }
+  liveSeries(){
+    return ['temperature_s1','temperature_s2','temperature_s3','temperature_s4'].filter(key=>this.num(key)!=null).map(key=>({id:key,name:this.chartName(key),value:this.num(key)}));
+  }
   drawHistory(node){
-    const series=this.historySeries();
+    const series=this.historySeries().map(item=>({...item,name:this.chartName(item.id)}));
     if(!globalThis.Ecl110Chart){node.textContent='';return;}
-    node.innerHTML=Ecl110Chart.history(series);
+    node.innerHTML=Ecl110Chart.history(series,{comma:this.lang()==='da',empty:this.tr('Ingen historik de seneste 24 timer.','No history for the last 24 hours.')});
     const legend=el('div',undefined,'legend');
-    for(const item of series){const last=item.points.at(-1);legend.append(el('span',item.name+' '+(last?last[1].toFixed(1)+'°':'')));}
+    const live=this.liveSeries();
+    const rows=live.length?live:series.map(item=>({id:item.id,name:item.name,value:item.points.at(-1)?.[1]}));
+    for(const item of rows){
+      const span=el('span');
+      const mark=el('i',undefined,'swatch');
+      mark.style.background=Ecl110Chart.color(item.id);
+      span.append(mark,document.createTextNode(item.name+' '+this.fmt(item.value,1,'°C')));
+      legend.append(span);
+    }
     node.append(legend);
     const svg=node.querySelector('svg');
-    const tip=el('div',undefined,'tip');tip.hidden=true;node.style.position='relative';node.append(tip);
+    const tip=el('div',undefined,'tip');tip.hidden=true;node.append(tip);
     const move=(event)=>{
-      if(!svg)return;
+      if(!svg||!series.length)return;
       const rect=svg.getBoundingClientRect();
-      const ratio=Math.min(1,Math.max(0,(event.clientX-rect.left)/rect.width));
+      const pad=Number(svg.dataset.padX)||0;
+      const plot=Number(svg.dataset.plotW)||420;
+      const scale=rect.width/420;
+      const ratio=(event.clientX-rect.left-pad*scale)/(plot*scale);
       const hit=Ecl110Chart.nearest(series,ratio);
       if(!hit)return;
-      tip.hidden=false;tip.style.left=Math.round(ratio*rect.width)+'px';tip.textContent=hit.rows.map(row=>row.name+' '+row.value.toFixed(1)+'°').join(' · ');
-      const cursor=svg.querySelector('[data-cursor]');if(cursor){cursor.setAttribute('visibility','visible');cursor.setAttribute('x1',ratio*420);cursor.setAttribute('x2',ratio*420);}
+      const when=new Date(hit.time);
+      const clock=`${String(when.getHours()).padStart(2,'0')}:${String(when.getMinutes()).padStart(2,'0')}`;
+      tip.hidden=false;
+      const left=Math.min(rect.width-8,Math.max(8,(event.clientX-rect.left)));
+      tip.style.left=left+'px';
+      tip.textContent=clock+' · '+hit.rows.map(row=>row.name+' '+this.fmt(row.value,1,'°C')).join(' · ');
+      const cursor=svg.querySelector('[data-cursor]');
+      if(cursor){const x=pad+Math.min(1,Math.max(0,ratio))*plot;cursor.setAttribute('visibility','visible');cursor.setAttribute('x1',x);cursor.setAttribute('x2',x);}
     };
     svg?.addEventListener('pointermove',move);
-    svg?.addEventListener('pointerleave',()=>{tip.hidden=true;});
-  }
-  paintSparks(){
-    if(!globalThis.Ecl110Chart)return;
-    for(const node of this.shadowRoot.querySelectorAll('[data-spark]')){
-      const series=this.historySeries().find(item=>item.id===node.dataset.spark);
-      node.innerHTML=series?Ecl110Chart.spark(series.points):'';
-    }
+    svg?.addEventListener('pointerdown',move);
+    svg?.addEventListener('pointerleave',()=>{tip.hidden=true;const cursor=svg.querySelector('[data-cursor]');if(cursor)cursor.setAttribute('visibility','hidden');});
   }
   overviewControls(card){
     const mode=this.catalog.find(x=>x.key==='desired_mode');if(mode)card.append(this.settingRow(mode));

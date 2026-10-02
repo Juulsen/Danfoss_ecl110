@@ -10,6 +10,13 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 - Direct serial RTU transport remains planned.
 
+## [0.5.2] - 2026-10-02
+
+- Added outdoor (°C) and flow (°C) axes, gridlines and tick labels to the heat-curve chart.
+- Labelled the current operating point, the calculated flow at the current outdoor temperature, and a legend for the calculated curve versus the actual point. An unsaved slope or parallel shift is a solid preview over a faint saved curve.
+- Replaced the unlabelled history ticks with a 24 hour trend: time axis, °C axis, legend with each sensor's name and current value, and a tooltip. The same trend is on Overview.
+- Danish numbers in the curve and trend use a decimal comma.
+
 ## [0.5.1] - 2026-10-02
 
 - Polished the dashboard card so controls follow the Home Assistant theme, with dark fallbacks when theme variables are missing.
