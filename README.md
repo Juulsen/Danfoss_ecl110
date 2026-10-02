@@ -22,7 +22,7 @@ An independent community project by **Juulsen**, under active testing with ongoi
 
 ECL110 Modbus læser og styrer en Danfoss ECL Comfort 110 fra Home Assistant. Kortet viser et anlægsdiagram, varmekurve, ugeprogram og alarmer. Teksten er på dansk, når Home Assistant eller kortet er sat til dansk.
 
-Efter opdatering til 0.5.x skal Home Assistant genstartes én gang. Sæt dashboard-ressourcen til `/ecl110-static/ecl110-card.js?v=0.5.1`, og behold kun én ECL110-ressource. Anlægget gemmes på integrationen under **Indstillinger → Enheder og tjenester → ECL110 → Konfigurer**. Guiden spørger, før den aktiverer deaktiverede entiteter.
+Efter opdatering til 0.5.x skal Home Assistant genstartes én gang. Sæt dashboard-ressourcen til `/ecl110-static/ecl110-card.js?v=0.5.2`, og behold kun én ECL110-ressource. Anlægget gemmes på integrationen under **Indstillinger → Enheder og tjenester → ECL110 → Konfigurer**. Guiden spørger, før den aktiverer deaktiverede entiteter.
 
 ## Features
 
@@ -66,14 +66,14 @@ Download the source ZIP from the [latest release](https://github.com/Juulsen/Dan
 
 Update through HACS, or replace the complete integration folder manually, then restart Home Assistant. Existing connections and entity IDs are retained. Use **Reconfigure** on the existing integration to change application or connection settings.
 
-For **0.5.1**, update the existing dashboard resource to the URL below and reload the browser. Restart Home Assistant once so the plant options flow and websocket commands are registered. Keep only one ECL110 JavaScript resource.
+For **0.5.2**, update the existing dashboard resource to the URL below and reload the browser. Restart Home Assistant once so the plant options flow and websocket commands are registered. Keep only one ECL110 JavaScript resource.
 
 ## Dashboard
 
 Add this dashboard resource as a **JavaScript module**:
 
 ```text
-/ecl110-static/ecl110-card.js?v=0.5.1
+/ecl110-static/ecl110-card.js?v=0.5.2
 ```
 
 Add a manual card:
@@ -96,11 +96,11 @@ Legacy cards without explicit `overview` configuration can still save browser-lo
 
 The tabs are **Overview · Curve · Schedule · Alarms**. **Settings** and **Suggestions** are shown only to administrators. The card is bundled with the integration and requires no Browser Mod. It does not replace Home Assistant's standard device page.
 
-### Version 0.5.1 card
+### Version 0.5.2 card
 
 Overview has two views, **Graphic** and **Tiles**. Graphic draws a compact process diagram from the plant configuration. Tiles show the same readings, and a value opens Home Assistant history. The choice is stored in the browser; the visual editor sets the default with `view: graphic` or `view: overview`.
 
-**Curve** plots a simplified heat curve, a preview of a new slope, and a 24 hour history chart with a shared tooltip. Only an administrator can write the slope and parallel shift, and the card asks for confirmation first.
+**Curve** plots a simplified heat curve with outdoor and flow axes, the current operating point, and the calculated flow at the current outdoor temperature. An unsaved slope is a solid preview over a faint saved curve. Below it, a 24 hour chart has a time axis, a °C axis, a legend with each sensor's current value, and a tooltip. The same trend sits on Overview. Only an administrator can write the slope and parallel shift, and the card asks for confirmation first.
 
 **Alarms** lists calculated checks (return limit, missing sensors, communication) and recent logbook rows.
 
@@ -126,15 +126,17 @@ plant:
     heat_power: sensor.varmemaaler_effekt
 ```
 
-![Graphic overview, dark](docs/images/ecl110-graphic-0.5.1.png)
+![Graphic overview, dark](docs/images/ecl110-graphic-0.5.2.png)
 
-![Graphic overview, light](docs/images/ecl110-light-0.5.1.png)
+![Graphic overview, light](docs/images/ecl110-light-0.5.2.png)
 
-![Mobile](docs/images/ecl110-mobile-0.5.1.png)
+![Mobile](docs/images/ecl110-mobile-0.5.2.png)
 
-![Curve](docs/images/ecl110-curve-0.5.1.png)
+![Curve](docs/images/ecl110-curve-0.5.2.png)
 
-![Plant wizard, step 2](docs/images/ecl110-wizard-0.5.1.png)
+![Curve, mobile](docs/images/ecl110-curve-mobile-0.5.2.png)
+
+![Plant wizard, step 2](docs/images/ecl110-wizard-0.5.2.png)
 
 ### Quick heating controls
 

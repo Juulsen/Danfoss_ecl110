@@ -59,8 +59,15 @@ for(const variant of variants){
 }
 assert.equal(context.Ecl110Plant.normalize({application:'130',type:'dhw_fs'}).type,'hex');
 assert.ok(context.Ecl110Chart.flowAt(-12,1.2,20)>40);
-assert.match(context.Ecl110Chart.heatCurve({slope:0.7,parallel:0,previewSlope:0.8,outdoor:15.2,flow:31.5,room:21}),/data-point="live"/);
-assert.match(context.Ecl110Chart.history([{id:'temperature_s1',name:'Ude',points:[[0,15],[1,16]]}]),/data-series="temperature_s1"/);
+const curve=context.Ecl110Chart.heatCurve({slope:0.7,parallel:0,previewSlope:0.8,previewParallel:0,outdoor:15.2,flow:31.5,room:21,comma:true,nowLabel:'Nu: 15,2 °C ude · 31,5 °C frem',xTitle:'Udetemperatur',yTitle:'Fremløb'});
+assert.match(curve,/data-point="live"/);
+assert.match(curve,/data-series="saved"/);
+assert.match(curve,/data-series="preview"/);
+assert.match(curve,/>-20°/);
+assert.match(curve,/Nu: 15,2/);
+const same=context.Ecl110Chart.heatCurve({slope:0.7,parallel:0,previewSlope:0.7,previewParallel:0,outdoor:15.2,flow:31.5,room:21});
+assert.doesNotMatch(same,/data-series="preview"/);
+assert.match(context.Ecl110Chart.history([{id:'temperature_s1',name:'Ude',points:[[Date.now()-3600000,15],[Date.now(),16]]}],{comma:true}),/data-series="temperature_s1"/);
 console.log('PASS: plant schema, five diagram variants and charts');
 
 // Exercise the actual overview controls and their existing HA service path.
