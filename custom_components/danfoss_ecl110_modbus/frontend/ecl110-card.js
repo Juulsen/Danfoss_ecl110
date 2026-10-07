@@ -27,9 +27,15 @@ class Ecl110Card extends HTMLElement {
     this._widthObserver=new ResizeObserver(()=>{
       const width=this.getBoundingClientRect().width;
       const portrait=width>0&&width<700;
-      if(portrait===this._portrait)return;
-      this._portrait=portrait;
-      if(this._built&&this.tab==='overview'&&this.viewMode()==='graphic')this.render();
+      if(portrait!==this._portrait){
+        this._portrait=portrait;
+        if(this._built&&this.tab==='overview'&&this.viewMode()==='graphic')this.render();
+      }
+      const chartWidth=Math.round(width);
+      if(this._built&&chartWidth&&Math.abs(chartWidth-(this._chartWidth||0))>4){
+        this._chartWidth=chartWidth;
+        this.redrawCharts();
+      }
     });
     this._widthObserver.observe(this);
   }
@@ -501,7 +507,7 @@ class Ecl110Card extends HTMLElement {
     const flow=this.num('temperature_s3');
     const room=this.num('desired_room_temperature')||20;
     if(!this.curveDraft)this.curveDraft={slope,parallel};
-    const box=el('div');
+    const box=el('div',undefined,'curve-host');
     const paintCurve=()=>this.paintCurve(box,slope,parallel,outdoor,flow,room);
     paintCurve();
     card.append(box);
@@ -537,7 +543,7 @@ class Ecl110Card extends HTMLElement {
   }
   paintCurve(box,slope,parallel,outdoor,flow,room){
     if(!globalThis.Ecl110Chart)return;
-    box.innerHTML=Ecl110Chart.heatCurve(this.curveOpts(slope,parallel,outdoor,flow,room));
+    box.innerHTML=Ecl110Chart.heatCurve({...this.curveOpts(slope,parallel,outdoor,flow,room),width:box.clientWidth||undefined});
   }
   curveLegend(legend,slope,parallel,outdoor,flow,room){
     const opts=this.curveOpts(slope,parallel,outdoor,flow,room);
@@ -611,10 +617,15 @@ class Ecl110Card extends HTMLElement {
   liveSeries(){
     return ['temperature_s1','temperature_s2','temperature_s3','temperature_s4'].filter(key=>this.num(key)!=null).map(key=>({id:key,name:this.chartName(key),value:this.num(key)}));
   }
+  redrawCharts(){
+    for(const node of this.shadowRoot.querySelectorAll('.history'))this.drawHistory(node);
+    const curve=this.shadowRoot.querySelector('.curve-host');
+    if(curve)this.paintCurve(curve,this.num('heating_curve_slope'),this.num('parallel_displacement')||0,this.num('temperature_s1'),this.num('temperature_s3'),this.num('temperature_s2')??this.num('desired_room_temperature')??20);
+  }
   drawHistory(node){
     const series=this.historySeries().map(item=>({...item,name:this.chartName(item.id)}));
     if(!globalThis.Ecl110Chart){node.textContent='';return;}
-    node.innerHTML=Ecl110Chart.history(series,{comma:this.lang()==='da',empty:this.tr('Ingen historik de seneste 24 timer.','No history for the last 24 hours.')});
+    node.innerHTML=Ecl110Chart.history(series,{comma:this.lang()==='da',empty:this.tr('Ingen historik de seneste 24 timer.','No history for the last 24 hours.'),width:node.clientWidth||undefined});
     const legend=el('div',undefined,'legend');
     const live=this.liveSeries();
     const rows=live.length?live:series.map(item=>({id:item.id,name:item.name,value:item.points.at(-1)?.[1]}));
@@ -633,7 +644,8 @@ class Ecl110Card extends HTMLElement {
       const rect=svg.getBoundingClientRect();
       const pad=Number(svg.dataset.padX)||0;
       const plot=Number(svg.dataset.plotW)||420;
-      const scale=rect.width/420;
+      const vb=svg.viewBox?.baseVal?.width||rect.width;
+      const scale=rect.width/(vb||420);
       const ratio=(event.clientX-rect.left-pad*scale)/(plot*scale);
       const hit=Ecl110Chart.nearest(series,ratio);
       if(!hit)return;

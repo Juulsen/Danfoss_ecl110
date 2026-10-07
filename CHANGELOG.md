@@ -16,6 +16,7 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 - Equipment choices live in the integration options and on the card. They change only the drawing.
 - An explicit "off" for those choices is kept when an older stored value is also present.
 - Live readings are written into the existing value boxes and updated in place.
+- History and heat-curve labels stay at the same size when the card is wide. The degree sign in the chart source is UTF-8.
 
 ## [0.5.2] - 2026-10-02
 
