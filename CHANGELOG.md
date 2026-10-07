@@ -10,6 +10,14 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 - Direct serial RTU transport remains planned.
 
+## [0.6.0] - 2026-10-07
+
+- Overview uses the locked plant artwork verbatim: landscape from 700 px and the portrait drawing below that. Heat exchanger or direct connection, and the 3-way or 2-way valve, are stacked on the base at 0,0.
+- Equipment choices live in the integration options and on the card. They change only the drawing.
+- An explicit "off" for those choices is kept when an older stored value is also present.
+- Live readings are written into the existing value boxes and updated in place.
+- History and heat-curve labels stay at the same size when the card is wide. The degree sign in the chart source is UTF-8.
+
 ## [0.5.2] - 2026-10-02
 
 - Added outdoor (°C) and flow (°C) axes, gridlines and tick labels to the heat-curve chart.

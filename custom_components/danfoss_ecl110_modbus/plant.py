@@ -37,6 +37,8 @@ COMPONENTS = (
 )
 ENTITY_KEYS = ("room", "heat_power", "heat_energy", "heat_flow")
 LABEL_KEYS = ("site", "consumer")
+CONNECTIONS = ("veksler", "direkte")
+VALVES = ("3vejs", "2vejs")
 
 # Registers the wizard may offer to enable. Nothing here is enabled unless an
 # admin explicitly confirms the list.
@@ -46,6 +48,36 @@ ENABLEABLE_REGISTER_KEYS = (
     "actual_mode",
     "pump_state",
 )
+
+
+def _explicit_false(value: Any) -> bool:
+    """True when a checkbox was stored as off. Missing keys are not off."""
+
+    return value is False or value == 0 or value == "false" or value == "off"
+
+
+def _connection(source: Mapping[str, Any]) -> str:
+    """Drawing-only heat-source choice. An explicit false beats a stored slug."""
+
+    if "veksler" in source and _explicit_false(source.get("veksler")):
+        return "direkte"
+    choice = source.get("connection")
+    if choice in CONNECTIONS:
+        return str(choice)
+    if source.get("type") == "direct":
+        return "direkte"
+    return "veksler"
+
+
+def _valve(source: Mapping[str, Any]) -> str:
+    """Drawing-only valve choice. An explicit false beats a stored 3-way slug."""
+
+    if "ventil_3vejs" in source and _explicit_false(source.get("ventil_3vejs")):
+        return "2vejs"
+    choice = source.get("valve")
+    if choice in VALVES:
+        return str(choice)
+    return "3vejs"
 
 
 def _text(value: Any, limit: int = 40) -> str | None:
@@ -103,7 +135,11 @@ def normalize_plant(raw: Mapping[str, Any] | None) -> dict[str, Any]:
         "components": components,
         "entities": entities,
         "estimate_valve": bool(source.get("estimate_valve")),
+        "connection": _connection(source),
+        "valve": _valve(source),
     }
+    plant["veksler"] = plant["connection"] == "veksler"
+    plant["ventil_3vejs"] = plant["valve"] == "3vejs"
     if application == "130":
         emitters = source.get("emitters")
         plant["emitters"] = emitters if emitters in EMITTERS else "radiator"

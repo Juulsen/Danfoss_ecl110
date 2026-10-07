@@ -40,7 +40,17 @@ for(const [key,item] of Object.entries(help))for(const lang of ['da','en']){
   assert.doesNotMatch([item[lang],...['effect','example','formula','note'].map(f=>item[f]?.[lang]||'')].join(' '),/PDF|manual|Danfoss|page[s]? [0-9]|side[r]? [0-9]/i);
 }
 console.log('PASS: configuration precedence, legacy preferences, history event, editor persistence, custom names, option translation, DA/EN help');
-for(const file of ['ecl110-plant.js','ecl110-diagram.js','ecl110-chart.js','ecl110-wizard.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context);
+for(const file of ['ecl110-plant.js','ecl110-diagram.js','ecl110-chart.js','ecl110-wizard.js','ecl110-art.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context);
+const storedOff=context.Ecl110Plant.normalize({connection:'veksler',veksler:false,valve:'3vejs',ventil_3vejs:false});
+assert.equal(storedOff.connection,'direkte');
+assert.equal(storedOff.veksler,false);
+assert.equal(storedOff.valve,'2vejs');
+assert.equal(storedOff.ventil_3vejs,false);
+assert.equal(context.Ecl110Plant.normalize({}).valve,'3vejs');
+assert.equal(JSON.stringify(context.Ecl110Art.layers(false,{connection:'veksler',valve:'3vejs'})),JSON.stringify(['ecl110-anlaeg.svg','svg/veksler.svg','svg/ventil-3vejs.svg']));
+assert.equal(JSON.stringify(context.Ecl110Art.layers(true,{connection:'direkte',valve:'2vejs'})),JSON.stringify(['ecl110-mobil.svg','svg/direkte-mobil.svg','svg/ventil-2vejs-mobil.svg']));
+const gridCard=new Card();
+assert.equal(JSON.stringify(gridCard.getGridOptions()),JSON.stringify({columns:12,min_columns:6,rows:'auto'}));
 const variants=[
   {application:'130',type:'hex',components:['s1','s3','s4','m1','p1','radiator','meter']},
   {application:'130',type:'direct',components:['s1','s2','s3','s4','m1','p1','radiator','eca','floor']},

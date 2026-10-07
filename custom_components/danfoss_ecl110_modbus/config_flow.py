@@ -12,7 +12,7 @@ from homeassistant.config_entries import ConfigFlowResult
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TIMEOUT
 from homeassistant.helpers import selector
 
-from .plant import ACTUATORS, EMITTERS, TYPES_BY_APPLICATION, normalize_plant
+from .plant import ACTUATORS, CONNECTIONS, EMITTERS, TYPES_BY_APPLICATION, VALVES, normalize_plant
 from .const import (
     APPLICATIONS,
     CONF_APPLICATION,
@@ -312,7 +312,7 @@ class Ecl110OptionsFlow(config_entries.OptionsFlow):
                 "components": list(user_input.get("components") or []),
                 "estimate_valve": bool(user_input.get("estimate_valve")),
             }
-            return await self.async_step_plant_entities()
+            return await self.async_step_plant_equipment()
         application = str(self._plant.get("application") or current["application"])
         schema_fields: dict[Any, Any] = {
             vol.Required("actuator", default=current.get("actuator", "gear")): vol.In(ACTUATORS),
@@ -353,6 +353,40 @@ class Ecl110OptionsFlow(config_entries.OptionsFlow):
         return self.async_show_form(
             step_id="plant_components",
             data_schema=vol.Schema(schema_fields),
+        )
+
+    async def async_step_plant_equipment(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> ConfigFlowResult:
+        """Drawing choices only. Nothing here is written to the controller."""
+
+        current = {**self._stored(), **self._plant}
+        if user_input is not None:
+            connection = str(user_input["connection"])
+            valve = str(user_input["valve"])
+            self._plant = {
+                **current,
+                "connection": connection,
+                "valve": valve,
+                "veksler": connection == "veksler",
+                "ventil_3vejs": valve == "3vejs",
+            }
+            return await self.async_step_plant_entities()
+        return self.async_show_form(
+            step_id="plant_equipment",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        "connection",
+                        default=current.get("connection", "veksler"),
+                    ): vol.In(CONNECTIONS),
+                    vol.Required(
+                        "valve",
+                        default=current.get("valve", "3vejs"),
+                    ): vol.In(VALVES),
+                }
+            ),
         )
 
     async def async_step_plant_entities(

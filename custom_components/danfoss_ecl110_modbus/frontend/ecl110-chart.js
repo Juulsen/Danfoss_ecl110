@@ -58,6 +58,10 @@
     const yLabels = yTicks.map((y) => `<text x="${box.l - 6}" y="${(project.sy(y) + 3).toFixed(1)}" text-anchor="end" fill="#9aa6b5" font-size="10">${esc(num(y, 0, comma) + ySuffix)}</text>`).join('');
     return `${grid}${vgrid}<line x1="${box.l}" x2="${box.l + box.w}" y1="${box.t + box.h}" y2="${box.t + box.h}" stroke="#4a5568"/>${xLabels}${yLabels}`;
   }
+  function chartWidth(opts, fallback) {
+    const width = Math.round(Number(opts && opts.width));
+    return width >= 280 ? width : fallback;
+  }
   function heatCurve(opts) {
     const comma = !!opts.comma;
     const room = Number(opts.room) || 20;
@@ -68,9 +72,9 @@
     const previewParallel = opts.previewParallel == null ? parallel : Number(opts.previewParallel);
     const preview = previewSlope == null ? [] : curvePoints(previewSlope, previewParallel, room);
     const differs = preview.length && (Math.abs(previewSlope - slope) > 0.001 || Math.abs(previewParallel - parallel) > 0.001);
-    const W = 420;
+    const W = chartWidth(opts, 420);
     const H = 250;
-    const box = { l: 46, t: 28, w: 358, h: 186 };
+    const box = { l: 46, t: 28, w: W - 62, h: 186 };
     const ys = saved.concat(differs ? preview : []).map((p) => p[1]);
     if (!ys.length) ys.push(20, 40);
     if (Number.isFinite(opts.flow)) ys.push(opts.flow);
@@ -112,9 +116,9 @@
   }
   function history(series, opts) {
     const comma = !!opts?.comma;
-    const W = 420;
+    const W = chartWidth(opts, 420);
     const H = 188;
-    const box = { l: 46, t: 16, w: 360, h: 140 };
+    const box = { l: 46, t: 16, w: W - 60, h: 140 };
     const flat = (series || []).flatMap((item) => item.points.filter((p) => Number.isFinite(p[0]) && Number.isFinite(p[1])));
     const now = Date.now();
     const minX = flat.length ? Math.min(...flat.map((p) => p[0])) : now - 86400000;

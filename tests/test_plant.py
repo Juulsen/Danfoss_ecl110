@@ -64,6 +64,26 @@ class PlantTests(unittest.TestCase):
         self.assertEqual(plant["application"], "130")
         self.assertEqual(plant["type"], "hex")
         self.assertEqual(plant["components"], [])
+        self.assertEqual(plant["connection"], "veksler")
+        self.assertEqual(plant["valve"], "3vejs")
+        self.assertTrue(plant["veksler"])
+        self.assertTrue(plant["ventil_3vejs"])
+
+    def test_explicit_false_overrides_stored_equipment(self):
+        plant = normalize_plant(
+            {
+                "connection": "veksler",
+                "veksler": False,
+                "valve": "3vejs",
+                "ventil_3vejs": False,
+            }
+        )
+        self.assertEqual(plant["connection"], "direkte")
+        self.assertFalse(plant["veksler"])
+        self.assertEqual(plant["valve"], "2vejs")
+        self.assertFalse(plant["ventil_3vejs"])
+        direct = normalize_plant({"type": "direct"})
+        self.assertEqual(direct["connection"], "direkte")
 
 
 if __name__ == "__main__":
