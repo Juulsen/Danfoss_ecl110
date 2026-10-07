@@ -22,7 +22,7 @@ An independent community project by **Juulsen**, under active testing with ongoi
 
 ECL110 Modbus læser og styrer en Danfoss ECL Comfort 110 fra Home Assistant. Kortet viser et anlægsdiagram, varmekurve, ugeprogram og alarmer. Teksten er på dansk, når Home Assistant eller kortet er sat til dansk.
 
-Efter opdatering til 0.5.x skal Home Assistant genstartes én gang. Sæt dashboard-ressourcen til `/ecl110-static/ecl110-card.js?v=0.5.2`, og behold kun én ECL110-ressource. Anlægget gemmes på integrationen under **Indstillinger → Enheder og tjenester → ECL110 → Konfigurer**. Guiden spørger, før den aktiverer deaktiverede entiteter.
+Efter opdatering til 0.6.x skal Home Assistant genstartes én gang. Sæt dashboard-ressourcen til `/ecl110-static/ecl110-card.js?v=0.6.0`, og behold kun én ECL110-ressource. Anlægget gemmes på integrationen under **Indstillinger → Enheder og tjenester → ECL110 → Konfigurer**. Guiden spørger, før den aktiverer deaktiverede entiteter.
 
 ## Features
 
@@ -66,14 +66,14 @@ Download the source ZIP from the [latest release](https://github.com/Juulsen/Dan
 
 Update through HACS, or replace the complete integration folder manually, then restart Home Assistant. Existing connections and entity IDs are retained. Use **Reconfigure** on the existing integration to change application or connection settings.
 
-For **0.5.2**, update the existing dashboard resource to the URL below and reload the browser. Restart Home Assistant once so the plant options flow and websocket commands are registered. Keep only one ECL110 JavaScript resource.
+For **0.6.0**, update the existing dashboard resource to the URL below and reload the browser. Restart Home Assistant once so the plant options flow and websocket commands are registered. Keep only one ECL110 JavaScript resource.
 
 ## Dashboard
 
 Add this dashboard resource as a **JavaScript module**:
 
 ```text
-/ecl110-static/ecl110-card.js?v=0.5.2
+/ecl110-static/ecl110-card.js?v=0.6.0
 ```
 
 Add a manual card:

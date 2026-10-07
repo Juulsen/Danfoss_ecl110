@@ -88,6 +88,18 @@
           "estimate_valve": "Optional. Shows an approximate percent from the 96 s travel time. It is marked as an estimate and is not a measured position."
         }
       },
+      "plant_equipment": {
+        "title": "Plant · equipment",
+        "description": "These choices only change the drawing on the card. Nothing is written to the ECL110.",
+        "data": {
+          "connection": "Connection",
+          "valve": "Valve"
+        },
+        "data_description": {
+          "connection": "Veksler is an indirect heat exchanger. Direkte connects the district-heating pipes straight through.",
+          "valve": "3vejs is a 3-way mixing valve. 2vejs is a 2-way valve on the district-heating flow."
+        }
+      },
       "plant_entities": {
         "title": "Plant · external data",
         "description": "Room temperature and heat-meter values come from other Home Assistant entities. Leave a field empty to skip it.",

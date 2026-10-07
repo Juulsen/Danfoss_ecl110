@@ -88,6 +88,18 @@
           "estimate_valve": "Valgfrit. Viser en omtrentlig procent ud fra gangtiden på 96 s. Den er markeret som et estimat og er ikke en målt stilling."
         }
       },
+      "plant_equipment": {
+        "title": "Anlæg · udstyr",
+        "description": "Valgene ændrer kun tegningen på kortet. Der skrives ikke til ECL110.",
+        "data": {
+          "connection": "Tilslutning",
+          "valve": "Ventil"
+        },
+        "data_description": {
+          "connection": "Veksler er indirekte med pladevarmeveksler. Direkte forbinder fjernvarmerørene uden veksler.",
+          "valve": "3vejs er en 3-vejs blandeventil. 2vejs er en 2-vejs ventil i fjernvarmens fremløb."
+        }
+      },
       "plant_entities": {
         "title": "Anlæg · eksterne data",
         "description": "Rumtemperatur og varmemåler kommer fra andre Home Assistant-entiteter. Lad et felt stå tomt for at springe det over.",

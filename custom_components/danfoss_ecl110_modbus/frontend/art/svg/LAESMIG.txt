@@ -1,0 +1,53 @@
+ECL110 fjernvarme – SVG-udkast v3 (Home Assistant-kort, Danfoss ECL110)
+=========================================================================
+
+Grundbilleder (i roden af zip-filen)
+  ecl110-anlaeg.svg   Landskab 1200x600, bruges ved kortbredde 700 px og derover
+  ecl110-mobil.svg    Portræt 400x760, bruges under 700 px (ned til ca. 320 px)
+
+Grundbillederne indeholder kun det, der er fælles for alle anlægsvarianter:
+ramme, titel, Display-felt, ydre rør, cirkulationspumpe, temperaturfølere,
+værdifelter, paneler og farveforklaring. Der er bevidst huller i rørene der,
+hvor varmeveksler/direkte tilslutning og reguleringsventil skal sidde.
+
+Komponenter (mappen svg/)
+  Tilvalg 1 – tilslutning af varmekilde (vælg præcis én):
+    veksler.svg / veksler-mobil.svg
+        (a) Indirekte anlæg: pladevarmeveksler mellem fjernvarme og gulvvarme.
+    direkte.svg / direkte-mobil.svg
+        (b) Direkte anlæg: rørstykker der forbinder fjernvarmens frem- og retur
+            direkte med gulvvarmekredsen. Ingen veksler.
+  Tilvalg 2 – reguleringsventil (vælg præcis én):
+    ventil-3vejs.svg / ventil-3vejs-mobil.svg
+        (a) 3-vejs blandeventil med motor (M) i gulvvarmens fremløb, bypass fra
+            returen og feltet "Position %" (id val-ventil). Indeholder også det
+            lille rørstykke, der lukker 2-vejs-ventilens plads.
+    ventil-2vejs.svg / ventil-2vejs-mobil.svg
+        (b) 2-vejs ventil med motor (M) i fremløbet på fjernvarmesiden (før
+            veksleren/den direkte tilslutning), ingen bypass, og feltet
+            "Position %" (id val-ventil). Indeholder også det lille rørstykke,
+            der lukker 3-vejs-ventilens plads.
+  Filer uden "-mobil" hører til ecl110-anlaeg.svg, filer med "-mobil" hører
+  til ecl110-mobil.svg.
+
+Placering
+  Hver komponent har PRÆCIS samme viewBox som sit grundbillede
+  (0 0 1200 600 for landskab, 0 0 400 760 for mobil) og en gennemsigtig
+  baggrund. Komponenterne lægges derfor oven på grundbilledet i position 0,0
+  i fuld størrelse – ingen forskydning eller skalering.
+  Rækkefølge (nederst -> øverst): grundbillede, varmekilde, ventil.
+  I Inkscape: åbn grundbilledet, Filer > Importér komponenten og placér den
+  i X=0, Y=0 (eller kopiér lagene ind), så kan alt redigeres samlet.
+
+Værdifelter (id'er uændret)
+  Grundbilleder: val-display, val-s1, val-pumpe, val-s3, val-s5, val-rum,
+  val-driftsform, val-kredslob, val-onsket-frem, val-ude-akk, val-varmekurve,
+  val-parallel, val-komfort-spare, val-sommerstop.
+  Ventil-komponenterne: val-ventil (findes i både 3-vejs og 2-vejs, men der
+  vises altid kun én ventil ad gangen, så id'et er entydigt i det samlede billede).
+
+Bemærk
+  Ren SVG uden CSS-variabler og uden style-blokke. Hver fil har sine egne
+  <defs> med rørgradienterne (samme id'er og indhold i alle filer).
+  Gulvvarmekredsen er ikke tegnet som slanger; frem- og retur går ud til kanten
+  som "Gulvvarme fremløb / til boligen" og "Gulvvarme retur / fra boligen".

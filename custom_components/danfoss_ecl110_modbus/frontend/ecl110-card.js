@@ -1,8 +1,8 @@
 /* ECL110 dashboard by Juulsen. No external card or CDN dependencies. */
-const ECL_VERSION = '0.5.2';
+const ECL_VERSION = '0.6.0';
 async function eclLoadLibs(){
-  if(globalThis.Ecl110Plant&&globalThis.Ecl110Diagram&&globalThis.Ecl110Chart&&globalThis.Ecl110Wizard)return;
-  for(const file of ['ecl110-plant.js','ecl110-diagram.js','ecl110-chart.js','ecl110-wizard.js']){
+  if(globalThis.Ecl110Plant&&globalThis.Ecl110Diagram&&globalThis.Ecl110Chart&&globalThis.Ecl110Wizard&&globalThis.Ecl110Art)return;
+  for(const file of ['ecl110-plant.js','ecl110-diagram.js','ecl110-chart.js','ecl110-wizard.js','ecl110-art.js']){
     await new Promise((resolve,reject)=>{
       const script=document.createElement('script');
       script.src='/ecl110-static/'+file+'?v='+ECL_VERSION;
@@ -22,6 +22,18 @@ class Ecl110Card extends HTMLElement {
   static getConfigElement(){return document.createElement('ecl110-card-editor');}
   static getStubConfig(){return {overview:{fields:[...ECL_DEFAULT_FIELDS],layout:'tiles',size:'normal'}};}
   constructor(){super();this.attachShadow({mode:'open'});this.tab=0;this.pending=new Map();this.busy=false;this.message='';}
+  connectedCallback(){
+    if(typeof ResizeObserver!=='function')return;
+    this._widthObserver=new ResizeObserver(()=>{
+      const width=this.getBoundingClientRect().width;
+      const portrait=width>0&&width<700;
+      if(portrait===this._portrait)return;
+      this._portrait=portrait;
+      if(this._built&&this.tab==='overview'&&this.viewMode()==='graphic')this.render();
+    });
+    this._widthObserver.observe(this);
+  }
+  disconnectedCallback(){this._widthObserver?.disconnect();}
   setConfig(config){
     this.config={...config};this.overviewKey=null;this.overviewDraft=null;
     if(this.catalog)this.render();else this.load();
@@ -37,16 +49,26 @@ class Ecl110Card extends HTMLElement {
   set hass(hass){
     this._hass=hass;
     if(!this._askedPlant){this._askedPlant=true;this.loadPlant();}
-    if(!this.shadowRoot.activeElement&&!this.shadowRoot.querySelector('dialog[open]')&&!this.busy&&!this.pending.size&&!this.overviewDraft)this.render();
-    else this.refreshOverview();
+    if(!this.catalog)return;
+    const interactive=this.shadowRoot.activeElement||this.shadowRoot.querySelector('dialog[open]')||this.busy||this.pending.size||this.overviewDraft;
+    if(!this._built){this.render();return;}
+    if(interactive){this.patchArt();this.refreshOverview();return;}
+    if(this._viewSig!==this.viewSig())this.render();
+    else {this.patchArt();this.refreshOverview();}
   }
   getCardSize(){
     if((this.tab&&this.tab!==0&&this.tab!=='overview')||this.overviewDraft)return 9;
+    if((!this.tab||this.tab===0||this.tab==='overview')&&this.viewMode()==='graphic')return this.cardPortrait()?16:8;
     const view=this.overviewView||{fields:ECL_DEFAULT_FIELDS,size:'normal',layout:'tiles'};
     const columns=view.layout==='list'?1:view.size==='compact'?3:2;
     return 4+Math.ceil(view.fields.length/columns)*(view.size==='large'?3:2);
   }
-  getGridOptions(){return {columns:this.config?.grid_options?.columns||12,min_columns:6,rows:'auto'};}
+  getGridOptions(){return {columns:12,min_columns:6,rows:'auto'};}
+  cardPortrait(){return this._portrait===true;}
+  viewSig(){
+    const plant=this.resolvedPlant();
+    return [this.tab,this.viewMode(),this.cardPortrait(),plant.connection,plant.valve,this.message,this.busy,this.overviewDraft?1:0].join('|');
+  }
   tr(da,en){return (this.config?.language||this._hass?.language||'en').startsWith('da')?da:en;}
   lang(){return this.tr('da','en');}
   button(text,fn,cls){const b=el('button',text,cls);b.type='button';b.disabled=this.busy;b.onclick=fn;return b;}
@@ -123,7 +145,13 @@ class Ecl110Card extends HTMLElement {
       nav button.active{background:transparent;color:var(--ecl-fg);box-shadow:inset 0 -2px 0 #ff8a3d}
       nav button.admin .label{display:none}
       .diagram{border-radius:16px;overflow:hidden;background:#10141a}
-      .diagram svg{display:block}
+      .diagram svg{display:block;width:100%;height:auto}
+      .ecl-stack{position:relative;width:100%;line-height:0}
+      .ecl-layer{position:absolute;inset:0;pointer-events:none}
+      .ecl-layer:first-child{position:relative}
+      .ecl-layer svg{display:block;width:100%;height:auto;pointer-events:auto}
+      .ecl-flow{animation:eclchev 1.2s ease-in-out infinite}
+      @keyframes eclchev{0%,100%{opacity:.4}50%{opacity:1}}
       .diagram [data-bind],.metric{cursor:pointer}
       .chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
       .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ecl-line);border-radius:999px;padding:4px 8px;font-size:12px;background:transparent;color:var(--ecl-fg)}
@@ -154,7 +182,7 @@ class Ecl110Card extends HTMLElement {
       .banner{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;background:#2a2118;margin-bottom:10px}
       .hidden-view{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
       .alarm{padding:8px 0;border-top:1px solid var(--divider-color,#2c3442)}
-      @media (prefers-reduced-motion: reduce){.diagram .flow{animation:none}}
+      @media (prefers-reduced-motion: reduce){.diagram .flow,.ecl-flow{animation:none}}
       .diagram .flow{animation:eclflow 1.6s linear infinite}
       @keyframes eclflow{to{stroke-dashoffset:-28}}
       .ghost{background:transparent;border-color:transparent;color:var(--ecl-muted);padding:4px 8px}
@@ -216,6 +244,8 @@ class Ecl110Card extends HTMLElement {
     const foot=el('div',undefined,'footer');
     foot.append(el('span',this.tab==='overview'||this.tab===0?this.tr('Tryk på en værdi for historik','Tap a value for history'):this.tr('Indstillinger gemmes i regulatoren og kontrolleres ved genlæsning.','Settings are saved in the controller and checked by readback.')),el('span','Juulsen · '+ECL_VERSION));
     card.append(foot);
+    this._built=true;
+    this._viewSig=this.viewSig();
   }
   // Preferences never call HA services. Scope them to user, controller and optional card ID.
   normalizeOverview(value){
@@ -290,7 +320,7 @@ class Ecl110Card extends HTMLElement {
   plantSubtitle(){
     const plant=globalThis.Ecl110Plant?this.resolvedPlant():null;
     if(!plant)return 'ECL 110';
-    const type={hex:this.tr('veksler','exchanger'),direct:this.tr('direkte','direct'),boiler:this.tr('kedel','boiler'),dhw_hex:this.tr('brugsvand','DHW'),dhw_fs:this.tr('tapning','draw-off')}[plant.type]||plant.type;
+    const type=plant.connection==='direkte'?this.tr('direkte','direct'):plant.connection==='veksler'?this.tr('veksler','exchanger'):({hex:this.tr('veksler','exchanger'),direct:this.tr('direkte','direct'),boiler:this.tr('kedel','boiler'),dhw_hex:this.tr('brugsvand','DHW'),dhw_fs:this.tr('tapning','draw-off')}[plant.type]||plant.type);
     return `A${plant.application} · ${type}`;
   }
   async entryId(){
@@ -361,10 +391,54 @@ class Ecl110Card extends HTMLElement {
     if(close)this._valvePct=Math.max(0,this._valvePct-dt/travel*100);
     return this._valvePct;
   }
+  artValues(){
+    const plant=this.resolvedPlant();
+    const dash='–';
+    const temp=(key)=>{const value=this.num(key);return value==null?dash:this.fmt(value,1,'°C');};
+    const setting=(key,digits)=>{const match=this.find(key,false);if(!match)return {text:dash,bind:''};const state=String(match[1].state??'');if(!state||state==='unavailable'||state==='unknown')return {text:dash,bind:key};if(match[0].startsWith('select.')||match[0].startsWith('switch.'))return {text:this.optionLabel(state),bind:key};const value=this.num(key);if(value==null)return {text:this.optionLabel(state),bind:key};const unit=key==='parallel_displacement'?'°C':(match[1].attributes?.unit_of_measurement||'');return {text:this.fmt(value,digits,unit),bind:key};};
+    const roomEntity=plant.entities?.room;
+    const roomState=roomEntity&&this._hass?.states?.[roomEntity];
+    let room={text:temp('temperature_s2'),bind:'temperature_s2'};
+    if(roomState){const value=Number(String(roomState.state).replace(',','.'));room={text:Number.isFinite(value)?this.fmt(value,1,'°C'):dash,bind:roomEntity};}
+    const pump=this.find('pump_state',false);
+    const pumpText=!pump||['unavailable','unknown',''].includes(String(pump[1].state||''))?dash:(pump[1].state==='on'?this.tr('Til','On'):this.tr('Fra','Off'));
+    let valveText=dash;
+    if(plant.estimate_valve){const pct=this.valveEstimate();if(pct!=null)valveText=Math.round(pct)+' %';}
+    const box=(text,bind)=>({text,bind:bind||''});
+    return {
+      'val-display':box(dash,''),
+      'val-s1':box(temp('temperature_s1'),'temperature_s1'),
+      'val-s3':box(temp('temperature_s3'),'temperature_s3'),
+      'val-s5':box(temp('temperature_s4'),'temperature_s4'),
+      'val-rum':room,
+      'val-ventil':box(valveText,plant.estimate_valve?'valve_running_time':''),
+      'val-pumpe':box(pumpText,pump?'pump_state':''),
+      'val-driftsform':setting('desired_mode',0),
+      'val-kredslob':box(dash,''),
+      'val-onsket-frem':setting('desired_s3',1),
+      'val-ude-akk':box(dash,''),
+      'val-varmekurve':setting('heating_curve_slope',1),
+      'val-parallel':setting('parallel_displacement',0),
+      'val-komfort-spare':setting('desired_room_temperature',0),
+      'val-sommerstop':setting('heating_cutout',0),
+    };
+  }
+  patchArt(){
+    const host=this.shadowRoot?.querySelector?.('.ecl-stack');
+    if(host&&globalThis.Ecl110Art)Ecl110Art.patch(host,this.artValues());
+  }
   graphic(card){
     const box=el('div',undefined,'diagram');
-    if(globalThis.Ecl110Diagram)box.innerHTML=Ecl110Diagram.markup(this.resolvedPlant(),this.diagramValues());
-    box.onclick=(event)=>{const node=event.target.closest?.('[data-bind]');const key=node?.dataset.bind;if(!key)return;const external=this.resolvedPlant().entities?.[key];if(external){this.dispatchEvent(new CustomEvent('hass-more-info',{detail:{entityId:external},bubbles:true,composed:true}));return;}this.moreInfo(key==='desired_flow'?'desired_s3':key);};
+    const host=el('div',undefined,'ecl-stack');
+    box.append(host);
+    const open=(event)=>{const node=event.target.closest?.('[data-bind]');const key=node?.getAttribute('data-bind');if(!key)return;if(this._hass?.states?.[key]){this.dispatchEvent(new CustomEvent('hass-more-info',{detail:{entityId:key},bubbles:true,composed:true}));return;}this.moreInfo(key);};
+    box.addEventListener('click',open);
+    const plant=this.resolvedPlant();
+    const portrait=this.cardPortrait();
+    if(globalThis.Ecl110Art){
+      const token=this._artToken=(this._artToken||0)+1;
+      Ecl110Art.mount(host,{portrait,plant,values:this.artValues(),version:ECL_VERSION}).catch((error)=>{if(this._artToken===token)host.textContent=String(error);});
+    }
     card.append(box);
   }
   chip(kind,text){const node=el('span',undefined,'chip');const dot=el('i',undefined,'dot '+kind);node.append(dot,document.createTextNode(text));return node;}
@@ -616,7 +690,41 @@ class Ecl110Card extends HTMLElement {
     },'primary'),this.button(this.tr('Fortryd','Cancel'),()=>{this.overviewDraft=null;this.render();}),this.button(this.tr('Standardvisning','Default view'),()=>{this.overviewDraft=this.normalizeOverview(this.config.overview);this.render();}));editor.append(actions);
     editor.append(el('p',this.tr('Gemmes for denne bruger og ECL-enhed i denne browser. Nye felter kræver, at deres entiteter er aktiveret i Home Assistant.','Saved for this user and ECL device in this browser. Additional fields require their entities to be enabled in Home Assistant.'),'muted'));card.append(editor);draw();card.querySelector('.overview-grid')?.remove();
   }
+  async persistEquipment(next){
+    const plant=Ecl110Plant.normalize(next);
+    if(this.config.plant){this.config.plant=plant;this.dispatchEvent(new CustomEvent('config-changed',{detail:{config:this.config},bubbles:true,composed:true}));}
+    const id=await this.entryId();
+    if(id&&this._hass?.callWS)await this._hass.callWS({type:'danfoss_ecl110_modbus/plant/set',entry_id:id,plant});
+    this.remotePlant=plant;
+    this.message=this.tr('Udstyr gemt. Tegningen er opdateret, og der er ikke skrevet til ECL110.','Equipment saved. The drawing is updated, and nothing was written to the ECL110.');
+    this.render();
+  }
+  equipmentSection(card){
+    const plant=this.resolvedPlant();
+    const box=el('section',undefined,'overview-editor');
+    box.append(el('h3',this.tr('Udstyr','Equipment')));
+    box.append(el('p',this.tr('Tilslutning og ventil ændrer kun tegningen.','Connection and valve only change the drawing.'),'muted'));
+    const row=(title,key,value,choices)=>{
+      const label=el('label',title);
+      const select=el('select');
+      select.setAttribute('aria-label',title);
+      for(const [option,text] of choices){const node=el('option',text);node.value=option;select.append(node);}
+      select.value=value;
+      select.onchange=()=>{
+        const next={...plant};
+        next[key]=select.value;
+        if(key==='connection')next.veksler=select.value==='veksler';
+        if(key==='valve')next.ventil_3vejs=select.value==='3vejs';
+        this.persistEquipment(next);
+      };
+      label.append(select);box.append(label);
+    };
+    row(this.tr('Tilslutning','Connection'),'connection',plant.connection||'veksler',[['veksler',this.tr('Veksler','Exchanger')],['direkte',this.tr('Direkte','Direct')]]);
+    row(this.tr('Ventil','Valve'),'valve',plant.valve||'3vejs',[['3vejs',this.tr('3-vejs','3-way')],['2vejs',this.tr('2-vejs','2-way')]]);
+    card.append(box);
+  }
   settings(card){
+    this.equipmentSection(card);
     const groups=[['2',this.tr('Fremløb og varmekurve','Flow and heat curve')],['3',this.tr('Rumregulering','Room control')],['4',this.tr('Returbegrænsning','Return limitation')],['5',this.tr('Optimering','Optimization')],['6',this.tr('Reguleringsparametre','Control parameters')],['7',this.tr('Anlæg og pumpe','System and pump')],['8',this.tr('Display og service','Display and service')]];
     const app=this.entities().find(([,s])=>s.attributes.ecl_application)?.[1].attributes.ecl_application;
     if(!app||app==='all')card.append(el('p',this.tr('Vælg applikation 130 i integrationens opsætning for at aktivere de nye varmeindstillinger.','Select application 130 in the integration setup to enable the new heating settings.'),'muted'));
@@ -722,6 +830,14 @@ class Ecl110CardEditor extends HTMLElement {
     const setup=el('button',this.tr('Opsæt anlæg…','Set up plant…'));setup.type='button';setup.onclick=()=>globalThis.Ecl110Wizard&&Ecl110Wizard.open(this);root.append(setup);
     const view=this.config.overview||{fields:[...ECL_DEFAULT_FIELDS],layout:'tiles',size:'normal'};
     const update=(key,value)=>{this.config.overview={...(this.config.overview||view),[key]:value};this.changed();};
+    const equipment=globalThis.Ecl110Plant?Ecl110Plant.normalize(this.config.plant||this.resolvedPlant()):this.resolvedPlant();
+    const storeEquipment=(patch)=>{
+      const next=Ecl110Plant.normalize({...equipment,...patch});
+      this.config.plant=next;
+      this.changed();
+    };
+    field(this.tr('Tilslutning','Connection'),equipment.connection||'veksler',v=>storeEquipment({connection:v,veksler:v==='veksler'}),[['veksler',this.tr('Veksler','Exchanger')],['direkte',this.tr('Direkte','Direct')]]);
+    field(this.tr('Ventil','Valve'),equipment.valve||'3vejs',v=>storeEquipment({valve:v,ventil_3vejs:v==='3vejs'}),[['3vejs',this.tr('3-vejs','3-way')],['2vejs',this.tr('2-vejs','2-way')]]);
     field(this.tr('Standardvisning','Default view'),this.config.view||'graphic',v=>{this.config.view=v;this.changed();},[['graphic',this.tr('Grafisk','Graphic')],['overview',this.tr('Overblik','Overview')]]);
     field(this.tr('Layout','Layout'),view.layout||'tiles',v=>update('layout',v),[['tiles',this.tr('Felter','Tiles')],['list',this.tr('Liste','List')],['focus',this.tr('Ét felt i fokus','Focus on first field')]]);
     field(this.tr('Størrelse','Size'),view.size||'normal',v=>update('size',v),[['compact',this.tr('Kompakt','Compact')],['normal',this.tr('Normal','Normal')],['large',this.tr('Stor','Large')]]);

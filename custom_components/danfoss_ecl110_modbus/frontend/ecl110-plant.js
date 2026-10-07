@@ -32,6 +32,16 @@
       const value = text(rawLabels[key]);
       if (value) labels[key] = value;
     }
+    const off = (value) => value === false || value === 0 || value === 'false' || value === 'off';
+    let connection;
+    if (Object.prototype.hasOwnProperty.call(source, 'veksler') && off(source.veksler)) connection = 'direkte';
+    else if (source.connection === 'veksler' || source.connection === 'direkte') connection = source.connection;
+    else if (source.type === 'direct') connection = 'direkte';
+    else connection = 'veksler';
+    let valve;
+    if (Object.prototype.hasOwnProperty.call(source, 'ventil_3vejs') && off(source.ventil_3vejs)) valve = '2vejs';
+    else if (source.valve === '3vejs' || source.valve === '2vejs') valve = source.valve;
+    else valve = '3vejs';
     const plant = {
       version: 1,
       application,
@@ -40,6 +50,10 @@
       components,
       entities,
       estimate_valve: !!source.estimate_valve,
+      connection,
+      valve,
+      veksler: connection === 'veksler',
+      ventil_3vejs: valve === '3vejs',
     };
     if (application === '130') plant.emitters = ['radiator', 'floor', 'both'].includes(source.emitters) ? source.emitters : 'radiator';
     if (Object.keys(labels).length) plant.labels = labels;
