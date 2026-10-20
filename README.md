@@ -2,7 +2,7 @@
   <img src="docs/icon.png" alt="Juulsen smart home icon" width="180">
 </p>
 
-# Danfoss ECL110 Modbus · Juulsen
+# Danfoss ECL110
 
 [![Latest release](https://img.shields.io/github/v/release/Juulsen/Danfoss_ecl110)](https://github.com/Juulsen/Danfoss_ecl110/releases/latest)
 [![Validation](https://img.shields.io/github/actions/workflow/status/Juulsen/Danfoss_ecl110/validate.yaml?branch=main&label=HACS%20%2B%20Hassfest%20%2B%20tests)](https://github.com/Juulsen/Danfoss_ecl110/actions/workflows/validate.yaml)
@@ -50,9 +50,9 @@ Typical setup: a small Linux host or embedded device running [mbusd](https://git
 The integration is included in the [HACS default repository](https://github.com/hacs/default). You do **not** need to add a custom repository for normal releases.
 
 1. Open **HACS** in Home Assistant.
-2. Search for **`Danfoss ECL110`** (or **ECL110 Modbus by Juulsen**).
+2. Search for **`Danfoss ECL110`**.
 3. Open the integration, click **Download**, and **restart Home Assistant** when prompted.
-4. Go to **Settings → Devices & services → Add integration**, search for **`ECL110`** or **Danfoss ECL110 Modbus**, and complete the connection wizard.
+4. Go to **Settings → Devices & services → Add integration**, search for **`Danfoss ECL110`**, and complete the connection wizard.
 
 [![Open your Home Assistant instance and open this repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Juulsen&repository=Danfoss_ecl110&category=integration)
 
@@ -63,7 +63,7 @@ The integration is included in the [HACS default repository](https://github.com/
 1. Download the ZIP from the [latest release](https://github.com/Juulsen/Danfoss_ecl110/releases/latest).
 2. Extract and copy the entire folder `custom_components/danfoss_ecl110_modbus` (including `frontend`) into `/config/custom_components/` on your Home Assistant host.
 3. Restart Home Assistant.
-4. Add the integration under **Settings → Devices & services** as above.
+4. Add the integration under **Settings → Devices & services**, search for **`Danfoss ECL110`**, as above.
 
 ### Updating
 
@@ -72,7 +72,7 @@ The integration is included in the [HACS default repository](https://github.com/
 
 Existing config entries and entity IDs are kept. Use **Reconfigure** on the integration to change host, application, or options.
 
-After upgrading to **0.6.0** or newer: set the dashboard resource URL below, keep **only one** ECL110 JavaScript resource, restart Home Assistant once (for plant options and websocket commands), and hard-refresh the browser.
+After upgrading to **0.6.0** or newer: set the dashboard resource URL below, keep **only one** Danfoss ECL110 dashboard JavaScript resource, restart Home Assistant once (for plant options and websocket commands), and hard-refresh the browser.
 
 ## Configuration
 
@@ -89,7 +89,7 @@ A read test runs before the entry is created. If setup fails with a read error, 
 
 ### Plant diagram (integration options)
 
-For the dashboard **graphic** view, describe your plant under **Settings → Devices & services → ECL110 Modbus → Configure** (application, plant type, sensors S1–S4, actuator, pump, optional external room or heat-meter entities). The wizard in the card can guide admins through the same choices and will **ask before enabling** any disabled entities.
+For the dashboard **graphic** view, describe your plant under **Settings → Devices & services → Danfoss ECL110 → Configure** (application, plant type, sensors S1–S4, actuator, pump, optional external room or heat-meter entities). The wizard in the card can guide admins through the same choices and will **ask before enabling** any disabled entities.
 
 Plant data affects **drawing and labels only**, not how the ECL regulates heat.
 
@@ -143,7 +143,7 @@ Changing the target alone does not change mode or the weekly schedule. Flow or r
    type: custom:ecl110-card
    ```
 
-One ECL110 is picked automatically. With several controllers, choose the device in the visual editor or set any of its entities:
+If you have one **Danfoss ECL110** controller, it is picked automatically. With several, choose the device in the visual editor or set any of its entities:
 
 ```yaml
 type: custom:ecl110-card
@@ -244,7 +244,7 @@ Definitions live in [`registers.py`](custom_components/danfoss_ecl110_modbus/reg
 | **Modbus error from ECL** | Correct slave ID, no duplicate masters, increase **request delay** or **timeout** |
 | **Entities unavailable** | Scan interval, gateway logs, pymodbus errors in the Home Assistant log |
 | **Climate shows no current temp** | S2 not wired or disabled; setpoint control can still work |
-| **Card blank or old UI** | Correct resource URL with `?v=0.6.0`, single ECL110 resource, browser hard refresh, HA restart after upgrade |
+| **Card blank or old UI** | Correct resource URL with `?v=0.6.0`, a single Danfoss ECL110 dashboard resource, browser hard refresh, HA restart after upgrade |
 | **Control disabled in card** | Entity disabled on device page; enable after wizard prompt |
 
 Remove passwords and private addresses from logs before posting issues.
