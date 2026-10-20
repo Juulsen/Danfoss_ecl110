@@ -35,7 +35,7 @@ Direct serial Modbus RTU from Home Assistant is **not** implemented yet (TCP gat
 | Home Assistant | **2026.6.0 or newer** |
 | Controller | Danfoss **ECL Comfort 110** with Modbus enabled |
 | Network path | **Modbus TCP gateway** on the same LAN as Home Assistant, wired to the ECL **RS485** bus |
-| Connection settings | Gateway host or IP, TCP port (usually **502**), and the ECL **Modbus slave ID** on the bus (often **5** — confirm on your installation) |
+| Connection settings | Gateway host or IP, TCP port (usually **502**), and the ECL **Modbus slave ID** on the bus (**default 5** in the setup flow; change it if your controller uses another address) |
 | Application | **130** for room heating or **116** for DHW; must match what is configured on the controller (menu 7000) |
 | Weekly schedule (optional) | **ECA 110** timer function on the controller; enable only if supported |
 
@@ -80,7 +80,7 @@ After upgrading to **0.6.0** or newer: set the dashboard resource URL below, kee
 
 The config flow asks for:
 
-- Gateway **host**, **port**, **slave ID**, **timeout**, **scan interval** (minimum 5 s), and **delay between Modbus requests** (helps on slower RTU buses).
+- Gateway **host**, **port**, **Modbus slave ID** (default **5**, configurable in this step), **timeout**, **scan interval** (minimum 5 s), and **delay between Modbus requests** (helps on slower RTU buses).
 - **ECL application:** `130`, `116`, or `all`.
 - Optional **ECA 110 weekly schedule** — only enable if the timer program exists; setup tries to read all seven days.
 - Optional **desired room temperature** entity for application 130 (hidden until enabled).
