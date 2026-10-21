@@ -10,6 +10,12 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 - Direct serial RTU transport remains planned.
 
+## [0.6.1] - 2026-10-21
+
+- README images use absolute `raw.githubusercontent.com` URLs so the icon and screenshots render inside HACS.
+- Install instructions describe the HACS default list.
+- Dashboard resource cache query and card version are 0.6.1. No Modbus or control changes.
+
 ## [0.6.0] - 2026-10-07
 
 - Overview uses the locked plant artwork verbatim: landscape from 700 px and the portrait drawing below that. Heat exchanger or direct connection, and the 3-way or 2-way valve, are stacked on the base at 0,0.

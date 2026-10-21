@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/icon.png" alt="Juulsen smart home icon" width="180">
+  <img src="https://raw.githubusercontent.com/Juulsen/Danfoss_ecl110/main/docs/icon.png" alt="Juulsen smart home icon" width="180">
 </p>
 
 # Danfoss ECL110
@@ -47,7 +47,7 @@ Typical setup: a small Linux host or embedded device running [mbusd](https://git
 
 ### Recommended: HACS (default catalog)
 
-The integration is included in the [HACS default repository](https://github.com/hacs/default). You do **not** need to add a custom repository for normal releases.
+The integration is in the [HACS default list](https://github.com/hacs/default). Search for it in HACS and download it from there.
 
 1. Open **HACS** in Home Assistant.
 2. Search for **`Danfoss ECL110`**.
@@ -55,8 +55,6 @@ The integration is included in the [HACS default repository](https://github.com/
 4. Go to **Settings → Devices & services → Add integration**, search for **`Danfoss ECL110`**, and complete the connection wizard.
 
 [![Open your Home Assistant instance and open this repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Juulsen&repository=Danfoss_ecl110&category=integration)
-
-**Pre-releases:** to test an unpublished build, you can still add `https://github.com/Juulsen/Danfoss_ecl110` under **HACS → ⋮ → Custom repositories** (type **Integration**), then install from that repository. Remove the custom entry when you return to default-catalog releases.
 
 ### Manual installation (fallback)
 
@@ -72,7 +70,7 @@ The integration is included in the [HACS default repository](https://github.com/
 
 Existing config entries and entity IDs are kept. Use **Reconfigure** on the integration to change host, application, or options.
 
-After upgrading to **0.6.0** or newer: set the dashboard resource URL below, keep **only one** Danfoss ECL110 dashboard JavaScript resource, restart Home Assistant once (for plant options and websocket commands), and hard-refresh the browser.
+After upgrading to **0.6.1** or newer: set the dashboard resource URL below, keep **only one** Danfoss ECL110 dashboard JavaScript resource, restart Home Assistant once (for plant options and websocket commands), and hard-refresh the browser.
 
 ## Configuration
 
@@ -134,7 +132,7 @@ Changing the target alone does not change mode or the weekly schedule. Flow or r
 1. **Settings → Dashboards → Resources → Add resource** — type **JavaScript module**:
 
    ```text
-   /ecl110-static/ecl110-card.js?v=0.6.0
+   /ecl110-static/ecl110-card.js?v=0.6.1
    ```
 
 2. Add a manual card:
@@ -192,26 +190,26 @@ plant:
     heat_power: sensor.varmemaaler_effekt
 ```
 
-![Graphic overview, dark](docs/images/ecl110-graphic-0.5.2.png)
+![Graphic overview, dark](https://raw.githubusercontent.com/Juulsen/Danfoss_ecl110/main/docs/images/ecl110-graphic-0.5.2.png)
 
-![Graphic overview, light](docs/images/ecl110-light-0.5.2.png)
+![Graphic overview, light](https://raw.githubusercontent.com/Juulsen/Danfoss_ecl110/main/docs/images/ecl110-light-0.5.2.png)
 
-![Mobile](docs/images/ecl110-mobile-0.5.2.png)
+![Mobile](https://raw.githubusercontent.com/Juulsen/Danfoss_ecl110/main/docs/images/ecl110-mobile-0.5.2.png)
 
-![Curve](docs/images/ecl110-curve-0.5.2.png)
+![Curve](https://raw.githubusercontent.com/Juulsen/Danfoss_ecl110/main/docs/images/ecl110-curve-0.5.2.png)
 
-![Curve, mobile](docs/images/ecl110-curve-mobile-0.5.2.png)
+![Curve, mobile](https://raw.githubusercontent.com/Juulsen/Danfoss_ecl110/main/docs/images/ecl110-curve-mobile-0.5.2.png)
 
-![Plant wizard, step 2](docs/images/ecl110-wizard-0.5.2.png)
+![Plant wizard, step 2](https://raw.githubusercontent.com/Juulsen/Danfoss_ecl110/main/docs/images/ecl110-wizard-0.5.2.png)
 
 ### Older screenshot (0.4.2, simulated data)
 
-![Dashboard overview](docs/images/ecl110-overview-0.4.2.jpg)
+![Dashboard overview](https://raw.githubusercontent.com/Juulsen/Danfoss_ecl110/main/docs/images/ecl110-overview-0.4.2.jpg)
 
 <details>
 <summary>Weekly schedule preview (0.4.2)</summary>
 
-![Weekly schedule](docs/images/ecl110-schedule-0.4.2.jpg)
+![Weekly schedule](https://raw.githubusercontent.com/Juulsen/Danfoss_ecl110/main/docs/images/ecl110-schedule-0.4.2.jpg)
 
 </details>
 
@@ -244,7 +242,7 @@ Definitions live in [`registers.py`](custom_components/danfoss_ecl110_modbus/reg
 | **Modbus error from ECL** | Correct slave ID, no duplicate masters, increase **request delay** or **timeout** |
 | **Entities unavailable** | Scan interval, gateway logs, pymodbus errors in the Home Assistant log |
 | **Climate shows no current temp** | S2 not wired or disabled; setpoint control can still work |
-| **Card blank or old UI** | Correct resource URL with `?v=0.6.0`, a single Danfoss ECL110 dashboard resource, browser hard refresh, HA restart after upgrade |
+| **Card blank or old UI** | Correct resource URL with `?v=0.6.1`, a single Danfoss ECL110 dashboard resource, browser hard refresh, HA restart after upgrade |
 | **Control disabled in card** | Entity disabled on device page; enable after wizard prompt |
 
 Remove passwords and private addresses from logs before posting issues.
