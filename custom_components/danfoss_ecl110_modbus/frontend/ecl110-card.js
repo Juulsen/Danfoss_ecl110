@@ -1,5 +1,5 @@
 /* ECL110 dashboard by Juulsen. No external card or CDN dependencies. */
-const ECL_VERSION = '0.6.0';
+const ECL_VERSION = '0.6.1';
 async function eclLoadLibs(){
   if(globalThis.Ecl110Plant&&globalThis.Ecl110Diagram&&globalThis.Ecl110Chart&&globalThis.Ecl110Wizard&&globalThis.Ecl110Art)return;
   for(const file of ['ecl110-plant.js','ecl110-diagram.js','ecl110-chart.js','ecl110-wizard.js','ecl110-art.js']){
