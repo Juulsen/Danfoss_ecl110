@@ -64,6 +64,24 @@
         "description": "Configure the Modbus TCP connection through your RTU-to-TCP gateway. A read-only test of register 11200 is performed before the entry is created.",
         "title": "Connect to Danfoss ECL Comfort 110"
       },
+      "init": {
+        "title": "ECL110 options",
+        "description": "Choose the plant wizard or the read interval. Connection settings stay under Reconfigure.",
+        "menu_options": {
+          "plant_app": "Plant",
+          "scan_interval": "Read interval"
+        }
+      },
+      "scan_interval": {
+        "title": "Read interval",
+        "description": "Seconds between Modbus reads. Minimum 5 seconds. Saving reloads the integration. Nothing is written to the ECL110.",
+        "data": {
+          "scan_interval": "Read interval"
+        },
+        "data_description": {
+          "scan_interval": "Seconds between updates. Minimum 5 seconds, maximum 3600 seconds."
+        }
+      },
       "plant_app": {
         "title": "Plant · application",
         "description": "ECL 110 only runs application 130 (weather-compensated heating) or 116 (domestic hot water). The application itself is changed on the controller, menu 7000.",

@@ -243,7 +243,7 @@ class Ecl110ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 
 class Ecl110OptionsFlow(config_entries.OptionsFlow):
-    """Three-step plant description. Connection settings stay in reconfigure."""
+    """Plant wizard plus read interval. Connection settings stay in reconfigure."""
 
     def __init__(self) -> None:
         """Hold the in-progress plant between steps."""
@@ -258,9 +258,52 @@ class Ecl110OptionsFlow(config_entries.OptionsFlow):
         self,
         user_input: dict[str, Any] | None = None,
     ) -> ConfigFlowResult:
-        """Start at the application step."""
+        """Plant wizard or read interval. Connection settings stay in reconfigure."""
 
-        return await self.async_step_plant_app(user_input)
+        del user_input
+        return self.async_show_menu(
+            step_id="init",
+            menu_options=["plant_app", "scan_interval"],
+        )
+
+    async def async_step_scan_interval(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> ConfigFlowResult:
+        """Store the Modbus poll interval. The update listener reloads the entry."""
+
+        if user_input is not None:
+            seconds = int(user_input[CONF_SCAN_INTERVAL])
+            return self.async_create_entry(
+                title="",
+                data={**self.config_entry.options, CONF_SCAN_INTERVAL: seconds},
+            )
+        current = self.config_entry.options.get(
+            CONF_SCAN_INTERVAL,
+            self.config_entry.data.get(
+                CONF_SCAN_INTERVAL,
+                int(DEFAULT_SCAN_INTERVAL.total_seconds()),
+            ),
+        )
+        return self.async_show_form(
+            step_id="scan_interval",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_SCAN_INTERVAL,
+                        default=int(current),
+                    ): selector.NumberSelector(
+                        selector.NumberSelectorConfig(
+                            min=MIN_SCAN_INTERVAL,
+                            max=3600,
+                            step=1,
+                            mode=selector.NumberSelectorMode.BOX,
+                            unit_of_measurement="s",
+                        )
+                    ),
+                }
+            ),
+        )
 
     async def async_step_plant_app(
         self,

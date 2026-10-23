@@ -64,6 +64,24 @@
         "description": "Konfigurer Modbus TCP-forbindelsen gennem din RTU-til-TCP-gateway. Register 11200 testlæses uden skrivning, før opsætningen gemmes.",
         "title": "Forbind til Danfoss ECL Comfort 110"
       },
+      "init": {
+        "title": "ECL110-indstillinger",
+        "description": "Vælg anlægsguiden eller aflæsningsintervallet. Forbindelsen ændres under Genkonfigurer.",
+        "menu_options": {
+          "plant_app": "Anlæg",
+          "scan_interval": "Aflæsningsinterval"
+        }
+      },
+      "scan_interval": {
+        "title": "Aflæsningsinterval",
+        "description": "Sekunder mellem Modbus-aflæsninger. Minimum 5 sekunder. Gem genindlæser integrationen. Der skrives ikke til ECL110.",
+        "data": {
+          "scan_interval": "Aflæsningsinterval"
+        },
+        "data_description": {
+          "scan_interval": "Antal sekunder mellem opdateringer. Minimum 5 sekunder, maksimum 3600 sekunder."
+        }
+      },
       "plant_app": {
         "title": "Anlæg · applikation",
         "description": "ECL 110 kører kun applikation 130 (vejrkompenseret varme) eller 116 (varmt brugsvand). Selve applikationen skiftes på regulatoren, menu 7000.",

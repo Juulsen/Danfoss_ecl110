@@ -10,6 +10,13 @@ The project follows [Semantic Versioning](https://semver.org/). During the pre-1
 
 - Direct serial RTU transport remains planned.
 
+## [0.6.2] - 2026-10-23
+
+- History timestamps from `history/history_during_period` (`lu`/`lc`, Unix seconds) are converted to milliseconds, so the trend covers the selected window instead of a few seconds in 1970.
+- The history axis is the configured window ending at now. Card options `history_hours` (1, 6, 12 or 24, default 24) and `history_refresh` (seconds, default 60) are in the visual editor. The chart refetches on that cadence and when the page becomes visible.
+- Configure → **Aflæsningsinterval** stores `scan_interval` in the config entry options (5–3600 s). The integration reads options before the initial setup value and reloads through the existing update listener. The plant wizard is unchanged and writes nothing new to Modbus.
+- Dashboard resource cache query and card version are 0.6.2 (`Juulsen · 0.6.2`).
+
 ## [0.6.1] - 2026-10-21
 
 - README images use absolute `raw.githubusercontent.com` URLs so the icon and screenshots render inside HACS.
