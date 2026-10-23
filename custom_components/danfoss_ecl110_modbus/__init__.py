@@ -175,9 +175,12 @@ async def async_setup_entry(
     """Set up an ECL110 from a UI config entry."""
 
     scan_interval_seconds = int(
-        entry.data.get(
+        entry.options.get(
             CONF_SCAN_INTERVAL,
-            int(DEFAULT_SCAN_INTERVAL.total_seconds()),
+            entry.data.get(
+                CONF_SCAN_INTERVAL,
+                int(DEFAULT_SCAN_INTERVAL.total_seconds()),
+            ),
         )
     )
 

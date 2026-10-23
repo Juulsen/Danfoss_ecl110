@@ -1,4 +1,4 @@
-/* SVG charts: heat curve and 24 h history. No external libraries. */
+/* SVG charts: heat curve and history window. No external libraries. */
 (function (root) {
   const esc = (value) => String(value ?? '').replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
   const FONT = 'var(--ecl-font, Roboto, ui-sans-serif, system-ui, sans-serif)';
@@ -119,10 +119,14 @@
     const W = chartWidth(opts, 420);
     const H = 188;
     const box = { l: 46, t: 16, w: W - 60, h: 140 };
-    const flat = (series || []).flatMap((item) => item.points.filter((p) => Number.isFinite(p[0]) && Number.isFinite(p[1])));
     const now = Date.now();
-    const minX = flat.length ? Math.min(...flat.map((p) => p[0])) : now - 86400000;
-    const maxX = flat.length ? Math.max(...flat.map((p) => p[0]), minX + 3600000) : now;
+    const maxX = Number.isFinite(opts?.end) ? opts.end : now;
+    const minX = Number.isFinite(opts?.start) ? opts.start : maxX - 86400000;
+    const clipped = (series || []).map((item) => ({
+      ...item,
+      points: (item.points || []).filter((p) => Number.isFinite(p[0]) && Number.isFinite(p[1]) && p[0] >= minX && p[0] <= maxX),
+    }));
+    const flat = clipped.flatMap((item) => item.points);
     const span = Math.max(maxX - minX, 1);
     const ys = flat.map((p) => p[1]);
     const [minY, maxY] = nice(ys.length ? Math.min(...ys) : 10, ys.length ? Math.max(...ys) : 40, 5);
@@ -134,7 +138,7 @@
     });
     const frame = axis(box, minX, maxX, minY, maxY, xTicks, ticks(minY, maxY, 5), comma, '', '°', xText);
     const colors = ['#7eb6ff', '#ff8a3d', '#f5c16c', '#3dd68c', '#c4b5fd'];
-    const lines = (series || []).map((item, index) => {
+    const lines = clipped.map((item, index) => {
       const color = COLORS[item.id] || colors[index % colors.length];
       const d = seriesPath(item.points, project);
       const last = [...item.points].reverse().find((p) => Number.isFinite(p[1]));
@@ -148,11 +152,11 @@
       <line data-cursor="1" x1="${box.l}" x2="${box.l}" y1="${box.t}" y2="${box.t + box.h}" stroke="#ffffff55" visibility="hidden"/>
     </svg>`;
   }
-  function nearest(series, ratio) {
+  function nearest(series, ratio, opts) {
     const stamps = (series || []).flatMap((item) => item.points.map((p) => p[0])).filter((t) => Number.isFinite(t));
     if (!stamps.length) return null;
-    const min = Math.min(...stamps);
-    const max = Math.max(...stamps);
+    const min = Number.isFinite(opts?.start) ? opts.start : Math.min(...stamps);
+    const max = Number.isFinite(opts?.end) ? opts.end : Math.max(...stamps);
     const target = min + (max - min) * Math.min(1, Math.max(0, ratio));
     const rows = series.map((item) => {
       let best = null;

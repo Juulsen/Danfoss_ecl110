@@ -70,7 +70,7 @@ The integration is in the [HACS default list](https://github.com/hacs/default). 
 
 Existing config entries and entity IDs are kept. Use **Reconfigure** on the integration to change host, application, or options.
 
-After upgrading to **0.6.1** or newer: set the dashboard resource URL below, keep **only one** Danfoss ECL110 dashboard JavaScript resource, restart Home Assistant once (for plant options and websocket commands), and hard-refresh the browser.
+After upgrading to **0.6.2** or newer: set the dashboard resource URL below, keep **only one** Danfoss ECL110 dashboard JavaScript resource, restart Home Assistant once, and hard-refresh the browser.
 
 ## Configuration
 
@@ -78,7 +78,7 @@ After upgrading to **0.6.1** or newer: set the dashboard resource URL below, kee
 
 The config flow asks for:
 
-- Gateway **host**, **port**, **Modbus slave ID** (default **5**, configurable in this step), **timeout**, **scan interval** (minimum 5 s), and **delay between Modbus requests** (helps on slower RTU buses).
+- Gateway **host**, **port**, **Modbus slave ID** (default **5**, configurable in this step), **timeout**, **scan interval** (default **15 s**, minimum 5 s), and **delay between Modbus requests** (helps on slower RTU buses).
 - **ECL application:** `130`, `116`, or `all`.
 - Optional **ECA 110 weekly schedule** — only enable if the timer program exists; setup tries to read all seven days.
 - Optional **desired room temperature** entity for application 130 (hidden until enabled).
@@ -90,6 +90,10 @@ A read test runs before the entry is created. If setup fails with a read error, 
 For the dashboard **graphic** view, describe your plant under **Settings → Devices & services → Danfoss ECL110 → Configure** (application, plant type, sensors S1–S4, actuator, pump, optional external room or heat-meter entities). The wizard in the card can guide admins through the same choices and will **ask before enabling** any disabled entities.
 
 Plant data affects **drawing and labels only**, not how the ECL regulates heat.
+
+### Read interval
+
+**Settings → Devices & services → Danfoss ECL110 → Configure → Aflæsningsinterval** (English: **Read interval**) sets how often Home Assistant polls the ECL. Allowed range is **5–3600 seconds** (default **15**). The value is stored in the config entry options and takes precedence over the interval from the first setup. Saving reloads the integration. It does not write to the controller.
 
 ### Reconfigure
 
@@ -132,7 +136,7 @@ Changing the target alone does not change mode or the weekly schedule. Flow or r
 1. **Settings → Dashboards → Resources → Add resource** — type **JavaScript module**:
 
    ```text
-   /ecl110-static/ecl110-card.js?v=0.6.1
+   /ecl110-static/ecl110-card.js?v=0.6.2
    ```
 
 2. Add a manual card:
@@ -149,7 +153,13 @@ entity: sensor.REPLACE_WITH_YOUR_ECL110_S1_ENTITY
 language: da
 ```
 
-Use the **visual card editor** for fields, order, layout (tiles / list / focus), size, and custom display names. Names apply to this card only. The card fills the width Home Assistant gives it.
+Use the **visual card editor** for fields, order, layout (tiles / list / focus), size, history window (**Historik (timer)**: 1, 6, 12 or 24, default 24), history refresh (**Opdater historik (sekunder)**, default 60), and custom display names. Names apply to this card only. The card fills the width Home Assistant gives it.
+
+```yaml
+type: custom:ecl110-card
+history_hours: 6
+history_refresh: 30
+```
 
 **Tabs:** Overview · Curve · Schedule · Alarms. **Settings** and **Suggestions** appear for administrators only. The card is bundled with the integration (no Browser Mod). It does not replace the standard device page.
 
@@ -168,7 +178,7 @@ Enable disabled entities on the device page if a control is missing. Not shown f
 
 Overview can show **Graphic** (process diagram from plant config) or **Tiles** (readings; tap for more-info / history). Default view can be set in the editor (`view: graphic` or `view: overview`).
 
-**Curve** shows a simplified heat curve with outdoor and flow axes, operating point, and calculated flow at current outdoor temperature. Unsaved slope appears as a solid preview over the saved curve. A 24-hour trend chart shares the same data on Overview. Admins confirm before writing slope or parallel shift.
+**Curve** shows a simplified heat curve with outdoor and flow axes, operating point, and calculated flow at current outdoor temperature. Unsaved slope appears as a solid preview over the saved curve. The same trend (default **last 24 hours**, ending at now) is on Overview and Curve. The card refetches history on the configured interval and when the page becomes visible. Admins confirm before writing slope or parallel shift.
 
 **Alarms** lists calculated checks (return limit, missing sensors, communication) and recent logbook rows.
 
@@ -242,7 +252,8 @@ Definitions live in [`registers.py`](custom_components/danfoss_ecl110_modbus/reg
 | **Modbus error from ECL** | Correct slave ID, no duplicate masters, increase **request delay** or **timeout** |
 | **Entities unavailable** | Scan interval, gateway logs, pymodbus errors in the Home Assistant log |
 | **Climate shows no current temp** | S2 not wired or disabled; setpoint control can still work |
-| **Card blank or old UI** | Correct resource URL with `?v=0.6.1`, a single Danfoss ECL110 dashboard resource, browser hard refresh, HA restart after upgrade |
+| **Card blank or old UI** | Correct resource URL with `?v=0.6.2`, a single Danfoss ECL110 dashboard resource, browser hard refresh, HA restart after upgrade |
+| **Trend shows a few seconds or 1970** | Upgrade to 0.6.2 or newer so history timestamps are read as Unix seconds |
 | **Control disabled in card** | Entity disabled on device page; enable after wizard prompt |
 
 Remove passwords and private addresses from logs before posting issues.

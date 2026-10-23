@@ -1,5 +1,5 @@
 /* ECL110 dashboard by Juulsen. No external card or CDN dependencies. */
-const ECL_VERSION = '0.6.1';
+const ECL_VERSION = '0.6.2';
 async function eclLoadLibs(){
   if(globalThis.Ecl110Plant&&globalThis.Ecl110Diagram&&globalThis.Ecl110Chart&&globalThis.Ecl110Wizard&&globalThis.Ecl110Art)return;
   for(const file of ['ecl110-plant.js','ecl110-diagram.js','ecl110-chart.js','ecl110-wizard.js','ecl110-art.js']){
@@ -23,6 +23,9 @@ class Ecl110Card extends HTMLElement {
   static getStubConfig(){return {overview:{fields:[...ECL_DEFAULT_FIELDS],layout:'tiles',size:'normal'}};}
   constructor(){super();this.attachShadow({mode:'open'});this.tab=0;this.pending=new Map();this.busy=false;this.message='';}
   connectedCallback(){
+    this._onVisible=()=>{if(document.visibilityState==='visible')this.ensureHistory(true);};
+    document.addEventListener?.('visibilitychange',this._onVisible);
+    this._armHistoryTimer();
     if(typeof ResizeObserver!=='function')return;
     this._widthObserver=new ResizeObserver(()=>{
       const width=this.getBoundingClientRect().width;
@@ -39,9 +42,29 @@ class Ecl110Card extends HTMLElement {
     });
     this._widthObserver.observe(this);
   }
-  disconnectedCallback(){this._widthObserver?.disconnect();}
+  disconnectedCallback(){
+    this._widthObserver?.disconnect();
+    clearInterval(this._historyTimer);
+    this._historyTimer=undefined;
+    if(this._onVisible)document.removeEventListener?.('visibilitychange',this._onVisible);
+  }
+  historyHours(){
+    const hours=Number(this.config?.history_hours);
+    return [1,6,12,24].includes(hours)?hours:24;
+  }
+  historyRefreshMs(){
+    const seconds=Number(this.config?.history_refresh);
+    return Number.isFinite(seconds)&&seconds>=5?seconds*1000:60000;
+  }
+  _armHistoryTimer(){
+    clearInterval(this._historyTimer);
+    this._historyTimer=undefined;
+    if(!this.isConnected)return;
+    this._historyTimer=setInterval(()=>this.ensureHistory(),this.historyRefreshMs());
+  }
   setConfig(config){
     this.config={...config};this.overviewKey=null;this.overviewDraft=null;
+    this._armHistoryTimer();
     if(this.catalog)this.render();else this.load();
   }
   async load(){
@@ -57,10 +80,11 @@ class Ecl110Card extends HTMLElement {
     if(!this._askedPlant){this._askedPlant=true;this.loadPlant();}
     if(!this.catalog)return;
     const interactive=this.shadowRoot.activeElement||this.shadowRoot.querySelector('dialog[open]')||this.busy||this.pending.size||this.overviewDraft;
-    if(!this._built){this.render();return;}
-    if(interactive){this.patchArt();this.refreshOverview();return;}
+    if(!this._built){this.render();this.noteLiveSample();return;}
+    if(interactive){this.patchArt();this.refreshOverview();this.noteLiveSample();return;}
     if(this._viewSig!==this.viewSig())this.render();
     else {this.patchArt();this.refreshOverview();}
+    this.noteLiveSample();
   }
   getCardSize(){
     if((this.tab&&this.tab!==0&&this.tab!=='overview')||this.overviewDraft)return 9;
@@ -534,7 +558,8 @@ class Ecl110Card extends HTMLElement {
       card.append(actions);
       card.append(el('p',this.tr('Forhåndsvisningen skriver ikke, før du bekræfter Gem i ECL. Kurven er en forenklet beregning.','The preview does not write until you confirm Save to ECL. The curve is a simplified calculation.'),'muted'));
     }else card.append(el('p',this.tr('Kun administratorer kan skrive en ny hældning til ECL.','Only administrators can write a new slope to the ECL.'),'muted'));
-    const history=el('div',undefined,'history');card.append(el('h3',this.tr('Seneste 24 timer','Last 24 hours')));card.append(history);this.drawHistory(history);
+    const hours=this.historyHours();
+    const history=el('div',undefined,'history');card.append(el('h3',this.tr(`Seneste ${hours} timer`,`Last ${hours} hours`)));card.append(history);this.drawHistory(history);
   }
   curveOpts(slope,parallel,outdoor,flow,room){
     const set=globalThis.Ecl110Chart?Ecl110Chart.flowAt(outdoor,slope,room):null;
@@ -584,32 +609,64 @@ class Ecl110Card extends HTMLElement {
       if(!events?.length)node.append(el('p',this.tr('Ingen nylige hændelser.','No recent events.'),'muted'));
     }catch{node.textContent=this.tr('Logbogen kunne ikke hentes.','The logbook could not be loaded.');}
   }
-  async ensureHistory(){
+  async ensureHistory(force){
     if(this._historyLoading||!this._hass?.callWS)return;
     const now=Date.now();
-    if(this._historyAt&&now-this._historyAt<60000)return;
+    if(!force&&this._historyAt&&now-this._historyAt<this.historyRefreshMs())return;
     this._historyLoading=true;
     try{
       const ids=this.entities().filter(([id,s])=>id.startsWith('sensor.')&&['temperature_s1','temperature_s2','temperature_s3','temperature_s4'].includes(s.attributes.register_key)).map(([id])=>id);
       const room=this.resolvedPlant().entities?.room;
       if(room)ids.push(room);
       if(!ids.length)return;
-      const start=new Date(now-86400000).toISOString();
+      const start=new Date(now-this.historyHours()*3600000).toISOString();
       const rows=await this._hass.callWS({type:'history/history_during_period',start_time:start,entity_ids:ids,minimal_response:true,no_attributes:true});
       this._history=rows;this._historyAt=now;
-      for(const box of this.shadowRoot.querySelectorAll('.history'))this.drawHistory(box);
+      if(this.shadowRoot?.querySelectorAll)for(const box of this.shadowRoot.querySelectorAll('.history'))this.drawHistory(box);
     }catch{}
     finally{this._historyLoading=false;}
+  }
+  noteLiveSample(){
+    const now=Date.now();
+    const gap=Math.min(15000,Math.max(1000,this.historyRefreshMs()/4));
+    if(this._liveAt&&now-this._liveAt<gap)return;
+    this._liveAt=now;
+    if(!this._liveTail)this._liveTail={};
+    const start=now-this.historyHours()*3600000;
+    let changed=false;
+    for(const key of ['temperature_s1','temperature_s2','temperature_s3','temperature_s4']){
+      const value=this.num(key);
+      if(value==null)continue;
+      const list=(this._liveTail[key]||[]).filter(point=>point[0]>=start);
+      list.push([now,value]);
+      this._liveTail[key]=list;
+      changed=true;
+    }
+    if(changed&&this._built&&this.shadowRoot?.querySelectorAll)this.redrawCharts();
   }
   historySeries(){
     const rows=this._history||{};
     const list=Array.isArray(rows)?rows:Object.values(rows);
-    return list.map(points=>{
+    const start=Date.now()-this.historyHours()*3600000;
+    const byKey=new Map();
+    for(const points of list){
       const id=points?.[0]?.entity_id||points?.entity_id;
-      const samples=(Array.isArray(points)?points:[]).map(point=>[new Date(point.last_changed||point.lu||point.last_updated||0).getTime(),Number(point.state??point.s)]).filter(point=>Number.isFinite(point[1]));
+      const samples=(Array.isArray(points)?points:[]).map(point=>{
+        const t=point.lu??point.lc;
+        const ms=t!=null?t*1000:Date.parse(point.last_changed||point.last_updated);
+        return [ms,Number(point.state??point.s)];
+      }).filter(point=>Number.isFinite(point[0])&&Number.isFinite(point[1]));
       const key=this._hass?.states[id]?.attributes.register_key||id;
-      return {id:key,name:this.overviewName(key),points:samples};
-    }).filter(item=>item.points.length);
+      if(samples.length)byKey.set(key,{id:key,name:this.overviewName(key),points:samples});
+    }
+    for(const [key,points] of Object.entries(this._liveTail||{})){
+      const extra=points.filter(point=>point[0]>=start);
+      if(!extra.length)continue;
+      const existing=byKey.get(key);
+      if(existing)existing.points=existing.points.concat(extra).sort((a,b)=>a[0]-b[0]);
+      else byKey.set(key,{id:key,name:this.overviewName(key),points:extra});
+    }
+    return [...byKey.values()].filter(item=>item.points.length);
   }
   chartName(key){
     return {temperature_s1:this.tr('Ude','Outdoor'),temperature_s2:this.tr('Rum','Room'),temperature_s3:this.tr('Frem','Flow'),temperature_s4:this.tr('Retur','Return')}[key]||this.overviewName(key);
@@ -625,7 +682,11 @@ class Ecl110Card extends HTMLElement {
   drawHistory(node){
     const series=this.historySeries().map(item=>({...item,name:this.chartName(item.id)}));
     if(!globalThis.Ecl110Chart){node.textContent='';return;}
-    node.innerHTML=Ecl110Chart.history(series,{comma:this.lang()==='da',empty:this.tr('Ingen historik de seneste 24 timer.','No history for the last 24 hours.'),width:node.clientWidth||undefined});
+    const end=Date.now();
+    const start=end-this.historyHours()*3600000;
+    const hours=this.historyHours();
+    const window={start,end};
+    node.innerHTML=Ecl110Chart.history(series,{...window,comma:this.lang()==='da',empty:this.tr(`Ingen historik de seneste ${hours} timer.`,`No history for the last ${hours} hours.`),width:node.clientWidth||undefined});
     const legend=el('div',undefined,'legend');
     const live=this.liveSeries();
     const rows=live.length?live:series.map(item=>({id:item.id,name:item.name,value:item.points.at(-1)?.[1]}));
@@ -647,7 +708,7 @@ class Ecl110Card extends HTMLElement {
       const vb=svg.viewBox?.baseVal?.width||rect.width;
       const scale=rect.width/(vb||420);
       const ratio=(event.clientX-rect.left-pad*scale)/(plot*scale);
-      const hit=Ecl110Chart.nearest(series,ratio);
+      const hit=Ecl110Chart.nearest(series,ratio,window);
       if(!hit)return;
       const when=new Date(hit.time);
       const clock=`${String(when.getHours()).padStart(2,'0')}:${String(when.getMinutes()).padStart(2,'0')}`;
@@ -853,6 +914,12 @@ class Ecl110CardEditor extends HTMLElement {
     field(this.tr('Standardvisning','Default view'),this.config.view||'graphic',v=>{this.config.view=v;this.changed();},[['graphic',this.tr('Grafisk','Graphic')],['overview',this.tr('Overblik','Overview')]]);
     field(this.tr('Layout','Layout'),view.layout||'tiles',v=>update('layout',v),[['tiles',this.tr('Felter','Tiles')],['list',this.tr('Liste','List')],['focus',this.tr('Ét felt i fokus','Focus on first field')]]);
     field(this.tr('Størrelse','Size'),view.size||'normal',v=>update('size',v),[['compact',this.tr('Kompakt','Compact')],['normal',this.tr('Normal','Normal')],['large',this.tr('Stor','Large')]]);
+    const hours=[1,6,12,24].includes(Number(this.config.history_hours))?String(this.config.history_hours):'24';
+    field(this.tr('Historik (timer)','History (hours)'),hours,v=>{this.config.history_hours=Number(v);this.changed();},[['1','1'],['6','6'],['12','12'],['24','24']]);
+    const refreshLabel=el('label',this.tr('Opdater historik (sekunder)','Refresh history (seconds)'));
+    const refresh=el('input');refresh.type='number';refresh.min='5';refresh.step='1';refresh.value=this.config.history_refresh??60;
+    refresh.onchange=()=>{const n=Math.round(Number(refresh.value));if(Number.isFinite(n)&&n>=5)this.config.history_refresh=n;else delete this.config.history_refresh;this.changed();};
+    refreshLabel.append(refresh);root.append(refreshLabel);
     root.append(el('p',this.tr('Kortet tilpasser sig pladsen. Brug dashboardets Layout-fane til kortbredde og gør afsnittet bredere for at udnytte hele skærmen. Gem med dashboardets Gem-knap; valgene følger derefter dashboardet på alle enheder.','The card adapts to the available space. Use the dashboard Layout tab for card width and widen the section to use the full screen. Save with the dashboard Save button; choices then follow the dashboard across devices.')));
     if(!this.catalog){root.append(el('p',this.error?this.tr('Feltlisten kunne ikke hentes. Luk og åbn editoren igen.','Could not load fields. Close and reopen the editor.'):this.tr('Indlæser felter…','Loading fields…')));return;}
     const fields=view.fields||[...ECL_DEFAULT_FIELDS];

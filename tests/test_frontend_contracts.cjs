@@ -78,6 +78,22 @@ assert.match(curve,/Nu: 15,2/);
 const same=context.Ecl110Chart.heatCurve({slope:0.7,parallel:0,previewSlope:0.7,previewParallel:0,outdoor:15.2,flow:31.5,room:21});
 assert.doesNotMatch(same,/data-series="preview"/);
 assert.match(context.Ecl110Chart.history([{id:'temperature_s1',name:'Ude',points:[[Date.now()-3600000,15],[Date.now(),16]]}],{comma:true}),/data-series="temperature_s1"/);
+const histCard=new Card();
+histCard.catalog=[];
+histCard.config={history_hours:6};
+histCard._hass={states:{'sensor.s1':{state:'12',attributes:{register_key:'temperature_s1'}}}};
+histCard._history=[[{entity_id:'sensor.s1',lu:1700000000.5,s:'12.5'},{entity_id:'sensor.s1',lc:1700000060,s:'13'}]];
+const stamped=histCard.historySeries();
+assert.equal(stamped[0].points[0][0],1700000000.5*1000);
+assert.equal(stamped[0].points[1][0],1700000060*1000);
+const end=Date.now();
+const clipped=context.Ecl110Chart.history([{id:'temperature_s1',points:[[end-86400000*3,1],[end-86400000*3+120000,2],[end-120000,15],[end-60000,16]]}],{start:end-6*3600000,end});
+assert.match(clipped,/data-series="temperature_s1"/);
+const dropped=context.Ecl110Chart.history([{id:'temperature_s1',points:[[end-86400000*3,1],[end-86400000*3+120000,2]]}],{start:end-3600000,end});
+assert.doesNotMatch(dropped,/data-series="temperature_s1"/);
+const clock=new Date(end);
+const hh=`${String(clock.getHours()).padStart(2,'0')}:${String(clock.getMinutes()).padStart(2,'0')}`;
+assert.match(clipped,new RegExp(hh));
 console.log('PASS: plant schema, five diagram variants and charts');
 
 // Exercise the actual overview controls and their existing HA service path.
